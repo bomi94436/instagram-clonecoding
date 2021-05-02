@@ -3,14 +3,14 @@ import { normalize } from 'styled-normalize';
 
 const GlobalStyle = createGlobalStyle`
   ${normalize}
- 
-  html,
-  body {
-    overflow: hidden;
-  }
 
   * {
-    box-sizing: border-box;
+    //box-sizing: border-box;
+  }
+  button {
+    border: none;
+    background: none;
+    cursor: pointer;
   }
 `;
 

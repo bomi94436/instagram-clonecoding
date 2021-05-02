@@ -7,10 +7,15 @@ import 'styled-components';
 declare module 'styled-components' {
   export interface DefaultTheme {
     background: {
-      white: string;
+      gray: string;
     };
     fontColor: {
       black: string;
+      gray: string;
+      blue: string;
+    };
+    border: {
+      gray: string;
     };
   }
 }
