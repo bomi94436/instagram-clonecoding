@@ -16,16 +16,6 @@ export const Wrapper = styled.div`
     cursor: pointer;
   }
 
-  .left {
-    // 278 x 318
-    .emoji-picker {
-      position: relative;
-      bottom: 430px;
-      right: -10px;
-      z-index: 1;
-    }
-  }
-
   .right {
     ${media.desktop} {
       display: none;
@@ -72,7 +62,18 @@ export const Wrapper = styled.div`
   }
 `;
 
-export const Card = styled.div`
+export const StyledCardWrapper = styled.div`
+  position: relative;
+  // 278 x 318
+  .emoji-picker {
+    position: absolute;
+    bottom: 50px;
+    left: 10px;
+    z-index: 1;
+  }
+`;
+
+export const StyledCard = styled.div`
   width: 600px;
   border: 1px solid ${({ theme }) => theme.border.gray};
   border-radius: 5px;

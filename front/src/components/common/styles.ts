@@ -10,6 +10,8 @@ export const StyledNavBar = styled.div`
   width: 100%;
   height: 54px;
 
+  z-index: 999;
+
   background-color: white;
   border-bottom: 1px solid ${(props) => props.theme.border.gray};
 
