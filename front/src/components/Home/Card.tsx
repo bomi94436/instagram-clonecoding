@@ -9,7 +9,22 @@ import {
 } from 'react-icons/all';
 import Picker from 'emoji-picker-react';
 import useInput from '../../lib/hooks/useInput';
-import { StyledCard, StyledCardWrapper } from './styles';
+import { StyledCard, StyledCardWrapper, StyledSlider } from './styles';
+
+const sliderSettings = {
+  dots: true,
+  infinite: false,
+  speed: 500,
+  arrows: true,
+  slidesToShow: 1,
+  slidesToScroll: 1,
+  className: 'view',
+  appendDots: (dots: JSX.Element) => (
+    <div>
+      <ul style={{ margin: '5px', padding: '0' }}>{dots}</ul>
+    </div>
+  ),
+};
 
 const Card = () => {
   const [comment, onChangeComment, setComment] = useInput('');
@@ -29,7 +44,11 @@ const Card = () => {
           </button>
         </div>
 
-        <img src={faker.image.image()} alt={faker.image.image()} />
+        <StyledSlider {...sliderSettings}>
+          <img src={faker.image.image()} alt={faker.image.image()} />
+          <img src={faker.image.image()} alt={faker.image.image()} />
+          <img src={faker.image.image()} alt={faker.image.image()} />
+        </StyledSlider>
 
         <div className="content">
           <div className="icons">

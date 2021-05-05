@@ -1,5 +1,8 @@
 import styled from 'styled-components';
 import { media } from '../../styles/media';
+import Slider from 'react-slick';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
 
 export const Wrapper = styled.div`
   display: flex;
@@ -78,10 +81,10 @@ export const StyledCard = styled.div`
   border: 1px solid ${({ theme }) => theme.border.gray};
   border-radius: 5px;
   background-color: white;
-  overflow: hidden;
+  //overflow: hidden;
   margin-bottom: 60px;
 
-  img {
+  .view {
     width: 600px;
     object-fit: contain;
   }
@@ -208,5 +211,62 @@ export const StyledCard = styled.div`
       background: none;
       outline: none;
     }
+  }
+`;
+
+export const StyledSlider = styled(Slider)`
+  position: relative;
+
+  .slick-arrow {
+    opacity: 0.8;
+  }
+
+  .slick-disabled {
+    cursor: default;
+    ::before {
+      display: none;
+    }
+  }
+
+  .slick-prev {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    z-index: 1;
+  }
+
+  .slick-next {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+  }
+
+  .slick-dots {
+    width: 600px;
+
+    li {
+      margin: 0 2px;
+      width: 6px;
+      height: 6px;
+    }
+    button {
+      padding: 0;
+      width: 6px;
+      height: 6px;
+    }
+
+    button::before {
+      content: '';
+      opacity: 0.25;
+      background-color: black;
+      border-radius: 70%;
+      width: 6px;
+      height: 6px;
+    }
+  }
+
+  li.slick-active button::before {
+    opacity: 1;
+    background-color: ${({ theme }) => theme.fontColor.blue};
   }
 `;
