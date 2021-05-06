@@ -1,7 +1,17 @@
 import * as express from 'express';
+import sequelize from './models';
 
 const app = express();
 const port: number = Number(process.env.PORT) || 3000;
+
+sequelize
+  .sync()
+  .then(() => {
+    console.log('DB connection ...');
+  })
+  .catch((err) => {
+    console.log(err);
+  });
 
 app.get(
   '/',
