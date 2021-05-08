@@ -1,13 +1,20 @@
-import { Column, Model, Table } from 'sequelize-typescript';
+import { AllowNull, Column, Model, Table, Unique } from 'sequelize-typescript';
 
-@Table
-export class User extends Model {
+@Table({
+  charset: 'utf8',
+  collate: 'utf8_general_ci',
+})
+export default class User extends Model {
+  @AllowNull(false)
+  @Unique
   @Column
   email: string;
 
-  @Column
-  nickname: string;
-
+  @AllowNull(false)
   @Column
   password: string;
+
+  @AllowNull(false)
+  @Column
+  nickname: string;
 }
