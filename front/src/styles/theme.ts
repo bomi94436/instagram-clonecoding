@@ -2,15 +2,16 @@ import { DefaultTheme } from 'styled-components';
 
 const myTheme: DefaultTheme = {
   background: {
-    gray: 'rgb(250, 250, 250)',
+    gray: '#fafafa',
+    blue: '#0095f6',
   },
   fontColor: {
     black: 'black',
-    gray: '#8E8E8E',
-    blue: '#0095F6',
+    gray: '#8e8e8e',
+    blue: '#0095f6',
   },
   border: {
-    gray: 'rgb(218, 218, 218)',
+    gray: '#dadada',
   },
 };
 

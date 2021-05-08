@@ -8,6 +8,7 @@ declare module 'styled-components' {
   export interface DefaultTheme {
     background: {
       gray: string;
+      blue: string;
     };
     fontColor: {
       black: string;
