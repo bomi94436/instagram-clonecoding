@@ -33,6 +33,13 @@ export const StyledLogin = styled.div`
     margin: 22px auto 12px;
   }
 
+  p {
+    text-align: center;
+    font-size: 17px;
+    color: ${({ theme }) => theme.fontColor.gray};
+    font-weight: 600;
+  }
+
   form {
     display: flex;
     flex-direction: column;
