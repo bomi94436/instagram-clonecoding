@@ -12,7 +12,7 @@ exports.postUser = async (userData: User): Promise<User> => {
       },
     })
   );
-  if (exUser) throw new CustomError(403, '이미 사용중인 아이디입니다.');
+  if (exUser) throw new CustomError(409, '이미 사용중인 아이디입니다.');
 
   const hashedPassword = await bcrypt.hash(userData.password, 12);
   const [err2, user] = await to(
@@ -22,7 +22,7 @@ exports.postUser = async (userData: User): Promise<User> => {
       nickname: userData.nickname,
     })
   );
-  if (err2) throw new Error(err2.message);
+  if (err2) throw Error(err2.message);
 
   return user;
 };

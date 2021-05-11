@@ -1,5 +1,7 @@
 import * as express from 'express';
-import { ResponseData } from '../utils';
+import { createModelAndValidation, ResponseData } from '../utils';
+import { User } from '../models';
+import to from 'await-to-js';
 const UserService = require('../services/user');
 
 exports.postUser = async (
@@ -7,6 +9,9 @@ exports.postUser = async (
   res: express.Response,
   next: express.NextFunction
 ): Promise<void> => {
+  const [err] = await to(createModelAndValidation(User, req.body));
+  if (err) throw err;
+
   await UserService.postUser(req.body);
 
   res.status(201).json(<ResponseData>{
