@@ -2,8 +2,11 @@ import React, { useCallback } from 'react';
 import { StyledLink, StyledLogin, Wrapper } from './styles';
 import logo from '../../lib/assets/InstagramLogo.png';
 import useInput from '../../lib/hooks/useInput';
+import { useDispatch } from 'react-redux';
+import { signUpAsync } from '../../store/auth/actions';
 
 const SignUp = () => {
+  const dispatch = useDispatch();
   const [email, onChangeEmail] = useInput('');
   const [password, onChangePassword] = useInput('');
   const [nickname, onChangeNickname] = useInput('');
@@ -11,9 +14,9 @@ const SignUp = () => {
   const onSubmitLogin = useCallback(
     (e: React.FormEvent<HTMLFormElement>): void => {
       e.preventDefault();
-      console.log(email, password);
+      dispatch(signUpAsync.request({ email, password, nickname }));
     },
-    [email, password]
+    [dispatch, email, password, nickname]
   );
 
   return (
