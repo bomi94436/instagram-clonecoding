@@ -6,7 +6,7 @@ exports.postUser = async (
   req: express.Request,
   res: express.Response,
   next: express.NextFunction
-) => {
+): Promise<void> => {
   await UserService.postUser(req.body);
 
   res.status(201).json(<ResponseData>{
