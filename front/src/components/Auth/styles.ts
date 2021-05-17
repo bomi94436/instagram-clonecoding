@@ -66,6 +66,32 @@ export const StyledLogin = styled.div`
       }
     }
 
+    .password {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+
+      button {
+        position: absolute;
+        right: 8px;
+        top: 0;
+
+        padding: 0;
+
+        width: 22px;
+        height: 22px;
+
+        background: none;
+
+        * {
+          width: 22px;
+          height: 22px;
+          color: black;
+        }
+      }
+    }
+
     button {
       width: 266px;
       height: 30px;
@@ -76,11 +102,23 @@ export const StyledLogin = styled.div`
       color: white;
       background-color: ${({ theme }) => theme.background.blue};
       border-radius: 5px;
+
+      &[disabled] {
+        opacity: 0.5;
+        cursor: default;
+      }
     }
   }
 
-  span {
+  span.go-login {
     margin: 25px 0;
+    color: black;
+  }
+
+  span {
+    margin-bottom: 8px;
+    color: #cd313e;
+    text-align: center;
   }
 `;
 

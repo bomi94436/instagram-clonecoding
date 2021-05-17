@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
 import { Explore, Home, Login, SignUp } from './components';
 
 function App() {
@@ -10,6 +10,7 @@ function App() {
         <Route path="/login" component={Login} />
         <Route path="/signup" component={SignUp} />
         <Route path="/explore" component={Explore} />
+        <Redirect path="*" to="/" />
       </Switch>
     </BrowserRouter>
   );

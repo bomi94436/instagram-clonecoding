@@ -1,55 +1,132 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { StyledLink, StyledLogin, Wrapper } from './styles';
 import logo from '../../lib/assets/InstagramLogo.png';
-import useInput from '../../lib/hooks/useInput';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { signUpAsync } from '../../store/auth/actions';
+import { RootState } from '../../store';
+import { useHistory } from 'react-router-dom';
+import { AiFillEye, AiFillEyeInvisible } from 'react-icons/all';
+import { validateSignUpData } from './validation';
 
 const SignUp = () => {
   const dispatch = useDispatch();
-  const [email, onChangeEmail] = useInput('');
-  const [password, onChangePassword] = useInput('');
-  const [nickname, onChangeNickname] = useInput('');
+  const { data, error } = useSelector((state: RootState) => state.auth.signup);
+
+  const history = useHistory();
+  const [form, setForm] = useState<SignUpData>({
+    email: '',
+    password: '',
+    nickname: '',
+  });
+  const [errorMessage, setErrorMessage] = useState<SignUpData>({
+    email: undefined,
+    password: undefined,
+    nickname: undefined,
+  });
+  const [viewPassword, setViewPassword] = useState(false);
+  const [isFormValid, setIsFormValid] = useState(false);
+
+  const onChangeForm = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    setForm((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
+
+    setErrorMessage((prev) => ({
+      ...prev,
+      [e.target.name]: validateSignUpData(
+        e.target.name as keyof SignUpData,
+        e.target.value
+      ),
+    }));
+  }, []);
 
   const onSubmitLogin = useCallback(
     (e: React.FormEvent<HTMLFormElement>): void => {
       e.preventDefault();
-      dispatch(signUpAsync.request({ email, password, nickname }));
+      dispatch(signUpAsync.request(form));
     },
-    [dispatch, email, password, nickname]
+    [dispatch, form]
   );
+
+  const onClickEye = useCallback(() => {
+    setViewPassword((prev) => (prev = !prev));
+  }, []);
+
+  useEffect(() => {
+    if (data) {
+      alert(data.message);
+      history.push('/');
+    } else if (error) {
+      alert(error.message);
+    }
+  }, [history, data, error]);
+
+  useEffect(() => {
+    if (
+      errorMessage.email === '' &&
+      errorMessage.password === '' &&
+      errorMessage.nickname === ''
+    ) {
+      setIsFormValid(true);
+    } else {
+      setIsFormValid(false);
+    }
+  }, [errorMessage]);
 
   return (
     <Wrapper>
       <StyledLogin>
         <img src={logo} alt="logo" />
+
         <p>
           친구들의 사진과 동영상을 보려면
           <br />
           가입하세요.
         </p>
+
         <form onSubmit={onSubmitLogin}>
           <input
+            name="email"
             type="email"
-            value={email}
-            onChange={onChangeEmail}
-            placeholder="이메일"
+            value={form.email}
+            onChange={onChangeForm}
+            placeholder="이메일(아이디)"
           />
+
+          {errorMessage.email && <span>{errorMessage.email}</span>}
+
+          <div className="password">
+            <input
+              name="password"
+              type={viewPassword ? 'text' : 'password'}
+              value={form.password}
+              onChange={onChangeForm}
+              placeholder="비밀번호"
+            />
+            <button type="button" onClick={onClickEye}>
+              {viewPassword ? <AiFillEye /> : <AiFillEyeInvisible />}
+            </button>
+          </div>
+
+          {errorMessage.password && <span>{errorMessage.password}</span>}
+
           <input
-            type="password"
-            value={password}
-            onChange={onChangePassword}
-            placeholder="비밀번호"
-          />
-          <input
+            name="nickname"
             type="text"
-            value={nickname}
-            onChange={onChangeNickname}
+            value={form.nickname}
+            onChange={onChangeForm}
             placeholder="닉네임"
           />
-          <button type="submit">가입</button>
+
+          {errorMessage.nickname && <span>{errorMessage.nickname}</span>}
+
+          <button type="submit" disabled={!isFormValid}>
+            가입
+          </button>
         </form>
-        <span>
+
+        <span className="go-login">
           계정이 있으신가요? <StyledLink to="/login">로그인</StyledLink>
         </span>
       </StyledLogin>
