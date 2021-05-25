@@ -1,6 +1,8 @@
 # Instagram clone coding
 타입스크립트, 노드, 리액트와 더 친해지고 싶은 마음에 시작하는 클론코딩!
 
+프론트엔드 개발은 `front branch`에서, 백엔드 개발은 `back branch`에서 진행합니다.
+
 ### 개발 환경
 - Typescript
 - Nodejs
