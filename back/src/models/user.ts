@@ -1,5 +1,11 @@
 import { Column, Model, Table } from 'sequelize-typescript';
-import { IsDefined, IsEmail, Length, Matches } from 'class-validator';
+import {
+  IsDefined,
+  IsEmail,
+  IsOptional,
+  Length,
+  Matches,
+} from 'class-validator';
 
 @Table({
   charset: 'utf8',
@@ -36,4 +42,8 @@ export default class User extends Model {
   })
   @Column
   nickname: string;
+
+  @IsOptional()
+  @Column
+  token: string;
 }

@@ -2,6 +2,7 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 module.exports = {
+  // db
   development: {
     username: process.env.DB_USERNAME,
     password: process.env.DB_PASSWORD,
@@ -35,4 +36,5 @@ module.exports = {
       freezeTableName: true,
     },
   },
+  jwtSecret: process.env.JWT_SECRET,
 };

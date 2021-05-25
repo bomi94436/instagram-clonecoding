@@ -3,8 +3,9 @@ import sequelize from './models/sequelize';
 const morgan = require('morgan');
 const dotenv = require('dotenv');
 const cors = require('cors');
+const cookieParser = require('cookie-parser');
 
-import { CustomError, ResponseData } from './utils';
+import { CustomError } from './utils';
 const userRouter = require('./routes/user');
 
 const app = express();
@@ -12,6 +13,7 @@ app.use(morgan('dev'));
 dotenv.config();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 sequelize
   .sync()
