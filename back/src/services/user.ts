@@ -130,6 +130,7 @@ const UserService = {
   },
 
   silentRefresh: async (
+    loggedInUser: string,
     oldRefreshToken: string
   ): Promise<ReturnType<typeof UserService.generateToken>> =>
     jwt.verify(
@@ -156,7 +157,7 @@ const UserService = {
         );
         if (dbErr) throw dbErr;
 
-        if (user.token === oldRefreshToken) {
+        if (user.token === oldRefreshToken && loggedInUser === user.email) {
           const { accessToken, refreshToken } = await UserService.generateToken(
             decoded.email
           );
@@ -167,6 +168,22 @@ const UserService = {
         }
       }
     ),
+
+  logout: async (refreshToken: string): Promise<void> => {
+    const [err] = await to(
+      User.update(
+        {
+          token: null,
+        },
+        {
+          where: {
+            token: refreshToken,
+          },
+        }
+      )
+    );
+    if (err) throw err;
+  },
 };
 
 export default UserService;

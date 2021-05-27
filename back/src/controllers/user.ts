@@ -34,7 +34,7 @@ const UserController = {
       maxAge: 1000 * 60 * 60 * 24 * 14, // 14일
     });
 
-    res.status(200).json(<ResponseData>{
+    res.status(201).json(<ResponseData>{
       success: true,
       message: '로그인이 완료되었습니다.',
       data: {
@@ -51,6 +51,7 @@ const UserController = {
   ): Promise<void> => {
     const oldRefreshToken = req.cookies['x-refresh-token'];
     const { accessToken, refreshToken } = await UserService.silentRefresh(
+      req.user,
       oldRefreshToken
     );
 
@@ -73,10 +74,13 @@ const UserController = {
     res: express.Response,
     next: express.NextFunction
   ): Promise<void> => {
-    // TODO
+    const refreshToken = req.cookies['x-refresh-token'];
+
+    await UserService.logout(refreshToken);
+
     res.status(200).json(<ResponseData>{
       success: true,
-      message: 'logout router',
+      message: '로그아웃 되었습니다.',
     });
   },
 };
