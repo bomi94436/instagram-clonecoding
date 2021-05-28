@@ -7,6 +7,7 @@ import { RootState } from '../../store';
 import { useHistory } from 'react-router-dom';
 import { AiFillEye, AiFillEyeInvisible } from 'react-icons/all';
 import { validateSignUpData } from './validation';
+import { SignUpData } from '../../store/auth/types';
 
 const SignUp = () => {
   const dispatch = useDispatch();
@@ -126,7 +127,7 @@ const SignUp = () => {
           </button>
         </form>
 
-        <span className="go-login">
+        <span className="link">
           계정이 있으신가요? <StyledLink to="/login">로그인</StyledLink>
         </span>
       </StyledLogin>

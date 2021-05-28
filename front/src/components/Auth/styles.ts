@@ -110,7 +110,7 @@ export const StyledLogin = styled.div`
     }
   }
 
-  span.go-login {
+  span.link {
     margin: 25px 0;
     color: black;
   }
