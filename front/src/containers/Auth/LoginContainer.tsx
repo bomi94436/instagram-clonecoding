@@ -1,7 +1,11 @@
 import React, { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store';
-import { loginAsync } from '../../store/auth/actions';
+import {
+  loginAsync,
+  setAutoLogin,
+  silentRefreshAsync,
+} from '../../store/auth/actions';
 import { useHistory } from 'react-router-dom';
 import { Login } from '../../components';
 
@@ -19,6 +23,12 @@ const LoginContainer = () => {
     ): void => {
       e.preventDefault();
       dispatch(loginAsync.request({ email, password }));
+
+      const timer = setInterval(() => {
+        dispatch(silentRefreshAsync.request());
+      }, 1000 * 60 * 59);
+
+      dispatch(setAutoLogin({ timer }));
     },
     [dispatch]
   );

@@ -9,6 +9,9 @@ const initialState: AuthState = {
   },
   signup: asyncState.initial(),
   login: asyncState.initial(),
+  silentRefresh: asyncState.initial(),
+  logout: asyncState.initial(),
+  timer: null,
 };
 
 const auth = (state: AuthState = initialState, action: AuthAction) =>
@@ -33,6 +36,37 @@ const auth = (state: AuthState = initialState, action: AuthAction) =>
         break;
       case 'auth/LOGIN_ERROR':
         draft.login = asyncState.error(action.payload);
+        break;
+
+      case 'auth/SILENT_REFRESH':
+        draft.silentRefresh = asyncState.loading();
+        break;
+      case 'auth/SILENT_REFRESH_SUCCESS':
+        draft.silentRefresh = asyncState.success(null);
+        break;
+      case 'auth/SILENT_REFRESH_ERROR':
+        draft.silentRefresh = asyncState.error(action.payload);
+        break;
+
+      case 'auth/LOGOUT':
+        draft.logout = asyncState.loading();
+        break;
+      case 'auth/LOGOUT_SUCCESS':
+        draft.logout = asyncState.success(null);
+        draft.user.email = null;
+        draft.user.nickname = null;
+        break;
+      case 'auth/LOGOUT_ERROR':
+        draft.logout = asyncState.error(action.payload);
+        break;
+
+      case 'auth/SET_AUTO_LOGIN':
+        draft.timer = action.payload.timer;
+        break;
+      case 'auth/CLEAR_AUTO_LOGIN':
+        clearInterval(draft.timer as NodeJS.Timeout);
+        draft.timer = null;
+        break;
     }
   });
 
