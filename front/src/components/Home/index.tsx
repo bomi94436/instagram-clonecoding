@@ -3,8 +3,13 @@ import faker from 'faker';
 import AppLayout from '../common/AppLayout';
 import { Wrapper } from './styles';
 import Card from './Card';
+import { UserInfo } from '../../store/auth/types';
 
-const Home = () => {
+interface props {
+  user: UserInfo;
+}
+
+const Home = ({ user }: props) => {
   return (
     <AppLayout>
       <Wrapper>
@@ -18,7 +23,7 @@ const Home = () => {
           <div className="info">
             <div className="profile">
               <img src={faker.image.avatar()} alt={faker.image.avatar()} />
-              <span>{faker.name.findName()}</span>
+              <span>{user.nickname}</span>
             </div>
 
             <div className="follow">

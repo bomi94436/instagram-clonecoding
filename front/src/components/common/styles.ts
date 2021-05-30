@@ -23,6 +23,11 @@ export const StyledNavBar = styled.div`
     ${media.desktop} {
       width: 100%;
     }
+
+    .profile {
+      display: flex;
+      align-items: center;
+    }
   }
 `;
 
@@ -35,5 +40,80 @@ export const StyledAppLayout = styled.div`
       display: flex;
       justify-content: center;
     }
+  }
+`;
+
+export const StyledMenu = styled.div`
+  position: relative;
+  font-size: 14px;
+
+  img {
+    width: 22px;
+    height: 22px;
+    border-radius: 70%;
+    :hover {
+      cursor: pointer;
+    }
+  }
+
+  .opened {
+    transform: translate(0, 35px);
+    opacity: 1;
+    visibility: visible;
+  }
+  .closed {
+    transform: translate(0, 0);
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  .menu {
+    position: absolute;
+    top: 0;
+    right: -20px;
+
+    display: flex;
+    flex-direction: column;
+
+    background-color: white;
+    border-radius: 5px;
+    box-shadow: 0 0 8px ${({ theme }) => theme.border.gray};
+
+    transition: all 0.3s ease;
+
+    button {
+      display: flex;
+      align-items: center;
+
+      width: 198px;
+      height: 44px;
+      padding: 8px 16px;
+      text-align: left;
+
+      svg {
+        width: 16px;
+        height: 16px;
+        margin-right: 12px;
+      }
+
+      :hover {
+        background-color: ${({ theme }) => theme.background.gray};
+      }
+    }
+
+    button:nth-last-child(1) {
+      border-top: 1px solid ${({ theme }) => theme.border.gray};
+    }
+  }
+
+  .menu::after {
+    content: '';
+    position: absolute;
+    bottom: 100%;
+    right: 26px;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent transparent white transparent;
   }
 `;

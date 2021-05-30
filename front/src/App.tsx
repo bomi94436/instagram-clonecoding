@@ -8,21 +8,21 @@ function App() {
   return (
     <BrowserRouter>
       <Switch>
-        <AuthRoute authenticated="loggedIn" path="/" component={Home} exact />
+        <AuthRoute authenticated="loggedIn" path="/" Component={Home} exact />
         <AuthRoute
           authenticated="notLoggedIn"
           path="/login"
-          component={LoginContainer}
+          Component={LoginContainer}
         />
         <AuthRoute
           authenticated="notLoggedIn"
           path="/signup"
-          component={SignUp}
+          Component={SignUp}
         />
         <AuthRoute
           authenticated="loggedIn"
           path="/explore"
-          component={Explore}
+          Component={Explore}
         />
         <Redirect path="*" to="/" />
       </Switch>
