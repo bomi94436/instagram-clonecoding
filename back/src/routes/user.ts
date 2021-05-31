@@ -1,7 +1,7 @@
 import * as express from 'express';
 import UserController from '../controllers/user';
 import { wrapAsync } from '../utils';
-import { isLoggedIn, isNotLoggedIn } from './middlewares';
+import { isLoggedIn } from './middlewares';
 
 const router = express.Router();
 

@@ -78,6 +78,7 @@ const UserController = {
 
     await UserService.logout(refreshToken);
 
+    res.cookie('x-refresh-token', '', { maxAge: 0 });
     res.status(200).json(<ResponseData>{
       success: true,
       message: '로그아웃 되었습니다.',

@@ -10,3 +10,17 @@
 ### 실행 전
 1. back/.env_example 파일의 이름을 back/.env 로 바꿉니다
 2. .env 파일 안의 변수들을 자신의 환경에 맞게 할당합니다
+
+### 실행
+- /back 폴더에서
+    ```json
+    docker-compose up --build
+    ```
+    또는
+    ```json
+    npm start
+    ```
+- /front 폴더에서
+    ```json
+    npm start
+    ```
