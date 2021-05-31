@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Redirect, Switch } from 'react-router-dom';
+import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
 import { Explore, Home, SignUp } from './components';
 import { LoginContainer } from './containers';
 import AuthRoute from './AuthRoute';
@@ -9,11 +9,7 @@ function App() {
     <BrowserRouter>
       <Switch>
         <AuthRoute authenticated="loggedIn" path="/" Component={Home} exact />
-        <AuthRoute
-          authenticated="notLoggedIn"
-          path="/login"
-          Component={LoginContainer}
-        />
+        <Route path="/login" component={LoginContainer} />
         <AuthRoute
           authenticated="notLoggedIn"
           path="/signup"

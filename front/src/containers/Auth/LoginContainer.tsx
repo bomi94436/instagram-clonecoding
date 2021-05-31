@@ -23,23 +23,23 @@ const LoginContainer = () => {
     ): void => {
       e.preventDefault();
       dispatch(loginAsync.request({ email, password }));
-
-      const timer = setInterval(() => {
-        dispatch(silentRefreshAsync.request());
-      }, 1000 * 60 * 59);
-
-      dispatch(setAutoLogin({ timer }));
     },
     [dispatch]
   );
 
   useEffect(() => {
     if (user.email !== null && user.nickname !== null) {
+      const timer = setInterval(() => {
+        dispatch(silentRefreshAsync.request());
+      }, 1000 * 60 * 59);
+
+      dispatch(setAutoLogin({ timer }));
+
       history.push('/');
     } else if (error) {
       alert(error.message);
     }
-  }, [history, user, error]);
+  }, [dispatch, history, user, error]);
 
   return <Login onSubmitLogin={onSubmitLogin} />;
 };
