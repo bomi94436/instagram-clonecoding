@@ -13,12 +13,6 @@ export class CustomError extends Error {
 export const wrapAsync = (fn) => (req, res, next) =>
   fn(req, res, next).catch(next);
 
-export declare interface ResponseData {
-  success: boolean;
-  message: string;
-  data: any;
-}
-
 export const createModelAndValidation = async (classModel, data) => {
   try {
     const instance = new classModel();

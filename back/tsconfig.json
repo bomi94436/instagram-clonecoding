@@ -9,6 +9,6 @@
     "emitDecoratorMetadata": true,
     "sourceMap": true
   },
-  "include": ["src/**/*.ts"],
+  "include": ["src"],
   "exclude": ["node_modules"]
 }

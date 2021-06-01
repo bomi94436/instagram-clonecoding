@@ -1,6 +1,7 @@
 import * as express from 'express';
+import UserController from '../controllers/user';
 import { wrapAsync } from '../utils';
-const UserController = require('../controllers/user');
+import { isLoggedIn } from './middlewares';
 
 const router = express.Router();
 
@@ -8,6 +9,13 @@ const router = express.Router();
  * /user
  * */
 
-router.post('/', wrapAsync(UserController.postUser));
+router.post('/', wrapAsync(UserController.signUp));
+router.post('/login', wrapAsync(UserController.login));
+router.get(
+  '/silent-refresh',
+  isLoggedIn,
+  wrapAsync(UserController.silentRefresh)
+);
+router.get('/logout', wrapAsync(UserController.logout));
 
 module.exports = router;
