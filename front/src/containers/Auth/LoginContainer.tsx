@@ -12,7 +12,7 @@ import { Login } from '../../components';
 const LoginContainer = () => {
   const dispatch = useDispatch();
   const { error } = useSelector((state: RootState) => state.auth.login);
-  const { user } = useSelector((state: RootState) => state.auth);
+  const user = useSelector((state: RootState) => state.auth.user);
 
   const history = useHistory();
 

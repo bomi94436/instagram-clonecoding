@@ -11,7 +11,7 @@ interface props {
 }
 
 const AuthRoute = ({ authenticated, path, Component, ...rest }: props) => {
-  const { user } = useSelector((state: RootState) => state.auth);
+  const user = useSelector((state: RootState) => state.auth.user);
   const isLoggedIn = user.email && user.nickname;
 
   switch (authenticated) {
