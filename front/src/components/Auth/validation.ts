@@ -1,3 +1,5 @@
+import { SignUpData } from '../../store/auth/types';
+
 const regexEmail: RegExp = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;
 const regexPassword: RegExp = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]+$/;
 const regexNickname: RegExp = /^([가-힣ㄱ-ㅎa-zA-Z0-9._])+$/;

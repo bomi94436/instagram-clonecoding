@@ -1,15 +1,25 @@
 import React from 'react';
 import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
-import { Explore, Home, Login, SignUp } from './components';
+import { Explore, Home, SignUp } from './components';
+import { LoginContainer } from './containers';
+import AuthRoute from './AuthRoute';
 
 function App() {
   return (
     <BrowserRouter>
       <Switch>
-        <Route path="/" exact component={Home} />
-        <Route path="/login" component={Login} />
-        <Route path="/signup" component={SignUp} />
-        <Route path="/explore" component={Explore} />
+        <AuthRoute authenticated="loggedIn" path="/" Component={Home} exact />
+        <Route path="/login" component={LoginContainer} />
+        <AuthRoute
+          authenticated="notLoggedIn"
+          path="/signup"
+          Component={SignUp}
+        />
+        <AuthRoute
+          authenticated="loggedIn"
+          path="/explore"
+          Component={Explore}
+        />
         <Redirect path="*" to="/" />
       </Switch>
     </BrowserRouter>

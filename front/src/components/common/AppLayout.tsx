@@ -1,6 +1,6 @@
 import React from 'react';
+import { NavBarContainer } from '../../containers';
 import { StyledAppLayout } from './styles';
-import NavBar from './NavBar';
 
 interface props {
   children: JSX.Element | JSX.Element[];
@@ -9,7 +9,7 @@ interface props {
 const AppLayout = ({ children }: props) => {
   return (
     <StyledAppLayout>
-      <NavBar />
+      <NavBarContainer />
       <div className="box">
         <div className="children">{children}</div>
       </div>

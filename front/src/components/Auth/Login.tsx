@@ -1,25 +1,23 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import { StyledLink, StyledLogin, Wrapper } from './styles';
 import logo from '../../lib/assets/InstagramLogo.png';
 import useInput from '../../lib/hooks/useInput';
 
-const Login = () => {
+interface props {
+  onSubmitLogin: (
+    e: React.FormEvent<HTMLFormElement>
+  ) => (email: string, password: string) => void;
+}
+
+const Login = ({ onSubmitLogin }: props) => {
   const [email, onChangeEmail] = useInput('');
   const [password, onChangePassword] = useInput('');
-
-  const onSubmitLogin = useCallback(
-    (e: React.FormEvent<HTMLFormElement>): void => {
-      e.preventDefault();
-      console.log(email, password);
-    },
-    [email, password]
-  );
 
   return (
     <Wrapper>
       <StyledLogin>
         <img src={logo} alt="logo" />
-        <form onSubmit={onSubmitLogin}>
+        <form onSubmit={(e) => onSubmitLogin(e)(email, password)}>
           <input
             type="email"
             value={email}
@@ -34,7 +32,7 @@ const Login = () => {
           />
           <button type="submit">로그인</button>
         </form>
-        <span>
+        <span className="link">
           계정이 없으신가요? <StyledLink to="/signup">가입하기</StyledLink>
         </span>
       </StyledLogin>
