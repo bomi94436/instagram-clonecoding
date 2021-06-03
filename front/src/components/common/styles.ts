@@ -18,15 +18,40 @@ export const StyledNavBar = styled.div`
   .content {
     display: flex;
     justify-content: space-between;
+    align-items: center;
 
-    width: 1000px;
+    width: 950px;
+    padding: 0 20px;
     ${media.desktop} {
       width: 100%;
     }
 
-    .profile {
+    .home-button {
+      padding: 0;
+      img {
+        height: 29px;
+      }
+    }
+
+    .icons {
       display: flex;
       align-items: center;
+
+      button:not(:first-of-type) {
+        padding-left: 24px;
+      }
+
+      .upload-button {
+        width: 22px;
+        height: 22px;
+        padding: 0;
+
+        svg {
+          width: 22px;
+          height: 22px;
+          color: black;
+        }
+      }
     }
   }
 `;
@@ -43,17 +68,15 @@ export const StyledAppLayout = styled.div`
   }
 `;
 
-export const StyledMenu = styled.div`
+export const StyledMenu = styled.button`
   position: relative;
   font-size: 14px;
+  padding: 0;
 
   img {
     width: 22px;
     height: 22px;
     border-radius: 70%;
-    :hover {
-      cursor: pointer;
-    }
   }
 
   .opened {

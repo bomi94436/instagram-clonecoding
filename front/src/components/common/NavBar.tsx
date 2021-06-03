@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { StyledNavBar, StyledMenu } from './styles';
 import faker from 'faker';
-import { BsGearWide, CgProfile } from 'react-icons/all';
+import { BsGearWide, CgProfile, BsPlusSquare } from 'react-icons/all';
+import { Link } from 'react-router-dom';
+import logo from '../../lib/assets/InstagramLogo.png';
 
 interface props {
   user: string | null;
@@ -14,11 +16,21 @@ const NavBar = ({ user, onClickLogout }: props) => {
   return (
     <StyledNavBar>
       <div className="content">
-        <div>instagram</div>
+        <button className="home-button">
+          <Link to="/">
+            <img src={logo} alt="logo" />
+          </Link>
+        </button>
 
         <div>검색</div>
 
-        <div className="profile">
+        <div className="icons">
+          <button className="upload-button">
+            <Link to="/upload">
+              <BsPlusSquare />
+            </Link>
+          </button>
+
           <StyledMenu>
             <img
               src={faker.image.avatar()}

@@ -8,15 +8,19 @@ import { myTheme } from './styles/theme';
 import GlobalStyle from './styles/global-style';
 import './index.css';
 import { configureStore } from './store/configStore';
+import { persistStore } from 'redux-persist';
+import { PersistGate } from 'redux-persist/integration/react';
 
 const { config, store } = configureStore();
 config();
+const persistor = persistStore(store);
 
 ReactDOM.render(
   <ThemeProvider theme={myTheme}>
     <Provider store={store}>
       <React.StrictMode>
         <GlobalStyle />
+        <PersistGate loading={null} persistor={persistor} />
         <App />
       </React.StrictMode>
     </Provider>

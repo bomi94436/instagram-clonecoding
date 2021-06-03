@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
-import { Explore, Home, SignUp } from './components';
+import { Explore, Home, SignUp, Upload } from './components';
 import { LoginContainer } from './containers';
 import AuthRoute from './AuthRoute';
 
@@ -20,6 +20,7 @@ function App() {
           path="/explore"
           Component={Explore}
         />
+        <AuthRoute authenticated="loggedIn" path="/upload" Component={Upload} />
         <Redirect path="*" to="/" />
       </Switch>
     </BrowserRouter>
