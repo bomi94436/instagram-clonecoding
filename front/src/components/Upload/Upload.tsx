@@ -1,74 +1,86 @@
-import React, { useCallback, useRef } from 'react';
+import React from 'react';
 import AppLayout from '../common/AppLayout';
-import { Wrapper } from './styles';
+import { StyledCard, StyledTable, Wrapper } from './styles';
 import { UserInfo } from '../../store/auth/types';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../store';
-import { uploadAsync } from '../../store/post/actions';
+import {
+  DragDropContext,
+  Droppable,
+  Draggable,
+  DropResult,
+} from 'react-beautiful-dnd';
+import { UploadedContent } from '../../store/post/types';
 
 interface props {
   user: UserInfo;
+  uploadRef: React.RefObject<HTMLInputElement>;
+  uploaded: UploadedContent[];
+  onClickUpload: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  onChangeUpload: (e: any) => void;
+  onDragEnd: (result: DropResult) => void;
 }
 
-const Upload = ({ user }: props) => {
-  const dispatch = useDispatch();
-  const uploadRef = useRef<HTMLInputElement>(null);
-  const { data } = useSelector((state: RootState) => state.post.upload);
-
-  const onClickImageUpload = useCallback(
-    (e) => {
-      e.preventDefault();
-      if (uploadRef.current !== null) {
-        uploadRef.current.click();
-      }
-    },
-    [uploadRef]
-  );
-
-  const onChangeImages = useCallback(
-    (e) => {
-      e.preventDefault();
-      const uploadFormData = new FormData();
-      new Array(e.target.files.length).fill('').forEach((_, i) => {
-        const type = e.target.files[i].type.split('/')[0];
-        if (type !== 'image' && type !== 'video') {
-          alert('업로드는 이미지나 동영상만 가능합니다.');
-          return;
-        }
-        uploadFormData.append('uploading', e.target.files[i]);
-      });
-
-      dispatch(uploadAsync.request(uploadFormData));
-    },
-    [dispatch]
-  );
-
+const Upload = ({
+  user,
+  uploadRef,
+  uploaded,
+  onClickUpload,
+  onChangeUpload,
+  onDragEnd,
+}: props) => {
   return (
     <AppLayout>
       <Wrapper>
-        <form encType="multipart/form-data">
-          <div>
-            <input
-              type="file"
-              name="file"
-              multiple
-              hidden
-              ref={uploadRef}
-              onChange={onChangeImages}
-            />
-            <button onClick={onClickImageUpload}>이미지 업로드</button>
-          </div>
-        </form>
-
         <div>
-          {data?.data.map((filename: string) => (
-            <img
-              key={filename}
-              src={`http://localhost:3065/${filename}`}
-              style={{ width: '200px' }}
-              alt={filename}
-            />
-          ))}
+          <form encType="multipart/form-data">
+            <div>
+              <input
+                type="file"
+                name="file"
+                multiple
+                hidden
+                ref={uploadRef}
+                onChange={onChangeUpload}
+              />
+              <button className="upload-button" onClick={onClickUpload}>
+                이미지 또는 동영상 추가
+              </button>
+            </div>
+          </form>
+
+          <DragDropContext onDragEnd={onDragEnd}>
+            <Droppable droppableId="droppable">
+              {(provided, snapshot) => (
+                <StyledTable
+                  {...provided.droppableProps}
+                  ref={provided.innerRef}
+                  isDraggingOver={snapshot.isDraggingOver}
+                >
+                  {uploaded?.map((item, index) => (
+                    <Draggable
+                      key={item.id}
+                      draggableId={String(item.id)}
+                      index={index}
+                    >
+                      {(provided, snapshot) => (
+                        <StyledCard
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                          isDragging={snapshot.isDragging}
+                        >
+                          <img
+                            src={`http://localhost:3065/${item.src}`}
+                            alt={item.src}
+                          />
+                        </StyledCard>
+                      )}
+                    </Draggable>
+                  ))}
+                  {provided.placeholder}
+                </StyledTable>
+              )}
+            </Droppable>
+          </DragDropContext>
         </div>
       </Wrapper>
     </AppLayout>

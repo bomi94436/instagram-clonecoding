@@ -37,10 +37,6 @@ export const StyledNavBar = styled.div`
       display: flex;
       align-items: center;
 
-      button:not(:first-of-type) {
-        padding-left: 24px;
-      }
-
       .upload-button {
         width: 22px;
         height: 22px;
@@ -68,10 +64,12 @@ export const StyledAppLayout = styled.div`
   }
 `;
 
-export const StyledMenu = styled.button`
+export const StyledMenu = styled.div`
   position: relative;
   font-size: 14px;
   padding: 0;
+  cursor: pointer;
+  margin-left: 24px;
 
   img {
     width: 22px;

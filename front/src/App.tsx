@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
-import { Explore, Home, SignUp, Upload } from './components';
-import { LoginContainer } from './containers';
+import { Explore, Home, SignUp } from './components';
+import { LoginContainer, UploadContainer } from './containers';
 import AuthRoute from './AuthRoute';
 
 function App() {
@@ -20,7 +20,11 @@ function App() {
           path="/explore"
           Component={Explore}
         />
-        <AuthRoute authenticated="loggedIn" path="/upload" Component={Upload} />
+        <AuthRoute
+          authenticated="loggedIn"
+          path="/upload"
+          Component={UploadContainer}
+        />
         <Redirect path="*" to="/" />
       </Switch>
     </BrowserRouter>
