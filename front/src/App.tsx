@@ -1,12 +1,14 @@
 import React from 'react';
-import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
+import { Redirect, Route, Switch } from 'react-router-dom';
 import { Explore, Home, SignUp } from './components';
 import { LoginContainer, UploadContainer } from './containers';
 import AuthRoute from './AuthRoute';
+import history from './lib/history';
+import { Router } from 'react-router';
 
 function App() {
   return (
-    <BrowserRouter>
+    <Router history={history}>
       <Switch>
         <AuthRoute authenticated="loggedIn" path="/" Component={Home} exact />
         <Route path="/login" component={LoginContainer} />
@@ -27,7 +29,7 @@ function App() {
         />
         <Redirect path="*" to="/" />
       </Switch>
-    </BrowserRouter>
+    </Router>
   );
 }
 

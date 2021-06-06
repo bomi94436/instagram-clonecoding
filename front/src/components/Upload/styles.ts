@@ -12,16 +12,45 @@ export const Wrapper = styled.div`
     width: 100%;
   }
 
-  .upload-button {
-    width: 100%;
-    height: 30px;
+  .left {
+    .upload-button {
+      width: 100%;
+      height: 30px;
 
-    margin: 8px 0;
+      margin-bottom: 8px;
 
-    font-weight: 600;
-    color: white;
-    background-color: ${({ theme }) => theme.background.blue};
-    border-radius: 5px;
+      font-weight: 600;
+      color: white;
+      background-color: ${({ theme }) => theme.background.blue};
+      border-radius: 5px;
+    }
+  }
+
+  .right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    margin-left: 50px;
+
+    textarea {
+      resize: none;
+      font-size: 16px;
+      ::placeholder {
+        font-size: 16px;
+      }
+    }
+
+    button {
+      width: 60px;
+      height: 30px;
+
+      margin-top: 8px;
+
+      font-weight: 600;
+      color: white;
+      background-color: ${({ theme }) => theme.background.blue};
+      border-radius: 5px;
+    }
   }
 `;
 

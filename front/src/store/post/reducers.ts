@@ -1,34 +1,48 @@
-import { PostAction, PostState, ResponseUploadedContent } from './types';
+import { PostAction, PostState, ResponsePicture } from './types';
 import { asyncState } from '../../lib/reducerUtils';
 import produce from 'immer';
 
 const initialState: PostState = {
   upload: asyncState.initial(),
-  uploadedSrc: [],
+  addPost: asyncState.initial(),
+  picture: [],
 };
 
 const post = (state: PostState = initialState, action: PostAction) =>
   produce(state, (draft) => {
     switch (action.type) {
-      case 'post/UPLOAD':
+      case 'post/UPLOAD_PICTURE':
         draft.upload = asyncState.loading();
         break;
-      case 'post/UPLOAD_SUCCESS':
+      case 'post/UPLOAD_PICTURE_SUCCESS':
         draft.upload = asyncState.success(action.payload);
-        action.payload.data.forEach((value: ResponseUploadedContent) => {
-          draft.uploadedSrc.push({
-            id: draft.uploadedSrc.length + 1,
+        action.payload.data.forEach((value: ResponsePicture) => {
+          draft.picture.push({
+            id: draft.picture.length + 1,
             type: value.type,
+            size: value.size,
             src: value.src,
           });
         });
         break;
-      case 'post/UPLOAD_ERROR':
+      case 'post/UPLOAD_PICTURE_ERROR':
+        alert(action.payload.message);
         draft.upload = asyncState.error(action.payload);
         break;
 
       case 'post/REORDER_UPLOADED':
-        draft.uploadedSrc = action.payload;
+        draft.picture = action.payload;
+        break;
+
+      case 'post/ADD_POST':
+        draft.addPost = asyncState.loading();
+        break;
+      case 'post/ADD_POST_SUCCESS':
+        draft.addPost = asyncState.success(action.payload);
+        draft.picture = [];
+        break;
+      case 'post/ADD_POST_ERROR':
+        draft.addPost = asyncState.error(action.payload);
         break;
     }
   });

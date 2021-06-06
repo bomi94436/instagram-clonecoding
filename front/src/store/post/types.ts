@@ -1,23 +1,28 @@
 import { AsyncState } from '../../lib/reducerUtils';
 import { ActionType } from 'typesafe-actions';
-import { reorderUploaded, uploadAsync } from './actions';
+import { uploadPictureAsync, reorderPicture, addPostAsync } from './actions';
 
 export type PostState = {
   upload: AsyncState<ResponseData>;
-  uploadedSrc: UploadedContent[];
+  addPost: AsyncState<ResponseData>;
+  picture: Picture[];
 };
 
 export type PostAction = ActionType<
-  typeof uploadAsync | typeof reorderUploaded
+  typeof uploadPictureAsync | typeof reorderPicture | typeof addPostAsync
 >;
 
-export interface UploadedContent {
-  id: number;
+export interface ResponsePicture {
   type: string;
+  size: number;
   src: string;
 }
 
-export interface ResponseUploadedContent {
-  type: string;
-  src: string;
+export interface Picture extends ResponsePicture {
+  id: number;
+}
+
+export interface PostData {
+  content: string;
+  picture: { id: number; type: string; size: number; src: string }[];
 }

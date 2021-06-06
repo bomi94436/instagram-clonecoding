@@ -3,7 +3,7 @@ import { all, fork } from 'redux-saga/effects';
 import axios from 'axios';
 import { authSaga } from './auth/sagas';
 import auth from './auth/reducers';
-import { postSaga } from './post/saga';
+import { postSaga } from './post/sagas';
 import post from './post/reducers';
 import { persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';

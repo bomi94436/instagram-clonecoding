@@ -1,36 +1,40 @@
 import React from 'react';
 import AppLayout from '../common/AppLayout';
 import { StyledCard, StyledTable, Wrapper } from './styles';
-import { UserInfo } from '../../store/auth/types';
 import {
   DragDropContext,
   Droppable,
   Draggable,
   DropResult,
 } from 'react-beautiful-dnd';
-import { UploadedContent } from '../../store/post/types';
+import { Picture } from '../../store/post/types';
+import useInput from '../../lib/hooks/useInput';
 
 interface props {
-  user: UserInfo;
   uploadRef: React.RefObject<HTMLInputElement>;
-  uploaded: UploadedContent[];
+  picture: Picture[];
   onClickUpload: (e: React.MouseEvent<HTMLButtonElement>) => void;
   onChangeUpload: (e: any) => void;
   onDragEnd: (result: DropResult) => void;
+  onClickShare: (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => (content: string) => void;
 }
 
 const Upload = ({
-  user,
   uploadRef,
-  uploaded,
+  picture,
   onClickUpload,
   onChangeUpload,
   onDragEnd,
+  onClickShare,
 }: props) => {
+  const [content, onChangeContent] = useInput('');
+
   return (
     <AppLayout>
       <Wrapper>
-        <div>
+        <div className="left">
           <form encType="multipart/form-data">
             <div>
               <input
@@ -55,7 +59,7 @@ const Upload = ({
                   ref={provided.innerRef}
                   isDraggingOver={snapshot.isDraggingOver}
                 >
-                  {uploaded?.map((item, index) => (
+                  {picture?.map((item, index) => (
                     <Draggable
                       key={item.id}
                       draggableId={String(item.id)}
@@ -81,6 +85,17 @@ const Upload = ({
               )}
             </Droppable>
           </DragDropContext>
+        </div>
+
+        <div className="right">
+          <textarea
+            cols={70}
+            rows={15}
+            placeholder="오늘 어떤 일이 있었나요?"
+            value={content}
+            onChange={onChangeContent}
+          />
+          <button onClick={(e) => onClickShare(e)(content)}>공유</button>
         </div>
       </Wrapper>
     </AppLayout>
