@@ -6,7 +6,7 @@ import { isLoggedIn } from './middlewares';
 const router = express.Router();
 
 /*
- * /user
+ * /users
  * */
 
 router.post('/', wrapAsync(UserController.signUp));
