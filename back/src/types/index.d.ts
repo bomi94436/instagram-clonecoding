@@ -16,3 +16,14 @@ declare interface ResponseData {
   message: string;
   data?: any;
 }
+
+declare interface PostData {
+  content: string;
+  picture: {
+    id: number;
+    type: string;
+    size: number;
+    ext: string;
+    src: string;
+  }[];
+}

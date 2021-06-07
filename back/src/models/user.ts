@@ -1,4 +1,4 @@
-import { Column, Model, Table } from 'sequelize-typescript';
+import { Column, HasMany, Model, Table } from 'sequelize-typescript';
 import {
   IsDefined,
   IsEmail,
@@ -6,6 +6,7 @@ import {
   Length,
   Matches,
 } from 'class-validator';
+import { Post } from '.';
 
 @Table({
   charset: 'utf8',
@@ -46,4 +47,7 @@ export default class User extends Model {
   @IsOptional()
   @Column
   token: string;
+
+  @HasMany(() => Post)
+  posts: Post[];
 }

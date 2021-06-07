@@ -1,6 +1,7 @@
 import * as express from 'express';
 import { CustomError, wrapAsync } from '../utils';
 import PostController from '../controllers/post';
+import { isLoggedIn } from './middlewares';
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
@@ -40,8 +41,10 @@ const upload = multer({
   },
 });
 
+router.post('/', isLoggedIn, wrapAsync(PostController.createPost));
 router.post(
   '/pictures',
+  isLoggedIn,
   upload.array('upload'),
   wrapAsync(PostController.uploadPicture)
 );

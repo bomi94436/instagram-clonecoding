@@ -1,5 +1,5 @@
 import { Sequelize } from 'sequelize-typescript';
-import User from './user';
+import { Hashtag, Picture, Post, PostHashtag, User } from './index';
 
 const env = process.env.NODE_ENV || 'development';
 const config = require('../config')[env];
@@ -14,6 +14,6 @@ const sequelize = new Sequelize({
   define: config.define,
 });
 
-sequelize.addModels([User]);
+sequelize.addModels([User, Post, Picture, Hashtag, PostHashtag]);
 
 export default sequelize;
