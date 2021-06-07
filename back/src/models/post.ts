@@ -7,7 +7,7 @@ import {
   Model,
   Table,
 } from 'sequelize-typescript';
-import { IsDefined } from 'class-validator';
+import { IsDefined, IsString } from 'class-validator';
 import { Hashtag, Picture, PostHashtag, User } from './index';
 
 @Table({
@@ -18,11 +18,11 @@ export default class Post extends Model {
   @IsDefined({
     message: '내용을 입력해야 합니다.',
   })
+  @IsString()
   @Column
   content: string;
 
   @ForeignKey(() => User)
-  @IsDefined()
   @Column
   userId: number;
 

@@ -6,7 +6,7 @@ import {
   Table,
 } from 'sequelize-typescript';
 import { Post } from '.';
-import { IsDefined } from 'class-validator';
+import { IsDefined, IsInt, IsString } from 'class-validator';
 
 @Table({
   charset: 'utf8',
@@ -14,18 +14,22 @@ import { IsDefined } from 'class-validator';
 })
 export default class Picture extends Model {
   @IsDefined()
+  @IsString()
   @Column
   type: 'image' | 'video';
 
   @IsDefined()
+  @IsInt()
   @Column
   size: number;
 
   @IsDefined()
+  @IsString()
   @Column
   ext: string;
 
   @IsDefined()
+  @IsString()
   @Column
   src: string;
 

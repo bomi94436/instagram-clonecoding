@@ -1,6 +1,5 @@
 import * as express from 'express';
 import PostService from '../services/post';
-import { CustomError } from '../utils';
 
 const PostController = {
   uploadPicture: async (
@@ -25,15 +24,6 @@ const PostController = {
     res: express.Response,
     next: express.NextFunction
   ): Promise<void> => {
-    if (req.body.content.length === 0) {
-      throw new CustomError(400, '게시글의 내용을 작성하여야 합니다.');
-    } else if (req.body.picture.length === 0) {
-      throw new CustomError(
-        400,
-        '게시글을 작성하려면 하나 이상의 이미지나 동영상이 필요합니다.'
-      );
-    }
-
     const post = await PostService.createPost(req.user, req.body);
 
     res.status(201).json(<ResponseData>{
