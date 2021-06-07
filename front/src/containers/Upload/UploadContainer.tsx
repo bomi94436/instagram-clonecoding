@@ -3,6 +3,7 @@ import React, { useCallback, useRef } from 'react';
 import { RootState } from '../../store';
 import {
   addPostAsync,
+  removePicture,
   reorderPicture,
   uploadPictureAsync,
 } from '../../store/post/actions';
@@ -12,7 +13,7 @@ import { Upload } from '../../components';
 const UploadContainer = () => {
   const dispatch = useDispatch();
   const uploadRef = useRef<HTMLInputElement>(null);
-  const picture = useSelector((state: RootState) => state.post.picture);
+  const pictures = useSelector((state: RootState) => state.post.picture);
 
   const onClickUpload = useCallback(
     (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -26,18 +27,21 @@ const UploadContainer = () => {
 
   const onChangeUpload = useCallback(
     (e) => {
+      let status = true;
+
       e.preventDefault();
       const pictureFormData = new FormData();
       new Array(e.target.files.length).fill('').forEach((_, i) => {
         const type = e.target.files[i].type.split('/')[0];
         if (type !== 'image' && type !== 'video') {
           alert('업로드는 이미지나 동영상만 가능합니다.');
+          status = false;
           return;
         }
         pictureFormData.append('upload', e.target.files[i]);
       });
 
-      dispatch(uploadPictureAsync.request(pictureFormData));
+      status && dispatch(uploadPictureAsync.request(pictureFormData));
     },
     [dispatch]
   );
@@ -48,13 +52,13 @@ const UploadContainer = () => {
         return;
       }
 
-      const newItems = Array.from(picture);
+      const newItems = Array.from(pictures);
       const [removed] = newItems.splice(result.source.index, 1);
       newItems.splice(result.destination.index, 0, removed);
 
       dispatch(reorderPicture(newItems));
     },
-    [dispatch, picture]
+    [dispatch, pictures]
   );
 
   const onClickShare = useCallback(
@@ -62,19 +66,38 @@ const UploadContainer = () => {
       content: string
     ) => {
       e.preventDefault();
-      dispatch(addPostAsync.request({ content, picture }));
+      let status = true;
+
+      if (content.length === 0) {
+        alert('게시글의 내용을 작성하여야 합니다.');
+        status = false;
+      } else if (pictures.length === 0) {
+        alert('게시글을 작성하려면 하나 이상의 이미지나 동영상이 필요합니다.');
+        status = false;
+      }
+      status && dispatch(addPostAsync.request({ content, picture: pictures }));
     },
-    [dispatch, picture]
+    [dispatch, pictures]
+  );
+
+  const onClickRemovePicture = useCallback(
+    (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => (
+      pictureId: number
+    ) => {
+      dispatch(removePicture(pictureId));
+    },
+    [dispatch]
   );
 
   return (
     <Upload
       uploadRef={uploadRef}
-      picture={picture}
+      pictures={pictures}
       onClickUpload={onClickUpload}
       onChangeUpload={onChangeUpload}
       onDragEnd={onDragEnd}
       onClickShare={onClickShare}
+      onClickRemovePicture={onClickRemovePicture}
     />
   );
 };

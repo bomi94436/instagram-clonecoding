@@ -9,25 +9,35 @@ import {
 } from 'react-beautiful-dnd';
 import { Picture } from '../../store/post/types';
 import useInput from '../../lib/hooks/useInput';
+import {
+  BsChevronExpand,
+  BsDashCircle,
+  BsFillCameraVideoFill,
+  BsImageFill,
+} from 'react-icons/all';
 
 interface props {
   uploadRef: React.RefObject<HTMLInputElement>;
-  picture: Picture[];
+  pictures: Picture[];
   onClickUpload: (e: React.MouseEvent<HTMLButtonElement>) => void;
   onChangeUpload: (e: any) => void;
   onDragEnd: (result: DropResult) => void;
   onClickShare: (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => (content: string) => void;
+  onClickRemovePicture: (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => (pictureId: number) => void;
 }
 
 const Upload = ({
   uploadRef,
-  picture,
+  pictures,
   onClickUpload,
   onChangeUpload,
   onDragEnd,
   onClickShare,
+  onClickRemovePicture,
 }: props) => {
   const [content, onChangeContent] = useInput('');
 
@@ -59,11 +69,12 @@ const Upload = ({
                   ref={provided.innerRef}
                   isDraggingOver={snapshot.isDraggingOver}
                 >
-                  {picture?.map((item, index) => (
+                  {pictures?.map((picture, index) => (
                     <Draggable
-                      key={item.id}
-                      draggableId={String(item.id)}
+                      key={picture.id}
+                      draggableId={String(picture.id)}
                       index={index}
+                      disableInteractiveElementBlocking
                     >
                       {(provided, snapshot) => (
                         <StyledCard
@@ -72,10 +83,35 @@ const Upload = ({
                           {...provided.dragHandleProps}
                           isDragging={snapshot.isDragging}
                         >
-                          <img
-                            src={`http://localhost:3065/${item.src}`}
-                            alt={item.src}
-                          />
+                          <button>
+                            <BsChevronExpand />
+                          </button>
+
+                          {picture.type === 'image' ? (
+                            <div className="picture">
+                              <img
+                                src={`http://localhost:3065/${picture.src}`}
+                                alt={picture.src}
+                              />
+                              <BsImageFill className="icon" />
+                            </div>
+                          ) : (
+                            <div className="picture">
+                              <video
+                                disablePictureInPicture
+                                preload="metadata"
+                                src={`http://localhost:3065/${picture.src}#t=0.5`}
+                                controlsList="nodownload"
+                              />
+                              <BsFillCameraVideoFill className="icon" />
+                            </div>
+                          )}
+
+                          <button
+                            onClick={(e) => onClickRemovePicture(e)(picture.id)}
+                          >
+                            <BsDashCircle />
+                          </button>
                         </StyledCard>
                       )}
                     </Draggable>

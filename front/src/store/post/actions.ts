@@ -10,6 +10,7 @@ export const ADD_POST_SUCCESS = 'post/ADD_POST_SUCCESS';
 export const ADD_POST_ERROR = 'post/ADD_POST_ERROR';
 
 export const REORDER_UPLOADED = 'post/REORDER_UPLOADED';
+export const REMOVE_PICTURE = 'post/REMOVE_PICTURE';
 
 export const uploadPictureAsync = createAsyncAction(
   UPLOAD_PICTURE,
@@ -26,4 +27,9 @@ export const addPostAsync = createAsyncAction(
 export const reorderPicture = createAction(
   REORDER_UPLOADED,
   (reorderPicture: Picture[]) => reorderPicture
+)();
+
+export const removePicture = createAction(
+  REMOVE_PICTURE,
+  (pictureId: number) => pictureId
 )();

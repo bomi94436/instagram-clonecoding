@@ -16,6 +16,7 @@ function* uploadSaga(action: ReturnType<typeof uploadPictureAsync.request>) {
     const response: AxiosResponse = yield call(uploadAPI, action.payload);
     yield put(uploadPictureAsync.success(response.data));
   } catch (e) {
+    alert(e.response.data.message);
     yield put(uploadPictureAsync.failure(e.response.data));
   }
 }
@@ -29,6 +30,7 @@ function* addPostSaga(action: ReturnType<typeof addPostAsync.request>) {
     alert(response.data.message);
     history.push('/');
   } catch (e) {
+    alert(e.response.data.message);
     yield put(addPostAsync.failure(e.response.data));
   }
 }
