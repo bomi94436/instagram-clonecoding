@@ -1,7 +1,37 @@
 import { Hashtag, Picture, Post, User } from '../models';
 import { createModelAndValidation, CustomError } from '../utils';
+import { Op } from 'sequelize';
 
 const PostService = {
+  readPost: async (lastId: number) => {
+    let where = {};
+
+    if (lastId) {
+      where = {
+        id: { [Op.lt]: lastId },
+      };
+    }
+
+    return await Post.findAll({
+      where,
+      limit: 10,
+      order: [['createdAt', 'DESC']],
+      attributes: {
+        exclude: ['userId'],
+      },
+      include: [
+        {
+          model: User,
+          attributes: ['id', 'nickname'],
+        },
+        {
+          model: Picture,
+          attributes: ['id', 'type', 'src'],
+        },
+      ],
+    });
+  },
+
   createPost: async (userEmail: string, postData: PostData): Promise<Post> => {
     if (postData.content.length === 0) {
       throw new CustomError(400, '게시글의 내용을 작성하여야 합니다.');

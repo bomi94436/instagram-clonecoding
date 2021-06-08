@@ -41,6 +41,7 @@ const upload = multer({
   },
 });
 
+router.get('/', isLoggedIn, wrapAsync(PostController.readPost));
 router.post('/', isLoggedIn, wrapAsync(PostController.createPost));
 router.post(
   '/pictures',
