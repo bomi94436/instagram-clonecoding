@@ -41,4 +41,5 @@ export interface LoginData {
 export interface UserInfo {
   email: string | null;
   nickname: string | null;
+  profile?: string;
 }

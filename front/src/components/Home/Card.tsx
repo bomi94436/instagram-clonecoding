@@ -10,6 +10,9 @@ import {
 import Picker from 'emoji-picker-react';
 import useInput from '../../lib/hooks/useInput';
 import { StyledCard, StyledCardWrapper, StyledSlider } from './styles';
+import CardContent from './CardContent';
+import defaultProfile from '../../lib/assets/default_profile.jpg';
+import Picture from './Picture';
 
 const sliderSettings = {
   dots: true,
@@ -26,7 +29,11 @@ const sliderSettings = {
   ),
 };
 
-const Card = () => {
+interface props {
+  post: any;
+}
+
+const Card = ({ post }: props) => {
   const [comment, onChangeComment, setComment] = useInput('');
   const [openEmojiPicker, setOpenEmojiPicker] = useState<boolean>(false);
 
@@ -35,8 +42,16 @@ const Card = () => {
       <StyledCard>
         <div className="top">
           <div>
-            <img src={faker.image.avatar()} alt={faker.image.avatar()} />
-            <span>{faker.name.findName()}</span>
+            {post.user?.profile ? (
+              <img
+                src={`http://localhost:3065/${post.user.profile}`}
+                alt={post.user.profile}
+              />
+            ) : (
+              <img src={defaultProfile} alt="default profile" />
+            )}
+
+            <span>{post.user.nickname}</span>
           </div>
 
           <button>
@@ -45,9 +60,9 @@ const Card = () => {
         </div>
 
         <StyledSlider {...sliderSettings}>
-          <img src={faker.image.image()} alt={faker.image.image()} />
-          <img src={faker.image.image()} alt={faker.image.image()} />
-          <img src={faker.image.image()} alt={faker.image.image()} />
+          {post.pictures.map((picture: any) => (
+            <Picture key={picture.id} picture={picture} />
+          ))}
         </StyledSlider>
 
         <div className="content">
@@ -72,8 +87,8 @@ const Card = () => {
           </div>
 
           <div className="text">
-            <span>{faker.name.findName()} </span>
-            내용내용내용
+            <span>{post.user.nickname} </span>
+            <CardContent content={post.content} />
           </div>
 
           <div className="time">7시간 전</div>

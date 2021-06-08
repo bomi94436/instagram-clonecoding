@@ -10,6 +10,7 @@ const myTheme: DefaultTheme = {
     gray: '#8e8e8e',
     blue: '#0095f6',
     red: '#ed4956',
+    navy: '#00376B',
   },
   border: {
     gray: '#dadada',

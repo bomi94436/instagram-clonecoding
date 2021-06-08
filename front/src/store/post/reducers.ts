@@ -4,7 +4,8 @@ import produce from 'immer';
 
 const initialState: PostState = {
   upload: asyncState.initial(),
-  addPost: asyncState.initial(),
+  createPost: asyncState.initial(),
+  readPost: asyncState.initial(),
   picture: [],
 };
 
@@ -34,18 +35,28 @@ const post = (state: PostState = initialState, action: PostAction) =>
         draft.picture = action.payload;
         break;
 
-      case 'post/ADD_POST':
-        draft.addPost = asyncState.loading();
+      case 'post/CREATE_POST':
+        draft.createPost = asyncState.loading();
         break;
-      case 'post/ADD_POST_SUCCESS':
-        draft.addPost = asyncState.success(action.payload);
+      case 'post/CREATE_POST_SUCCESS':
+        draft.createPost = asyncState.success(action.payload);
         draft.picture = [];
         break;
-      case 'post/ADD_POST_ERROR':
-        draft.addPost = asyncState.error(action.payload);
+      case 'post/CREATE_POST_ERROR':
+        draft.createPost = asyncState.error(action.payload);
         break;
 
-      case 'post/REMOVE_PICTURE':
+      case 'post/READ_POST':
+        draft.readPost = asyncState.loading();
+        break;
+      case 'post/READ_POST_SUCCESS':
+        draft.readPost = asyncState.success(action.payload);
+        break;
+      case 'post/READ_POST_ERROR':
+        draft.readPost = asyncState.error(action.payload);
+        break;
+
+      case 'post/DELETE_PICTURE':
         draft.picture = draft.picture.filter((v) => v.id !== action.payload);
         break;
     }

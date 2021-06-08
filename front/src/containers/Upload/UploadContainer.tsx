@@ -2,8 +2,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import React, { useCallback, useRef } from 'react';
 import { RootState } from '../../store';
 import {
-  addPostAsync,
-  removePicture,
+  createPostAsync,
+  deletePicture,
   reorderPicture,
   uploadPictureAsync,
 } from '../../store/post/actions';
@@ -75,7 +75,8 @@ const UploadContainer = () => {
         alert('게시글을 작성하려면 하나 이상의 이미지나 동영상이 필요합니다.');
         status = false;
       }
-      status && dispatch(addPostAsync.request({ content, picture: pictures }));
+      status &&
+        dispatch(createPostAsync.request({ content, picture: pictures }));
     },
     [dispatch, pictures]
   );
@@ -84,7 +85,7 @@ const UploadContainer = () => {
     (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => (
       pictureId: number
     ) => {
-      dispatch(removePicture(pictureId));
+      dispatch(deletePicture(pictureId));
     },
     [dispatch]
   );

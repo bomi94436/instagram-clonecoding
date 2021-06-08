@@ -1,28 +1,36 @@
 import React from 'react';
-import faker from 'faker';
 import AppLayout from '../common/AppLayout';
 import { Wrapper } from './styles';
 import Card from './Card';
 import { UserInfo } from '../../store/auth/types';
+import defaultProfile from '../../lib/assets/default_profile.jpg';
 
 interface props {
   user: UserInfo;
+  posts: any;
 }
 
-const Home = ({ user }: props) => {
+const Home = ({ user, posts }: props) => {
   return (
     <AppLayout>
       <Wrapper>
         <div className="left">
-          <Card />
-          <Card />
-          <Card />
+          {posts?.map((post: any) => (
+            <Card key={post.id} post={post} />
+          ))}
         </div>
 
         <div className="right">
           <div className="info">
             <div className="profile">
-              <img src={faker.image.avatar()} alt={faker.image.avatar()} />
+              {user?.profile ? (
+                <img
+                  src={`http://localhost:3065/${user.profile}`}
+                  alt={user.profile}
+                />
+              ) : (
+                <img src={defaultProfile} alt="default profile" />
+              )}
               <span>{user.nickname}</span>
             </div>
 

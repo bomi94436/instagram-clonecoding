@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { StyledNavBar, StyledMenu } from './styles';
-import faker from 'faker';
 import { BsGearWide, CgProfile, BsPlusSquare } from 'react-icons/all';
 import { Link } from 'react-router-dom';
 import logo from '../../lib/assets/InstagramLogo.png';
+import defaultProfile from '../../lib/assets/default_profile.jpg';
+import { UserInfo } from '../../store/auth/types';
 
 interface props {
-  user: string | null;
+  user: UserInfo;
   onClickLogout: () => void;
 }
 
@@ -32,11 +33,19 @@ const NavBar = ({ user, onClickLogout }: props) => {
           </button>
 
           <StyledMenu>
-            <img
-              src={faker.image.avatar()}
-              alt={faker.image.avatar()}
-              onClick={() => setOpenProfileMenu((prev) => (prev = !prev))}
-            />
+            {user?.profile ? (
+              <img
+                src={`http://localhost:3065/${user.profile}`}
+                alt={user.profile}
+                onClick={() => setOpenProfileMenu((prev) => (prev = !prev))}
+              />
+            ) : (
+              <img
+                src={defaultProfile}
+                alt="default profile"
+                onClick={() => setOpenProfileMenu((prev) => (prev = !prev))}
+              />
+            )}
 
             <div className={`menu${openProfileMenu ? ' opened' : ' closed'}`}>
               <button>

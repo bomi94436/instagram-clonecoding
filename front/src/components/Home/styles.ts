@@ -3,6 +3,7 @@ import { media } from '../../styles/media';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
+import { Link } from 'react-router-dom';
 
 export const Wrapper = styled.div`
   display: flex;
@@ -81,12 +82,12 @@ export const StyledCard = styled.div`
   border: 1px solid ${({ theme }) => theme.border.gray};
   border-radius: 5px;
   background-color: white;
-  //overflow: hidden;
   margin-bottom: 60px;
 
   .view {
     width: 600px;
-    object-fit: contain;
+    height: 600px;
+    background-color: lightgray;
   }
 
   .top {
@@ -153,7 +154,7 @@ export const StyledCard = styled.div`
     }
 
     .text {
-      span {
+      span:first-child {
         font-weight: 600;
       }
     }
@@ -216,6 +217,15 @@ export const StyledCard = styled.div`
 
 export const StyledSlider = styled(Slider)`
   position: relative;
+  width: 600px;
+  height: 600px;
+
+  img,
+  video {
+    width: 600px;
+    height: 600px;
+    object-fit: scale-down;
+  }
 
   .slick-arrow {
     opacity: 0.8;
@@ -269,4 +279,9 @@ export const StyledSlider = styled(Slider)`
     opacity: 1;
     background-color: ${({ theme }) => theme.fontColor.blue};
   }
+`;
+
+export const StyledLink = styled(Link)`
+  text-decoration: none;
+  color: ${({ theme }) => theme.fontColor.navy};
 `;
