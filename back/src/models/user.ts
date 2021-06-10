@@ -1,4 +1,10 @@
-import { Column, Model, Table } from 'sequelize-typescript';
+import {
+  BelongsToMany,
+  Column,
+  HasMany,
+  Model,
+  Table,
+} from 'sequelize-typescript';
 import {
   IsDefined,
   IsEmail,
@@ -6,6 +12,7 @@ import {
   Length,
   Matches,
 } from 'class-validator';
+import { Follow, Post } from '.';
 
 @Table({
   charset: 'utf8',
@@ -46,4 +53,15 @@ export default class User extends Model {
   @IsOptional()
   @Column
   token: string;
+
+  @HasMany(() => Post)
+  posts: Post[];
+
+  // 누군가 -> 나
+  @BelongsToMany(() => User, () => Follow, 'followingId')
+  followers: Follow[];
+
+  // 나 -> 누군가
+  @BelongsToMany(() => User, () => Follow, 'followerId')
+  followings: Follow[];
 }

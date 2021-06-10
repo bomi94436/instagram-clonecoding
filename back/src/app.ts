@@ -4,9 +4,11 @@ const morgan = require('morgan');
 const dotenv = require('dotenv');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
+const path = require('path');
 
 import { CustomError } from './utils';
 const userRouter = require('./routes/user');
+const postRouter = require('./routes/post');
 
 const app = express();
 app.use(morgan('dev'));
@@ -30,10 +32,15 @@ app.use(
     credentials: true,
   })
 );
+
+app.use('/', express.static(path.join(__dirname, '../uploads')));
+
 app.get('/', (req: express.Request, res: express.Response) => {
   res.status(200).send('hello?');
 });
-app.use('/user', userRouter);
+
+app.use('/users', userRouter);
+app.use('/posts', postRouter);
 
 app.use(
   (
