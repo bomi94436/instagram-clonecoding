@@ -6,14 +6,14 @@ import { clearAutoLogin, logoutAsync } from '../../store/auth/actions';
 
 const NavBarContainer = () => {
   const dispatch = useDispatch();
-  const { nickname } = useSelector((state: RootState) => state.auth.user);
+  const user = useSelector((state: RootState) => state.auth.user);
 
   const onClickLogout = useCallback((): void => {
     dispatch(logoutAsync.request());
     dispatch(clearAutoLogin());
   }, [dispatch]);
 
-  return <NavBar user={nickname} onClickLogout={onClickLogout} />;
+  return <NavBar user={user} onClickLogout={onClickLogout} />;
 };
 
 export default NavBarContainer;

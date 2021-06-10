@@ -10,33 +10,50 @@ import {
 import Picker from 'emoji-picker-react';
 import useInput from '../../lib/hooks/useInput';
 import { StyledCard, StyledCardWrapper, StyledSlider } from './styles';
+import CardContent from './CardContent';
+import defaultProfile from '../../lib/assets/default_profile.jpg';
+import Video from './Video';
 
-const sliderSettings = {
-  dots: true,
-  infinite: false,
-  speed: 500,
-  arrows: true,
-  slidesToShow: 1,
-  slidesToScroll: 1,
-  className: 'view',
-  appendDots: (dots: JSX.Element) => (
-    <div>
-      <ul style={{ margin: '5px', padding: '0' }}>{dots}</ul>
-    </div>
-  ),
-};
+interface props {
+  post: any;
+}
 
-const Card = () => {
+const Card = ({ post }: props) => {
   const [comment, onChangeComment, setComment] = useInput('');
   const [openEmojiPicker, setOpenEmojiPicker] = useState<boolean>(false);
+  const [current, setCurrent] = useState<number>(0);
+
+  const sliderSettings = {
+    dots: true,
+    infinite: false,
+    speed: 500,
+    arrows: true,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    className: 'view',
+    appendDots: (dots: JSX.Element) => (
+      <div>
+        <ul style={{ margin: '5px', padding: '0' }}>{dots}</ul>
+      </div>
+    ),
+    afterChange: (current: number) => setCurrent(current),
+  };
 
   return (
     <StyledCardWrapper>
       <StyledCard>
         <div className="top">
           <div>
-            <img src={faker.image.avatar()} alt={faker.image.avatar()} />
-            <span>{faker.name.findName()}</span>
+            {post.user?.profile ? (
+              <img
+                src={`http://localhost:3065/${post.user.profile}`}
+                alt={post.user.profile}
+              />
+            ) : (
+              <img src={defaultProfile} alt="default profile" />
+            )}
+
+            <span>{post.user.nickname}</span>
           </div>
 
           <button>
@@ -45,9 +62,17 @@ const Card = () => {
         </div>
 
         <StyledSlider {...sliderSettings}>
-          <img src={faker.image.image()} alt={faker.image.image()} />
-          <img src={faker.image.image()} alt={faker.image.image()} />
-          <img src={faker.image.image()} alt={faker.image.image()} />
+          {post.pictures.map((picture: any) =>
+            picture.type === 'image' ? (
+              <img
+                key={picture.id}
+                src={`http://localhost:3065/${picture.src}`}
+                alt={picture.src}
+              />
+            ) : (
+              <Video key={picture.id} picture={picture} current={current} />
+            )
+          )}
         </StyledSlider>
 
         <div className="content">
@@ -72,8 +97,8 @@ const Card = () => {
           </div>
 
           <div className="text">
-            <span>{faker.name.findName()} </span>
-            내용내용내용
+            <span>{post.user.nickname} </span>
+            <CardContent content={post.content} />
           </div>
 
           <div className="time">7시간 전</div>

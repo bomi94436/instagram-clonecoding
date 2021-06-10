@@ -11,19 +11,23 @@ import {
   LOGOUT,
 } from './actions';
 import { LoginData, SignUpData } from './types';
+import history from '../../lib/history';
 
-const signUpAPI = (data: SignUpData) => axios.post('/user', data);
+const signUpAPI = (data: SignUpData) => axios.post('/users', data);
 
 function* signUpSaga(action: ReturnType<typeof signUpAsync.request>) {
   try {
     const response: AxiosResponse = yield call(signUpAPI, action.payload);
+    alert(response.data.message);
+    history.push('/login');
     yield put(signUpAsync.success(response.data));
   } catch (e) {
+    alert(e.response.data.message);
     yield put(signUpAsync.failure(e.response.data));
   }
 }
 
-const loginAPI = (data: LoginData) => axios.post('/user/login', data);
+const loginAPI = (data: LoginData) => axios.post('/users/login', data);
 
 function* loginSaga(action: ReturnType<typeof loginAsync.request>) {
   try {
@@ -33,11 +37,12 @@ function* loginSaga(action: ReturnType<typeof loginAsync.request>) {
     ] = `${response.data.data.token}`;
     yield put(loginAsync.success(response.data));
   } catch (e) {
+    alert(e.response.data.message);
     yield put(loginAsync.failure(e.response.data));
   }
 }
 
-const silentRefreshAPI = () => axios.get('/user/silent-refresh');
+const silentRefreshAPI = () => axios.get('/users/silent-refresh');
 
 function* silentRefreshSaga() {
   try {
@@ -51,7 +56,7 @@ function* silentRefreshSaga() {
   }
 }
 
-const logoutAPI = () => axios.get('/user/logout');
+const logoutAPI = () => axios.get('/users/logout');
 
 function* logoutSaga() {
   try {

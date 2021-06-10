@@ -1,19 +1,15 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { StyledLink, StyledLogin, Wrapper } from './styles';
 import logo from '../../lib/assets/InstagramLogo.png';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { signUpAsync } from '../../store/auth/actions';
-import { RootState } from '../../store';
-import { useHistory } from 'react-router-dom';
 import { AiFillEye, AiFillEyeInvisible } from 'react-icons/all';
 import { validateSignUpData } from './validation';
 import { SignUpData } from '../../store/auth/types';
 
 const SignUp = () => {
   const dispatch = useDispatch();
-  const { data, error } = useSelector((state: RootState) => state.auth.signup);
 
-  const history = useHistory();
   const [form, setForm] = useState<SignUpData>({
     email: '',
     password: '',
@@ -53,15 +49,6 @@ const SignUp = () => {
   const onClickEye = useCallback(() => {
     setViewPassword((prev) => (prev = !prev));
   }, []);
-
-  useEffect(() => {
-    if (data) {
-      alert(data.message);
-      history.push('/');
-    } else if (error) {
-      alert(error.message);
-    }
-  }, [history, data, error]);
 
   useEffect(() => {
     if (

@@ -3,6 +3,7 @@ import { media } from '../../styles/media';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
+import { Link } from 'react-router-dom';
 
 export const Wrapper = styled.div`
   display: flex;
@@ -81,12 +82,12 @@ export const StyledCard = styled.div`
   border: 1px solid ${({ theme }) => theme.border.gray};
   border-radius: 5px;
   background-color: white;
-  //overflow: hidden;
   margin-bottom: 60px;
 
   .view {
     width: 600px;
-    object-fit: contain;
+    height: 600px;
+    background-color: lightgray;
   }
 
   .top {
@@ -153,7 +154,7 @@ export const StyledCard = styled.div`
     }
 
     .text {
-      span {
+      span:first-child {
         font-weight: 600;
       }
     }
@@ -216,6 +217,15 @@ export const StyledCard = styled.div`
 
 export const StyledSlider = styled(Slider)`
   position: relative;
+  width: 600px;
+  height: 600px;
+
+  img,
+  video {
+    width: 600px;
+    height: 600px;
+    object-fit: scale-down;
+  }
 
   .slick-arrow {
     opacity: 0.8;
@@ -268,5 +278,34 @@ export const StyledSlider = styled(Slider)`
   li.slick-active button::before {
     opacity: 1;
     background-color: ${({ theme }) => theme.fontColor.blue};
+  }
+`;
+
+export const StyledLink = styled(Link)`
+  text-decoration: none;
+  color: ${({ theme }) => theme.fontColor.navy};
+`;
+
+export const StyledButton = styled.button<{ isPlayed: boolean }>`
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  width: 600px;
+  height: 600px;
+
+  padding: 0;
+  color: white;
+  opacity: ${(props) => (props.isPlayed === false ? 0.8 : 0)};
+  filter: drop-shadow(0 0 1px gray);
+  transition: all 0.3s ease;
+
+  svg {
+    width: 70px;
+    height: 70px;
   }
 `;
