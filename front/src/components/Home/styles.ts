@@ -285,3 +285,27 @@ export const StyledLink = styled(Link)`
   text-decoration: none;
   color: ${({ theme }) => theme.fontColor.navy};
 `;
+
+export const StyledButton = styled.button<{ isPlayed: boolean }>`
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  width: 600px;
+  height: 600px;
+
+  padding: 0;
+  color: white;
+  opacity: ${(props) => (props.isPlayed === false ? 0.8 : 0)};
+  filter: drop-shadow(0 0 1px gray);
+  transition: all 0.3s ease;
+
+  svg {
+    width: 70px;
+    height: 70px;
+  }
+`;

@@ -12,22 +12,7 @@ import useInput from '../../lib/hooks/useInput';
 import { StyledCard, StyledCardWrapper, StyledSlider } from './styles';
 import CardContent from './CardContent';
 import defaultProfile from '../../lib/assets/default_profile.jpg';
-import Picture from './Picture';
-
-const sliderSettings = {
-  dots: true,
-  infinite: false,
-  speed: 500,
-  arrows: true,
-  slidesToShow: 1,
-  slidesToScroll: 1,
-  className: 'view',
-  appendDots: (dots: JSX.Element) => (
-    <div>
-      <ul style={{ margin: '5px', padding: '0' }}>{dots}</ul>
-    </div>
-  ),
-};
+import Video from './Video';
 
 interface props {
   post: any;
@@ -36,6 +21,23 @@ interface props {
 const Card = ({ post }: props) => {
   const [comment, onChangeComment, setComment] = useInput('');
   const [openEmojiPicker, setOpenEmojiPicker] = useState<boolean>(false);
+  const [current, setCurrent] = useState<number>(0);
+
+  const sliderSettings = {
+    dots: true,
+    infinite: false,
+    speed: 500,
+    arrows: true,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    className: 'view',
+    appendDots: (dots: JSX.Element) => (
+      <div>
+        <ul style={{ margin: '5px', padding: '0' }}>{dots}</ul>
+      </div>
+    ),
+    afterChange: (current: number) => setCurrent(current),
+  };
 
   return (
     <StyledCardWrapper>
@@ -60,9 +62,17 @@ const Card = ({ post }: props) => {
         </div>
 
         <StyledSlider {...sliderSettings}>
-          {post.pictures.map((picture: any) => (
-            <Picture key={picture.id} picture={picture} />
-          ))}
+          {post.pictures.map((picture: any) =>
+            picture.type === 'image' ? (
+              <img
+                key={picture.id}
+                src={`http://localhost:3065/${picture.src}`}
+                alt={picture.src}
+              />
+            ) : (
+              <Video key={picture.id} picture={picture} current={current} />
+            )
+          )}
         </StyledSlider>
 
         <div className="content">

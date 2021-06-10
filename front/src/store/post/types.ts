@@ -5,20 +5,20 @@ import {
   reorderPicture,
   createPostAsync,
   deletePicture,
-  readPostAsync,
+  readHomePostAsync,
 } from './actions';
 
 export type PostState = {
   upload: AsyncState<ResponseData>;
   createPost: AsyncState<ResponseData>;
-  readPost: AsyncState<ResponseData>;
+  readHomePost: AsyncState<ResponseData>;
   picture: Picture[];
 };
 
 export type PostAction = ActionType<
   | typeof uploadPictureAsync
   | typeof createPostAsync
-  | typeof readPostAsync
+  | typeof readHomePostAsync
   | typeof reorderPicture
   | typeof deletePicture
 >;
@@ -39,7 +39,7 @@ export interface createPostData {
   picture: Picture[];
 }
 
-export interface readPostParams {
+export interface readHomePostParams {
   lastId?: number;
   search?: string;
 }

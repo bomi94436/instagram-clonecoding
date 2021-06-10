@@ -11,7 +11,6 @@ import { Login } from '../../components';
 
 const LoginContainer = () => {
   const dispatch = useDispatch();
-  const { error } = useSelector((state: RootState) => state.auth.login);
   const user = useSelector((state: RootState) => state.auth.user);
 
   const history = useHistory();
@@ -36,10 +35,8 @@ const LoginContainer = () => {
       dispatch(setAutoLogin({ timer }));
 
       history.push('/');
-    } else if (error) {
-      alert(error.message);
     }
-  }, [dispatch, history, user, error]);
+  }, [dispatch, history, user]);
 
   return <Login onSubmitLogin={onSubmitLogin} />;
 };

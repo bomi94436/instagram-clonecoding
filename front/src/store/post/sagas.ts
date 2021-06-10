@@ -5,10 +5,10 @@ import {
   createPostAsync,
   UPLOAD_PICTURE,
   uploadPictureAsync,
-  readPostAsync,
-  READ_POST,
+  readHomePostAsync,
+  READ_HOME_POST,
 } from './actions';
-import { createPostData, readPostParams } from './types';
+import { createPostData, readHomePostParams } from './types';
 import history from '../../lib/history';
 
 const uploadAPI = (data: FormData) => axios.post('/posts/pictures', data);
@@ -37,20 +37,21 @@ function* createPostSaga(action: ReturnType<typeof createPostAsync.request>) {
   }
 }
 
-const readPostAPI = (params: readPostParams) => axios.get('/posts', { params });
+const readPostAPI = (params: readHomePostParams) =>
+  axios.get('/posts/following', { params });
 
-function* readPostSaga(action: ReturnType<typeof readPostAsync.request>) {
+function* readPostSaga(action: ReturnType<typeof readHomePostAsync.request>) {
   try {
     const response: AxiosResponse = yield call(readPostAPI, action.payload);
-    yield put(readPostAsync.success(response.data));
+    yield put(readHomePostAsync.success(response.data));
   } catch (e) {
     alert(e.response.data.message);
-    yield put(readPostAsync.failure(e.response.data));
+    yield put(readHomePostAsync.failure(e.response.data));
   }
 }
 
 export function* postSaga() {
   yield takeEvery(UPLOAD_PICTURE, uploadSaga);
   yield takeEvery(CREATE_POST, createPostSaga);
-  yield takeEvery(READ_POST, readPostSaga);
+  yield takeEvery(READ_HOME_POST, readPostSaga);
 }

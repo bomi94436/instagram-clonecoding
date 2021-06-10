@@ -37,6 +37,7 @@ function* loginSaga(action: ReturnType<typeof loginAsync.request>) {
     ] = `${response.data.data.token}`;
     yield put(loginAsync.success(response.data));
   } catch (e) {
+    alert(e.response.data.message);
     yield put(loginAsync.failure(e.response.data));
   }
 }
