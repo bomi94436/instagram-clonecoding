@@ -11,7 +11,24 @@ const PostController = {
 
     res.status(200).json(<ResponseData>{
       success: true,
-      message: '게시글 조회가 완료되었습니다.',
+      message: 'explore 게시글 조회가 완료되었습니다.',
+      data: posts,
+    });
+  },
+
+  readHomePost: async (
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction
+  ): Promise<void> => {
+    const posts = await PostService.readHomePost(
+      req.user,
+      Number(req.query.lastId)
+    );
+
+    res.status(200).json(<ResponseData>{
+      success: true,
+      message: 'home 게시글 조회가 완료되었습니다.',
       data: posts,
     });
   },

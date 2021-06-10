@@ -1,4 +1,4 @@
-import { Hashtag, Picture, Post, User } from '../models';
+import { Follow, Hashtag, Picture, Post, User } from '../models';
 import { createModelAndValidation, CustomError } from '../utils';
 import { Op } from 'sequelize';
 
@@ -11,6 +11,60 @@ const PostService = {
         id: { [Op.lt]: lastId },
       };
     }
+
+    return await Post.findAll({
+      where,
+      limit: 10,
+      order: [['createdAt', 'DESC']],
+      attributes: {
+        exclude: ['userId'],
+      },
+      include: [
+        {
+          model: User,
+          attributes: ['id', 'nickname'],
+        },
+        {
+          model: Picture,
+          attributes: ['id', 'type', 'src'],
+        },
+      ],
+    });
+  },
+
+  readHomePost: async (userEmail: string, lastId: number) => {
+    let where = {};
+    const or = [];
+
+    if (lastId) {
+      where = {
+        id: { [Op.lt]: lastId },
+      };
+    }
+
+    const user = await User.findOne({
+      where: {
+        email: userEmail,
+      },
+    });
+    or.push({ userId: user.id });
+
+    const followings = await Follow.findAll({
+      where: {
+        followerId: user.id,
+      },
+    });
+
+    if (followings.length > 0) {
+      followings.forEach((v) => {
+        or.push({ userId: v.followingId });
+      });
+    }
+
+    where = {
+      ...where,
+      [Op.or]: or,
+    };
 
     return await Post.findAll({
       where,

@@ -42,6 +42,7 @@ const upload = multer({
 });
 
 router.get('/', isLoggedIn, wrapAsync(PostController.readPost));
+router.get('/following', isLoggedIn, wrapAsync(PostController.readHomePost));
 router.post('/', isLoggedIn, wrapAsync(PostController.createPost));
 router.post(
   '/pictures',
