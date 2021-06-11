@@ -1,7 +1,16 @@
 import React, { useState } from 'react';
 import { StyledNavBar, StyledMenu } from './styles';
-import { BsGearWide, CgProfile, BsPlusSquare } from 'react-icons/all';
-import { Link } from 'react-router-dom';
+import {
+  BsGearWide,
+  CgProfile,
+  BsPlusSquare,
+  BsPlusSquareFill,
+  BsHouse,
+  BsHouseFill,
+  BsCursorFill,
+  BsCursor,
+} from 'react-icons/all';
+import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 import logo from '../../lib/assets/InstagramLogo.png';
 import defaultProfile from '../../lib/assets/default_profile.jpg';
 import { UserInfo } from '../../store/auth/types';
@@ -11,7 +20,11 @@ interface props {
   onClickLogout: () => void;
 }
 
-const NavBar = ({ user, onClickLogout }: props) => {
+const NavBar = ({
+  user,
+  onClickLogout,
+  location,
+}: props & RouteComponentProps) => {
   const [openProfileMenu, setOpenProfileMenu] = useState<boolean>(false);
 
   return (
@@ -26,9 +39,29 @@ const NavBar = ({ user, onClickLogout }: props) => {
         <div>검색</div>
 
         <div className="icons">
-          <button className="upload-button">
+          <button className="button">
+            <Link to="/">
+              {location.pathname === '/' ? <BsHouseFill /> : <BsHouse />}
+            </Link>
+          </button>
+
+          <button className="button">
+            <Link to="/explore">
+              {location.pathname === '/explore' ? (
+                <BsCursorFill />
+              ) : (
+                <BsCursor />
+              )}
+            </Link>
+          </button>
+
+          <button className="button">
             <Link to="/upload">
-              <BsPlusSquare />
+              {location.pathname === '/upload' ? (
+                <BsPlusSquareFill />
+              ) : (
+                <BsPlusSquare />
+              )}
             </Link>
           </button>
 
@@ -65,4 +98,4 @@ const NavBar = ({ user, onClickLogout }: props) => {
   );
 };
 
-export default NavBar;
+export default withRouter(NavBar);

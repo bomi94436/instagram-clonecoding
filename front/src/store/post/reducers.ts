@@ -6,6 +6,7 @@ const initialState: PostState = {
   upload: asyncState.initial(),
   createPost: asyncState.initial(),
   readHomePost: asyncState.initial(),
+  readPost: asyncState.initial(),
   picture: [],
 };
 
@@ -54,6 +55,16 @@ const post = (state: PostState = initialState, action: PostAction) =>
         break;
       case 'post/READ_HOME_POST_ERROR':
         draft.readHomePost = asyncState.error(action.payload);
+        break;
+
+      case 'post/READ_POST':
+        draft.readPost = asyncState.loading();
+        break;
+      case 'post/READ_POST_SUCCESS':
+        draft.readPost = asyncState.success(action.payload);
+        break;
+      case 'post/READ_POST_ERROR':
+        draft.readPost = asyncState.error(action.payload);
         break;
 
       case 'post/DELETE_PICTURE':

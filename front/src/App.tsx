@@ -1,7 +1,12 @@
 import React from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
-import { Explore, SignUp, Tags } from './components';
-import { HomeContainer, LoginContainer, UploadContainer } from './containers';
+import { SignUp, Tags } from './components';
+import {
+  ExploreContainer,
+  HomeContainer,
+  LoginContainer,
+  UploadContainer,
+} from './containers';
 import AuthRoute from './AuthRoute';
 import history from './lib/history';
 import { Router } from 'react-router';
@@ -30,7 +35,7 @@ function App() {
         <AuthRoute
           authenticated="loggedIn"
           path="/explore"
-          Component={Explore}
+          Component={ExploreContainer}
         />
         <AuthRoute
           authenticated="loggedIn"

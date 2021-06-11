@@ -4,10 +4,11 @@ import { Wrapper } from './styles';
 import Card from './Card';
 import { UserInfo } from '../../store/auth/types';
 import defaultProfile from '../../lib/assets/default_profile.jpg';
+import { Post } from '../../store/post/types';
 
 interface props {
   user: UserInfo;
-  posts: any;
+  posts: Post[];
 }
 
 const Home = ({ user, posts }: props) => {
@@ -15,7 +16,7 @@ const Home = ({ user, posts }: props) => {
     <AppLayout>
       <Wrapper>
         <div className="left">
-          {posts?.map((post: any) => (
+          {posts?.map((post: Post) => (
             <Card key={post.id} post={post} />
           ))}
         </div>

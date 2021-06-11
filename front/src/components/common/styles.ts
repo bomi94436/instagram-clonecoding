@@ -37,10 +37,13 @@ export const StyledNavBar = styled.div`
       display: flex;
       align-items: center;
 
-      .upload-button {
+      .button {
         width: 22px;
         height: 22px;
         padding: 0;
+        &:not(:first-child) {
+          margin-left: 24px;
+        }
 
         svg {
           width: 22px;
@@ -56,6 +59,7 @@ export const StyledAppLayout = styled.div`
   .box {
     padding-top: 84px;
     background-color: rgb(250, 250, 250);
+    min-height: 100vh;
 
     .children {
       display: flex;
