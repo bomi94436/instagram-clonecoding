@@ -2,6 +2,7 @@ import {
   BelongsTo,
   BelongsToMany,
   Column,
+  Default,
   ForeignKey,
   HasMany,
   Model,
@@ -9,6 +10,7 @@ import {
 } from 'sequelize-typescript';
 import { IsDefined, IsString } from 'class-validator';
 import { Hashtag, Picture, PostHashtag, User } from './index';
+import PostLike from './postlike';
 
 @Table({
   charset: 'utf8',
@@ -34,4 +36,11 @@ export default class Post extends Model {
 
   @BelongsToMany(() => Hashtag, () => PostHashtag)
   hashtags: Hashtag[];
+
+  @Default(0)
+  @Column
+  likeCount: number;
+
+  @BelongsToMany(() => User, () => PostLike)
+  likedUser: User[];
 }

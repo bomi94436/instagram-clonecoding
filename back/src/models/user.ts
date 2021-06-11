@@ -13,6 +13,7 @@ import {
   Matches,
 } from 'class-validator';
 import { Follow, Post } from '.';
+import PostLike from './postlike';
 
 @Table({
   charset: 'utf8',
@@ -64,4 +65,7 @@ export default class User extends Model {
   // 나 -> 누군가
   @BelongsToMany(() => User, () => Follow, 'followerId')
   followings: Follow[];
+
+  @BelongsToMany(() => Post, () => PostLike)
+  likedPost: Post[];
 }

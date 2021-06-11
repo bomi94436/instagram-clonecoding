@@ -1,6 +1,7 @@
 import { Follow, Hashtag, Picture, Post, User } from '../models';
 import { createModelAndValidation, CustomError } from '../utils';
-import { Op } from 'sequelize';
+import { Op, Transaction } from 'sequelize';
+import sequelize from '../models/sequelize';
 
 const PostService = {
   readPost: async (lastId: number) => {
@@ -15,15 +16,14 @@ const PostService = {
     return await Post.findAll({
       where,
       limit: 10,
-      order: [['createdAt', 'DESC']],
+      order: [
+        ['createdAt', 'DESC'],
+        [{ model: Picture, as: 'pictures' }, 'id', 'ASC'],
+      ],
       attributes: {
-        exclude: ['userId'],
+        exclude: ['content', 'userId'],
       },
       include: [
-        {
-          model: User,
-          attributes: ['id', 'nickname'],
-        },
         {
           model: Picture,
           attributes: ['id', 'type', 'src'],
@@ -69,13 +69,17 @@ const PostService = {
     return await Post.findAll({
       where,
       limit: 10,
-      order: [['createdAt', 'DESC']],
+      order: [
+        ['createdAt', 'DESC'],
+        [{ model: Picture, as: 'pictures' }, 'id', 'ASC'],
+      ],
       attributes: {
         exclude: ['userId'],
       },
       include: [
         {
           model: User,
+          as: 'user',
           attributes: ['id', 'nickname'],
         },
         {
@@ -86,7 +90,7 @@ const PostService = {
     });
   },
 
-  createPost: async (userEmail: string, postData: PostData): Promise<Post> => {
+  createPost: async (userEmail: string, postData: PostData): Promise<void> => {
     if (postData.content.length === 0) {
       throw new CustomError(400, '게시글의 내용을 작성하여야 합니다.');
     } else if (postData.picture.length === 0) {
@@ -104,54 +108,59 @@ const PostService = {
 
     await createModelAndValidation(Post, { content: postData.content });
 
-    const post = await Post.create({
-      content: postData.content,
-      userId: user.id,
-    });
+    const transaction: Transaction = await sequelize.transaction();
 
-    const hashtags = Array.from(new Set(postData.content.match(/(#[^\s#]+)/g)));
+    try {
+      const post = await Post.create(
+        {
+          content: postData.content,
+          userId: user.id,
+        },
+        { transaction }
+      );
 
-    if (hashtags) {
-      const result = await Promise.all(
-        hashtags.map((tag) =>
-          Hashtag.findOrCreate({ where: { name: tag.slice(1).toLowerCase() } })
-        )
+      const hashtags = Array.from(
+        new Set(postData.content.match(/(#[^\s#]+)/g))
       );
-      await post.$add(
-        'hashtags',
-        result.map((v) => v[0])
+
+      if (hashtags) {
+        const result = await Promise.all(
+          hashtags.map((tag) =>
+            Hashtag.findOrCreate({
+              where: { name: tag.slice(1).toLowerCase() },
+              transaction,
+            })
+          )
+        );
+        await post.$add(
+          'hashtags',
+          result.map((v) => v[0]),
+          { transaction }
+        );
+      }
+
+      const pictures = await Promise.all(
+        postData.picture.map(async (picture) => {
+          await createModelAndValidation(Picture, picture);
+
+          return Picture.create(
+            {
+              type: picture.type,
+              size: picture.size,
+              ext: picture.ext,
+              src: picture.src,
+            },
+            { transaction }
+          );
+        })
       );
+      await post.$add('pictures', pictures, { transaction });
+
+      await transaction.commit();
+    } catch (error) {
+      await transaction.rollback();
+      throw error;
     }
-
-    const pictures = await Promise.all(
-      postData.picture.map(async (picture) => {
-        await createModelAndValidation(Picture, picture);
-
-        return Picture.create({
-          type: picture.type,
-          size: picture.size,
-          ext: picture.ext,
-          src: picture.src,
-        });
-      })
-    );
-    await post.$add('pictures', pictures);
-
-    const fullPost = await Post.findOne({
-      where: { id: post.id },
-      include: [
-        {
-          model: User,
-          attributes: ['id', 'nickname'],
-        },
-
-        {
-          model: Picture,
-        },
-      ],
-    });
-
-    return fullPost;
   },
 };
 

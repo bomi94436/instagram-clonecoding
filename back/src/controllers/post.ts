@@ -38,12 +38,11 @@ const PostController = {
     res: express.Response,
     next: express.NextFunction
   ): Promise<void> => {
-    const post = await PostService.createPost(req.user, req.body);
+    await PostService.createPost(req.user, req.body);
 
     res.status(201).json(<ResponseData>{
       success: true,
       message: '게시글 작성이 완료되었습니다.',
-      data: post,
     });
   },
 

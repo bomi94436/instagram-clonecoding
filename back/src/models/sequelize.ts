@@ -1,5 +1,6 @@
 import { Sequelize } from 'sequelize-typescript';
 import { Follow, Hashtag, Picture, Post, PostHashtag, User } from './index';
+import PostLike from './postlike';
 
 const env = process.env.NODE_ENV || 'development';
 const config = require('../config')[env];
@@ -12,8 +13,17 @@ const sequelize = new Sequelize({
   port: config.port,
   dialect: 'mysql',
   define: config.define,
+  timezone: '+09:00',
 });
 
-sequelize.addModels([User, Post, Picture, Hashtag, PostHashtag, Follow]);
+sequelize.addModels([
+  User,
+  Post,
+  Picture,
+  Hashtag,
+  PostHashtag,
+  Follow,
+  PostLike,
+]);
 
 export default sequelize;
