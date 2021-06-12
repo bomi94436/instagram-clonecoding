@@ -13,9 +13,11 @@ import { StyledCard, StyledCardWrapper, StyledSlider } from './styles';
 import CardContent from './CardContent';
 import defaultProfile from '../../lib/assets/default_profile.jpg';
 import Video from './Video';
+import { Picture, Post } from '../../store/post/types';
+import { timeForToday } from '../../lib/util';
 
 interface props {
-  post: any;
+  post: Post;
 }
 
 const Card = ({ post }: props) => {
@@ -62,7 +64,7 @@ const Card = ({ post }: props) => {
         </div>
 
         <StyledSlider {...sliderSettings}>
-          {post.pictures.map((picture: any) =>
+          {post.pictures.map((picture: Picture) =>
             picture.type === 'image' ? (
               <img
                 key={picture.id}
@@ -98,10 +100,16 @@ const Card = ({ post }: props) => {
 
           <div className="text">
             <span>{post.user.nickname} </span>
-            <CardContent content={post.content} />
+
+            {post.content.split('\\n').map((line, index) => (
+              <span key={index}>
+                <CardContent content={line} />
+                <br />
+              </span>
+            ))}
           </div>
 
-          <div className="time">7시간 전</div>
+          <div className="time">{timeForToday(post.createdAt)}</div>
         </div>
 
         <div className="comment">

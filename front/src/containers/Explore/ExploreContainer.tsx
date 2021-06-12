@@ -10,7 +10,7 @@ const ExploreContainer = () => {
 
   useEffect(() => {
     dispatch(readPostAsync.request({}));
-  }, []);
+  }, [dispatch]);
   return <Explore posts={posts?.data} />;
 };
 

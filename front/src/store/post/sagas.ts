@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from 'axios';
-import { call, put, takeEvery } from 'redux-saga/effects';
+import { call, put, takeEvery, takeLatest } from 'redux-saga/effects';
 import {
   CREATE_POST,
   createPostAsync,
@@ -67,8 +67,8 @@ function* readPostSaga(action: ReturnType<typeof readPostAsync.request>) {
 }
 
 export function* postSaga() {
-  yield takeEvery(UPLOAD_PICTURE, uploadSaga);
-  yield takeEvery(CREATE_POST, createPostSaga);
+  yield takeLatest(UPLOAD_PICTURE, uploadSaga);
+  yield takeLatest(CREATE_POST, createPostSaga);
   yield takeEvery(READ_HOME_POST, readHomePostSaga);
   yield takeEvery(READ_POST, readPostSaga);
 }

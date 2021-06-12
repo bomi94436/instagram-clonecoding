@@ -27,7 +27,7 @@ const Video = ({ picture, current }: props) => {
   }, [current]);
 
   return (
-    <>
+    <div className="video">
       <video
         ref={videoRef}
         key={picture.id}
@@ -41,7 +41,7 @@ const Video = ({ picture, current }: props) => {
       >
         <FaPlay />
       </StyledButton>
-    </>
+    </div>
   );
 };
 

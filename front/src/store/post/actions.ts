@@ -1,6 +1,6 @@
 import { createAction, createAsyncAction } from 'typesafe-actions';
 import {
-  Picture,
+  UploadedPicture,
   createPostData,
   readHomePostParams,
   readPostParams,
@@ -51,7 +51,7 @@ export const readPostAsync = createAsyncAction(
 
 export const reorderPicture = createAction(
   REORDER_UPLOADED,
-  (reorderPicture: Picture[]) => reorderPicture
+  (reorderPicture: UploadedPicture[]) => reorderPicture
 )();
 
 export const deletePicture = createAction(

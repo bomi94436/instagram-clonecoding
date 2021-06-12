@@ -7,7 +7,7 @@ const initialState: PostState = {
   createPost: asyncState.initial(),
   readHomePost: asyncState.initial(),
   readPost: asyncState.initial(),
-  picture: [],
+  uploadedPicture: [],
 };
 
 const post = (state: PostState = initialState, action: PostAction) =>
@@ -19,8 +19,8 @@ const post = (state: PostState = initialState, action: PostAction) =>
       case 'post/UPLOAD_PICTURE_SUCCESS':
         draft.upload = asyncState.success(action.payload);
         action.payload.data.forEach((value: ResponsePicture) => {
-          draft.picture.push({
-            id: draft.picture.length + 1,
+          draft.uploadedPicture.push({
+            id: draft.uploadedPicture.length + 1,
             type: value.type,
             size: value.size,
             ext: value.ext,
@@ -33,7 +33,7 @@ const post = (state: PostState = initialState, action: PostAction) =>
         break;
 
       case 'post/REORDER_UPLOADED':
-        draft.picture = action.payload;
+        draft.uploadedPicture = action.payload;
         break;
 
       case 'post/CREATE_POST':
@@ -41,7 +41,7 @@ const post = (state: PostState = initialState, action: PostAction) =>
         break;
       case 'post/CREATE_POST_SUCCESS':
         draft.createPost = asyncState.success(action.payload);
-        draft.picture = [];
+        draft.uploadedPicture = [];
         break;
       case 'post/CREATE_POST_ERROR':
         draft.createPost = asyncState.error(action.payload);
@@ -68,7 +68,9 @@ const post = (state: PostState = initialState, action: PostAction) =>
         break;
 
       case 'post/DELETE_PICTURE':
-        draft.picture = draft.picture.filter((v) => v.id !== action.payload);
+        draft.uploadedPicture = draft.uploadedPicture.filter(
+          (v) => v.id !== action.payload
+        );
         break;
     }
   });

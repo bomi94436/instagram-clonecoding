@@ -14,7 +14,7 @@ export type PostState = {
   createPost: AsyncState<ResponseData>;
   readHomePost: AsyncState<ResponseData>;
   readPost: AsyncState<ResponseData>;
-  picture: Picture[];
+  uploadedPicture: UploadedPicture[];
 };
 
 export type PostAction = ActionType<
@@ -33,13 +33,13 @@ export interface ResponsePicture {
   src: string;
 }
 
-export interface Picture extends ResponsePicture {
+export interface UploadedPicture extends ResponsePicture {
   id: number;
 }
 
 export interface createPostData {
   content: string;
-  picture: Picture[];
+  picture: UploadedPicture[];
 }
 
 export interface readHomePostParams {
@@ -50,14 +50,17 @@ export interface readPostParams extends readHomePostParams {
   search?: string;
 }
 
+export interface Picture {
+  id: number;
+  src: string;
+  type: 'image' | 'video';
+}
+
 export interface Post {
   id: number;
   content: string;
-  pictures: {
-    id: number;
-    src: string;
-    type: 'image' | 'video';
-  }[];
+  pictures: Picture[];
+  createdAt: Date;
   user: {
     id: number;
     nickname: string;

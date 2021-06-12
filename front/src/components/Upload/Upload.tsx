@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import AppLayout from '../common/AppLayout';
 import { StyledCard, StyledTable, Wrapper } from './styles';
 import {
@@ -7,7 +7,7 @@ import {
   Draggable,
   DropResult,
 } from 'react-beautiful-dnd';
-import { Picture } from '../../store/post/types';
+import { UploadedPicture } from '../../store/post/types';
 import useInput from '../../lib/hooks/useInput';
 import {
   BsChevronExpand,
@@ -18,7 +18,7 @@ import {
 
 interface props {
   uploadRef: React.RefObject<HTMLInputElement>;
-  pictures: Picture[];
+  pictures: UploadedPicture[];
   onClickUpload: (e: React.MouseEvent<HTMLButtonElement>) => void;
   onChangeUpload: (e: any) => void;
   onDragEnd: (result: DropResult) => void;
@@ -40,6 +40,10 @@ const Upload = ({
   onClickRemovePicture,
 }: props) => {
   const [content, onChangeContent] = useInput('');
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   return (
     <AppLayout>

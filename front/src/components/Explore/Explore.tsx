@@ -13,19 +13,21 @@ const Explore = ({ posts }: props) => {
     <AppLayout>
       <Wrapper>
         <StyledSection>
-          {posts?.map((v: Post) => (
-            <button>
-              {v.pictures[0].type === 'image' ? (
+          {posts?.map((post: Post) => (
+            <button key={post.id}>
+              {post.pictures[0].type === 'image' ? (
                 <img
-                  src={`http://localhost:3065/${v.pictures[0].src}`}
-                  alt={v.pictures[0].src}
+                  src={`http://localhost:3065/${post.pictures[0].src}`}
+                  alt={post.pictures[0].src}
                 />
               ) : (
-                <video src={`http://localhost:3065/${v.pictures[0].src}#t=0`} />
+                <video
+                  src={`http://localhost:3065/${post.pictures[0].src}#t=0`}
+                />
               )}
               <div className="icon">
-                {v.pictures.length === 1 ? (
-                  v.pictures[0].type === 'video' && <FaPlay />
+                {post.pictures.length === 1 ? (
+                  post.pictures[0].type === 'video' && <FaPlay />
                 ) : (
                   <IoCopy />
                 )}

@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from 'axios';
-import { call, put, takeEvery } from 'redux-saga/effects';
+import { call, put, takeEvery, takeLatest } from 'redux-saga/effects';
 import {
   LOGIN,
   loginAsync,
@@ -69,8 +69,8 @@ function* logoutSaga() {
 }
 
 export function* authSaga() {
-  yield takeEvery(SIGN_UP, signUpSaga);
-  yield takeEvery(LOGIN, loginSaga);
+  yield takeLatest(SIGN_UP, signUpSaga);
+  yield takeLatest(LOGIN, loginSaga);
   yield takeEvery(SILENT_REFRESH, silentRefreshSaga);
   yield takeEvery(LOGOUT, logoutSaga);
 }

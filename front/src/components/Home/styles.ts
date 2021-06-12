@@ -154,7 +154,9 @@ export const StyledCard = styled.div`
     }
 
     .text {
-      span:first-child {
+      white-space: pre-wrap;
+
+      > :first-child {
         font-weight: 600;
       }
     }
@@ -225,6 +227,12 @@ export const StyledSlider = styled(Slider)`
     width: 600px;
     height: 600px;
     object-fit: scale-down;
+  }
+
+  .video {
+    position: relative;
+    width: 600px;
+    height: 600px;
   }
 
   .slick-arrow {
