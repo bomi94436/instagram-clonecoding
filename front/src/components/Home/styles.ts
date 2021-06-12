@@ -153,14 +153,6 @@ export const StyledCard = styled.div`
       }
     }
 
-    .text {
-      white-space: pre-wrap;
-
-      > :first-child {
-        font-weight: 600;
-      }
-    }
-
     .time {
       display: flex;
       align-items: center;
@@ -315,5 +307,32 @@ export const StyledButton = styled.button<{ isPlayed: boolean }>`
   svg {
     width: 70px;
     height: 70px;
+  }
+`;
+
+export const StyledCardContent = styled.div<{ isOpened: boolean }>`
+  white-space: pre-wrap;
+
+  button {
+    padding: 0;
+    color: ${({ theme }) => theme.fontColor.gray};
+    font-weight: 600;
+  }
+  > {
+    float: left;
+  }
+
+  > :first-child {
+    font-weight: 600;
+  }
+  > :nth-child(2) {
+    [isOpened='false'] {
+      display: -webkit-box;
+      overflow: hidden;
+      word-break: break-word;
+
+      -webkit-line-clamp: 1;
+      -webkit-box-orient: vertical;
+    }
   }
 `;

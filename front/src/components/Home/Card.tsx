@@ -98,16 +98,7 @@ const Card = ({ post }: props) => {
             <span>{faker.name.findName()}</span>님 외 여러명이 좋아합니다
           </div>
 
-          <div className="text">
-            <span>{post.user.nickname} </span>
-
-            {post.content.split('\\n').map((line, index) => (
-              <span key={index}>
-                <CardContent content={line} />
-                <br />
-              </span>
-            ))}
-          </div>
+          <CardContent nickname={post.user.nickname} content={post.content} />
 
           <div className="time">{timeForToday(post.createdAt)}</div>
         </div>

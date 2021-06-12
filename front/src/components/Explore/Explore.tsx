@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import AppLayout from '../common/AppLayout';
 import { StyledSection, Wrapper } from './styles';
 import { Post } from '../../store/post/types';
@@ -9,6 +9,10 @@ interface props {
 }
 
 const Explore = ({ posts }: props) => {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   return (
     <AppLayout>
       <Wrapper>

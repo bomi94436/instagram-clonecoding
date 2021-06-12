@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import AppLayout from '../common/AppLayout';
 import { Wrapper } from './styles';
 import Card from './Card';
@@ -12,6 +12,10 @@ interface props {
 }
 
 const Home = ({ user, posts }: props) => {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   return (
     <AppLayout>
       <Wrapper>
