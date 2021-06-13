@@ -86,10 +86,6 @@ const PostService = {
           model: Picture,
           attributes: ['id', 'type', 'src'],
         },
-        {
-          model: PostLike,
-          attributes: ['userId'],
-        },
       ],
     });
   },
@@ -183,6 +179,7 @@ const PostService = {
 
     const isLiked = await PostLike.findOne({
       where: {
+        postId,
         userId: user.id,
       },
     });
@@ -201,6 +198,53 @@ const PostService = {
       await post.update(
         {
           likeCount: post.likeCount + 1,
+        },
+        { transaction }
+      );
+
+      await transaction.commit();
+    } catch (error) {
+      await transaction.rollback();
+      throw error;
+    }
+  },
+
+  unlikePost: async (userId: number, postId: number): Promise<void> => {
+    const user = await User.findOne({
+      where: {
+        id: userId,
+      },
+    });
+
+    const post = await Post.findOne({
+      where: {
+        id: postId,
+      },
+    });
+    if (!post) throw new CustomError(403, '존재하지 않는 게시글입니다.');
+
+    const isLiked = await PostLike.findOne({
+      where: {
+        postId,
+        userId: user.id,
+      },
+    });
+    if (!isLiked)
+      throw new CustomError(403, '이미 좋아요를 표시하지 않은 글입니다.');
+
+    const transaction: Transaction = await sequelize.transaction();
+
+    try {
+      await PostLike.destroy({
+        where: {
+          postId,
+          userId: user.id,
+        },
+      });
+
+      await post.update(
+        {
+          likeCount: post.likeCount - 1,
         },
         { transaction }
       );

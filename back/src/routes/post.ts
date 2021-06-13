@@ -51,5 +51,10 @@ router.post(
   wrapAsync(PostController.uploadPicture)
 );
 router.patch('/:postId/like', isLoggedIn, wrapAsync(PostController.likePost));
+router.delete(
+  '/:postId/like',
+  isLoggedIn,
+  wrapAsync(PostController.unlikePost)
+);
 
 module.exports = router;

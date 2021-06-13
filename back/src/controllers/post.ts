@@ -70,11 +70,27 @@ const PostController = {
   ): Promise<void> => {
     await PostService.likePost(req.user.id, Number(req.params.postId));
 
-    res.status(201).json(<ResponseData>{
+    res.status(200).json(<ResponseData>{
       success: true,
       message: '게시글에 좋아요 했습니다.',
       data: {
-        postId: req.params.postId,
+        postId: Number(req.params.postId),
+      },
+    });
+  },
+
+  unlikePost: async (
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction
+  ): Promise<void> => {
+    await PostService.unlikePost(req.user.id, Number(req.params.postId));
+
+    res.status(200).json(<ResponseData>{
+      success: true,
+      message: '게시글에 좋아요를 취소했습니다.',
+      data: {
+        postId: Number(req.params.postId),
       },
     });
   },

@@ -1,7 +1,7 @@
 import to from 'await-to-js';
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-import { User } from '../models';
+import { PostLike, User } from '../models';
 import { CustomError } from '../utils';
 import { VerifyErrors } from 'jsonwebtoken';
 const config = require('../config');
@@ -118,6 +118,12 @@ const UserService = {
           email: userData.email,
         },
         attributes: ['id', 'email', 'nickname'],
+        include: [
+          {
+            model: PostLike,
+            attributes: ['postId'],
+          },
+        ],
       })
     );
     if (err2) throw err2;
