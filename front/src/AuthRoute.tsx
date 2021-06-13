@@ -11,20 +11,15 @@ interface props {
 }
 
 const AuthRoute = ({ authenticated, path, Component, ...rest }: props) => {
-  const user = useSelector((state: RootState) => state.auth.user);
-  const isLoggedIn = user.email && user.nickname;
+  const email = useSelector((state: RootState) => state.auth.user.email);
+  const nickname = useSelector((state: RootState) => state.auth.user.nickname);
+  const isLoggedIn = email && nickname;
 
   switch (authenticated) {
     case 'loggedIn':
       if (!isLoggedIn) return <Redirect to="/login" />;
       else
-        return (
-          <Route
-            {...rest}
-            path={path}
-            component={() => <Component user={user} />}
-          />
-        );
+        return <Route {...rest} path={path} component={() => <Component />} />;
 
     case 'notLoggedIn':
       if (isLoggedIn) return <Redirect to="/" />;

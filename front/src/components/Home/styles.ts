@@ -129,11 +129,18 @@ export const StyledCard = styled.div`
 
       .left {
         display: flex;
+
+        .fill-heart {
+          svg {
+            color: ${({ theme }) => theme.icon.red};
+          }
+        }
       }
 
       button {
         padding: 0;
         height: 24px;
+        z-index: 99999;
 
         * {
           width: 24px;

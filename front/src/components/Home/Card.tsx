@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import faker from 'faker';
 import {
   BsBookmark,
   BsHeart,
+  BsHeartFill,
   FiMoreHorizontal,
   IoChatbubbleOutline,
   VscSmiley,
@@ -18,9 +18,16 @@ import { timeForToday } from '../../lib/util';
 
 interface props {
   post: Post;
+  likedPost: { postId: number }[];
+  onClickLike: (
+    e: React.MouseEvent<HTMLButtonElement>
+  ) => (postId: number) => void;
+  onClickUnlike: (
+    e: React.MouseEvent<HTMLButtonElement>
+  ) => (postId: number) => void;
 }
 
-const Card = ({ post }: props) => {
+const Card = ({ likedPost, post, onClickLike, onClickUnlike }: props) => {
   const [comment, onChangeComment, setComment] = useInput('');
   const [openEmojiPicker, setOpenEmojiPicker] = useState<boolean>(false);
   const [current, setCurrent] = useState<number>(0);
@@ -80,10 +87,18 @@ const Card = ({ post }: props) => {
         <div className="content">
           <div className="icons">
             <div className="left">
-              <button>
-                <BsHeart />
-                {/* BsHeartFill */}
-              </button>
+              {likedPost.find((v) => v.postId === post.id) ? (
+                <button
+                  className="fill-heart"
+                  onClick={(e) => onClickUnlike(e)(post.id)}
+                >
+                  <BsHeartFill />
+                </button>
+              ) : (
+                <button onClick={(e) => onClickLike(e)(post.id)}>
+                  <BsHeart />
+                </button>
+              )}
               <button>
                 <IoChatbubbleOutline />
               </button>
@@ -95,7 +110,7 @@ const Card = ({ post }: props) => {
           </div>
 
           <div className="liked">
-            <span>{faker.name.findName()}</span>님 외 여러명이 좋아합니다
+            좋아요 <span>{post.likeCount}</span>개
           </div>
 
           <CardContent nickname={post.user.nickname} content={post.content} />

@@ -13,7 +13,6 @@ import {
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 import logo from '../../lib/assets/InstagramLogo.png';
 import defaultProfile from '../../lib/assets/default_profile.jpg';
-import { UserInfo } from '../../store/auth/types';
 
 interface props {
   user: UserInfo;

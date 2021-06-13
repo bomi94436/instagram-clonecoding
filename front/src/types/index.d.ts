@@ -3,3 +3,11 @@ declare interface ResponseData {
   message: string;
   data?: any;
 }
+
+declare interface UserInfo {
+  id: number | null;
+  email: string | null;
+  nickname: string | null;
+  profile?: string | undefined;
+  likedPost: { postId: number }[];
+}

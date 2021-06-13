@@ -1,4 +1,4 @@
-import { PostAction, PostState, ResponsePicture } from './types';
+import { Post, PostAction, PostState, ResponsePicture } from './types';
 import { asyncState } from '../../lib/reducerUtils';
 import produce from 'immer';
 
@@ -72,6 +72,21 @@ const post = (state: PostState = initialState, action: PostAction) =>
           (v) => v.id !== action.payload
         );
         break;
+
+      case 'post/INCREASE_LIKE_POST': {
+        const post = draft.readHomePost.data?.data.find(
+          (v: Post) => v.id === action.payload
+        );
+        post.likeCount += 1;
+        break;
+      }
+      case 'post/DECREASE_LIKE_POST': {
+        const post = draft.readHomePost.data?.data.find(
+          (v: Post) => v.id === action.payload
+        );
+        post.likeCount -= 1;
+        break;
+      }
     }
   });
 

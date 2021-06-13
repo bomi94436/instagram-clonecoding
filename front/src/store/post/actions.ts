@@ -25,6 +25,9 @@ export const READ_POST_ERROR = 'post/READ_POST_ERROR';
 export const REORDER_UPLOADED = 'post/REORDER_UPLOADED';
 export const DELETE_PICTURE = 'post/DELETE_PICTURE';
 
+export const INCREASE_LIKE_POST = 'post/INCREASE_LIKE_POST';
+export const DECREASE_LIKE_POST = 'post/DECREASE_LIKE_POST';
+
 export const uploadPictureAsync = createAsyncAction(
   UPLOAD_PICTURE,
   UPLOAD_PICTURE_SUCCESS,
@@ -57,4 +60,14 @@ export const reorderPicture = createAction(
 export const deletePicture = createAction(
   DELETE_PICTURE,
   (pictureId: number) => pictureId
+)();
+
+export const increaseLikePost = createAction(
+  INCREASE_LIKE_POST,
+  (postId: number) => postId
+)();
+
+export const decreaseLikePost = createAction(
+  DECREASE_LIKE_POST,
+  (postId: number) => postId
 )();

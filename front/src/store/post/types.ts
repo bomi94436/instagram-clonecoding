@@ -7,6 +7,8 @@ import {
   deletePicture,
   readHomePostAsync,
   readPostAsync,
+  increaseLikePost,
+  decreaseLikePost,
 } from './actions';
 
 export type PostState = {
@@ -24,6 +26,8 @@ export type PostAction = ActionType<
   | typeof readPostAsync
   | typeof reorderPicture
   | typeof deletePicture
+  | typeof increaseLikePost
+  | typeof decreaseLikePost
 >;
 
 export interface ResponsePicture {
@@ -59,11 +63,12 @@ export interface Picture {
 export interface Post {
   id: number;
   content: string;
-  pictures: Picture[];
+  likeCount: number;
   createdAt: Date;
   user: {
     id: number;
     nickname: string;
     profile?: string;
   };
+  pictures: Picture[];
 }

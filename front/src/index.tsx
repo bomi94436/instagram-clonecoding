@@ -7,10 +7,7 @@ import { ThemeProvider } from 'styled-components';
 import { myTheme } from './styles/theme';
 import GlobalStyle from './styles/global-style';
 import './index.css';
-import { configureStore } from './store/configStore';
-
-const { config, store } = configureStore();
-config();
+import store from './store/configStore';
 
 ReactDOM.render(
   <ThemeProvider theme={myTheme}>

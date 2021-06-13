@@ -16,5 +16,8 @@ declare module 'styled-components' {
     border: {
       gray: string;
     };
+    icon: {
+      red: string;
+    };
   }
 }

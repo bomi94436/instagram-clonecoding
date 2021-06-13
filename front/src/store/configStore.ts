@@ -4,7 +4,7 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 import rootReducer, { rootSaga } from './index';
 import history from '../lib/history';
 
-export const configureStore = () => {
+const configureStore = () => {
   const sagaMiddleware = createSagaMiddleware({
     context: { history: history },
   });
@@ -15,7 +15,11 @@ export const configureStore = () => {
       : composeWithDevTools(applyMiddleware(...middlewares));
 
   const store = createStore(rootReducer, enhancer);
-  const config = () => sagaMiddleware.run(rootSaga);
+  sagaMiddleware.run(rootSaga);
 
-  return { config, store };
+  return store;
 };
+
+const store = configureStore();
+
+export default store;

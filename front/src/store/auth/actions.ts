@@ -17,6 +17,14 @@ export const LOGOUT = 'auth/LOGOUT';
 export const LOGOUT_SUCCESS = 'auth/LOGOUT_SUCCESS';
 export const LOGOUT_ERROR = 'auth/LOGOUT_ERROR';
 
+export const LIKE_POST = 'auth/LIKE_POST';
+export const LIKE_POST_SUCCESS = 'auth/LIKE_POST_SUCCESS';
+export const LIKE_POST_ERROR = 'auth/LIKE_POST_ERROR';
+
+export const UNLIKE_POST = 'auth/UNLIKE_POST';
+export const UNLIKE_POST_SUCCESS = 'auth/UNLIKE_POST_SUCCESS';
+export const UNLIKE_POST_ERROR = 'auth/UNLIKE_POST_ERROR';
+
 export const SET_AUTO_LOGIN = 'auth/SET_AUTO_LOGIN';
 export const CLEAR_AUTO_LOGIN = 'auth/CLEAR_AUTO_LOGIN';
 
@@ -43,6 +51,18 @@ export const logoutAsync = createAsyncAction(
   LOGOUT_SUCCESS,
   LOGOUT_ERROR
 )<undefined, ResponseData, ResponseData>();
+
+export const likePostAsync = createAsyncAction(
+  LIKE_POST,
+  LIKE_POST_SUCCESS,
+  LIKE_POST_ERROR
+)<{ postId: number }, ResponseData, ResponseData>();
+
+export const unlikePostAsync = createAsyncAction(
+  UNLIKE_POST,
+  UNLIKE_POST_SUCCESS,
+  UNLIKE_POST_ERROR
+)<{ postId: number }, ResponseData, ResponseData>();
 
 export const setAutoLogin = createAction(SET_AUTO_LOGIN, ({ timer }) => ({
   timer,
