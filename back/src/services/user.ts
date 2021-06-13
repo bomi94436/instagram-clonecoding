@@ -40,11 +40,13 @@ const UserService = {
   },
 
   generateToken: async (
+    id: number,
     email: string
   ): Promise<{ accessToken: string; refreshToken: string }> => {
     const accessToken: string = jwt.sign(
       {
-        email: email,
+        id,
+        email,
       },
       config.jwtSecret,
       {
@@ -53,7 +55,8 @@ const UserService = {
     );
     const refreshToken: string = jwt.sign(
       {
-        email: email,
+        id,
+        email,
       },
       config.jwtSecret,
       {
@@ -68,7 +71,8 @@ const UserService = {
         },
         {
           where: {
-            email: email,
+            id,
+            email,
           },
         }
       )
@@ -113,13 +117,14 @@ const UserService = {
         where: {
           email: userData.email,
         },
-        attributes: ['email', 'nickname'],
+        attributes: ['id', 'email', 'nickname'],
       })
     );
     if (err2) throw err2;
 
     const { accessToken, refreshToken } = await UserService.generateToken(
-      userData.email
+      info.id,
+      info.email
     );
 
     return {
@@ -151,7 +156,7 @@ const UserService = {
         const [dbErr, user] = await to(
           User.findOne({
             where: {
-              email: decoded.email,
+              id: decoded.id,
             },
           })
         );
@@ -159,6 +164,7 @@ const UserService = {
 
         if (user.token === oldRefreshToken && loggedInUser === user.email) {
           const { accessToken, refreshToken } = await UserService.generateToken(
+            decoded.id,
             decoded.email
           );
 

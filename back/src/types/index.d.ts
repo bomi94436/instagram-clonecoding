@@ -1,11 +1,12 @@
 declare namespace Express {
   interface Request {
-    user?: string;
+    user?: { id: number; email: string };
     files?: any;
   }
 }
 
 declare interface Token {
+  id: number;
   email: string;
   iat: number;
   exp: number;

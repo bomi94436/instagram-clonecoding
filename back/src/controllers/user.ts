@@ -51,7 +51,7 @@ const UserController = {
   ): Promise<void> => {
     const oldRefreshToken = req.cookies['x-refresh-token'];
     const { accessToken, refreshToken } = await UserService.silentRefresh(
-      req.user,
+      req.user.email,
       oldRefreshToken
     );
 

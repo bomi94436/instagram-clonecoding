@@ -50,5 +50,6 @@ router.post(
   upload.array('upload'),
   wrapAsync(PostController.uploadPicture)
 );
+router.patch('/:postId/like', isLoggedIn, wrapAsync(PostController.likePost));
 
 module.exports = router;

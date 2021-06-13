@@ -1,4 +1,4 @@
-import { Follow, Hashtag, Picture, Post, User } from '../models';
+import { Follow, Hashtag, Picture, Post, PostLike, User } from '../models';
 import { createModelAndValidation, CustomError } from '../utils';
 import { Op, Transaction } from 'sequelize';
 import sequelize from '../models/sequelize';
@@ -32,7 +32,7 @@ const PostService = {
     });
   },
 
-  readHomePost: async (userEmail: string, lastId: number) => {
+  readHomePost: async (userId: number, lastId: number) => {
     let where = {};
     const or = [];
 
@@ -44,7 +44,7 @@ const PostService = {
 
     const user = await User.findOne({
       where: {
-        email: userEmail,
+        id: userId,
       },
     });
     or.push({ userId: user.id });
@@ -86,11 +86,15 @@ const PostService = {
           model: Picture,
           attributes: ['id', 'type', 'src'],
         },
+        {
+          model: PostLike,
+          attributes: ['userId'],
+        },
       ],
     });
   },
 
-  createPost: async (userEmail: string, postData: PostData): Promise<void> => {
+  createPost: async (userId: number, postData: PostData): Promise<void> => {
     if (postData.content.length === 0) {
       throw new CustomError(400, '게시글의 내용을 작성하여야 합니다.');
     } else if (postData.picture.length === 0) {
@@ -102,7 +106,7 @@ const PostService = {
 
     const user = await User.findOne({
       where: {
-        email: userEmail,
+        id: userId,
       },
     });
 
@@ -155,6 +159,51 @@ const PostService = {
         })
       );
       await post.$add('pictures', pictures, { transaction });
+
+      await transaction.commit();
+    } catch (error) {
+      await transaction.rollback();
+      throw error;
+    }
+  },
+
+  likePost: async (userId: number, postId: number): Promise<void> => {
+    const user = await User.findOne({
+      where: {
+        id: userId,
+      },
+    });
+
+    const post = await Post.findOne({
+      where: {
+        id: postId,
+      },
+    });
+    if (!post) throw new CustomError(403, '존재하지 않는 게시글입니다.');
+
+    const isLiked = await PostLike.findOne({
+      where: {
+        userId: user.id,
+      },
+    });
+    if (isLiked) throw new CustomError(403, '이미 좋아요를 표시한 글입니다.');
+
+    const transaction: Transaction = await sequelize.transaction();
+
+    try {
+      const like = await PostLike.create({
+        postId,
+        userId: user.id,
+      });
+
+      await post.$add('likedUser', like, { transaction });
+
+      await post.update(
+        {
+          likeCount: post.likeCount + 1,
+        },
+        { transaction }
+      );
 
       await transaction.commit();
     } catch (error) {

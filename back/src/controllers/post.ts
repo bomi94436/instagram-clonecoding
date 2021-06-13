@@ -22,7 +22,7 @@ const PostController = {
     next: express.NextFunction
   ): Promise<void> => {
     const posts = await PostService.readHomePost(
-      req.user,
+      req.user.id,
       Number(req.query.lastId)
     );
 
@@ -38,7 +38,7 @@ const PostController = {
     res: express.Response,
     next: express.NextFunction
   ): Promise<void> => {
-    await PostService.createPost(req.user, req.body);
+    await PostService.createPost(req.user.id, req.body);
 
     res.status(201).json(<ResponseData>{
       success: true,
@@ -60,6 +60,22 @@ const PostController = {
         ext: v.mimetype.split('/')[1],
         src: v.filename,
       })),
+    });
+  },
+
+  likePost: async (
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction
+  ): Promise<void> => {
+    await PostService.likePost(req.user.id, Number(req.params.postId));
+
+    res.status(201).json(<ResponseData>{
+      success: true,
+      message: '게시글에 좋아요 했습니다.',
+      data: {
+        postId: req.params.postId,
+      },
     });
   },
 };

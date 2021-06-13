@@ -11,6 +11,7 @@ import {
 import { IsDefined, IsString } from 'class-validator';
 import { Hashtag, Picture, PostHashtag, User } from './index';
 import PostLike from './postlike';
+import { DataTypes } from 'sequelize';
 
 @Table({
   charset: 'utf8',
@@ -21,7 +22,7 @@ export default class Post extends Model {
     message: '내용을 입력해야 합니다.',
   })
   @IsString()
-  @Column
+  @Column(DataTypes.TEXT)
   content: string;
 
   @ForeignKey(() => User)
@@ -41,6 +42,6 @@ export default class Post extends Model {
   @Column
   likeCount: number;
 
-  @BelongsToMany(() => User, () => PostLike)
-  likedUser: User[];
+  @HasMany(() => PostLike)
+  likedUser: PostLike[];
 }

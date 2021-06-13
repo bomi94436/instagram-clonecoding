@@ -66,6 +66,6 @@ export default class User extends Model {
   @BelongsToMany(() => User, () => Follow, 'followerId')
   followings: Follow[];
 
-  @BelongsToMany(() => Post, () => PostLike)
-  likedPost: Post[];
+  @HasMany(() => PostLike)
+  likedPost: PostLike[];
 }
