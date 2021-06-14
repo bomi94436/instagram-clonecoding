@@ -15,6 +15,7 @@ const CardContainer = ({ post }: props) => {
   const likedPost = useSelector(
     (state: RootState) => state.auth.user.likedPost
   );
+  const userId = useSelector((state: RootState) => state.auth.user.id);
 
   const onClickLike = useCallback(
     (e: React.MouseEvent<HTMLButtonElement>) => (postId: number) => {
@@ -32,6 +33,7 @@ const CardContainer = ({ post }: props) => {
 
   return (
     <Card
+      userId={userId}
       post={post}
       likedPost={likedPost}
       onClickLike={onClickLike}

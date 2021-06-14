@@ -9,14 +9,21 @@ import {
 } from 'react-icons/all';
 import Picker from 'emoji-picker-react';
 import useInput from '../../lib/hooks/useInput';
-import { StyledCard, StyledCardWrapper, StyledSlider } from './styles';
+import {
+  StyledCard,
+  StyledCardWrapper,
+  StyledMorePostModal,
+  StyledSlider,
+} from './styles';
 import CardContent from './CardContent';
 import defaultProfile from '../../lib/assets/default_profile.jpg';
 import Video from './Video';
 import { Picture, Post } from '../../store/post/types';
 import { timeForToday } from '../../lib/util';
+import Modal from '../common/Modal';
 
 interface props {
+  userId: number | null;
   post: Post;
   likedPost: { postId: number }[];
   onClickLike: (
@@ -27,11 +34,18 @@ interface props {
   ) => (postId: number) => void;
 }
 
-const Card = ({ likedPost, post, onClickLike, onClickUnlike }: props) => {
+const Card = ({
+  userId,
+  post,
+  likedPost,
+  onClickLike,
+  onClickUnlike,
+}: props) => {
   const [comment, onChangeComment, setComment] = useInput('');
   const [openEmojiPicker, setOpenEmojiPicker] = useState<boolean>(false);
   const [current, setCurrent] = useState<number>(0);
   const commentRef = useRef<HTMLInputElement>(null);
+  const [openModal, setOpenModal] = useState(false);
 
   const sliderSettings = {
     dots: true,
@@ -66,7 +80,7 @@ const Card = ({ likedPost, post, onClickLike, onClickUnlike }: props) => {
             <span>{post.user.nickname}</span>
           </div>
 
-          <button>
+          <button onClick={(e) => setOpenModal(true)}>
             <FiMoreHorizontal />
           </button>
         </div>
@@ -155,6 +169,18 @@ const Card = ({ likedPost, post, onClickLike, onClickUnlike }: props) => {
             onEmojiClick={(event, data) => setComment(comment + data.emoji)}
           />
         </div>
+      )}
+
+      {openModal && (
+        <Modal openModal={openModal} setOpenModal={setOpenModal}>
+          <StyledMorePostModal>
+            {post.user.id === userId && (
+              <button className="delete">삭제</button>
+            )}
+            <button>링크 복사</button>
+            <button onClick={() => setOpenModal(false)}>취소</button>
+          </StyledMorePostModal>
+        </Modal>
       )}
     </StyledCardWrapper>
   );

@@ -10,7 +10,7 @@ export const StyledNavBar = styled.div`
   width: 100%;
   height: 54px;
 
-  z-index: 999;
+  z-index: 2;
 
   background-color: white;
   border-bottom: 1px solid ${(props) => props.theme.border.gray};
@@ -140,5 +140,33 @@ export const StyledMenu = styled.div`
     border-width: 5px;
     border-style: solid;
     border-color: transparent transparent white transparent;
+  }
+`;
+
+export const StyledModal = styled.div<{ openModal: boolean }>`
+  position: fixed;
+  z-index: 4;
+  top: 0;
+  left: 0;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  width: 100%;
+  height: 100%;
+
+  background-color: rgba(0, 0, 0, 0.4);
+
+  > div {
+    @keyframes fade-in {
+      0% {
+        transform: scale(1.2);
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
+    animation: fade-in 0.2s ease;
   }
 `;

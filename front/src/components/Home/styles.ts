@@ -131,6 +131,19 @@ export const StyledCard = styled.div`
         display: flex;
 
         .fill-heart {
+          @keyframes heart-beat {
+            0% {
+              transform: scale(0.5);
+            }
+            70% {
+              transform: scale(1.5);
+            }
+            100% {
+              transform: scale(1);
+            }
+          }
+          animation: heart-beat 0.2s linear;
+
           svg {
             color: ${({ theme }) => theme.icon.red};
           }
@@ -140,7 +153,7 @@ export const StyledCard = styled.div`
       button {
         padding: 0;
         height: 24px;
-        z-index: 99999;
+        z-index: 3;
 
         * {
           width: 24px;
@@ -342,4 +355,31 @@ export const StyledCardContent = styled.div<{ isOpened: boolean }>`
       -webkit-box-orient: vertical;
     }
   }
+`;
+
+export const StyledMorePostModal = styled.div`
+  width: 400px;
+  ${media.tablet} {
+    width: 260px;
+  }
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  border-radius: 5px;
+
+  button {
+    height: 48px;
+
+    :not(:first-child) {
+      border-top: 1px solid ${({ theme }) => theme.border.gray};
+    }
+
+    &.delete {
+      font-weight: 600;
+      color: ${({ theme }) => theme.fontColor.red};
+    }
+  }
+  background-color: white;
 `;
