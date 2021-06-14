@@ -10,4 +10,7 @@ declare interface UserInfo {
   nickname: string | null;
   profile?: string | undefined;
   likedPost: { postId: number }[];
+  postCount: number | null;
+  followings: { followingId: number }[];
+  followers: { followerId: number }[];
 }

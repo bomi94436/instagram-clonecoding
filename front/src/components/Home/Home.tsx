@@ -8,10 +8,20 @@ import CardContainer from '../../containers/Home/CardContainer';
 interface props {
   profile: string | undefined;
   nickname: string | null;
+  postCount: number | null;
   posts: Post[];
+  followings: { followingId: number }[];
+  followers: { followerId: number }[];
 }
 
-const Home = ({ profile, nickname, posts }: props) => {
+const Home = ({
+  profile,
+  nickname,
+  postCount,
+  posts,
+  followings,
+  followers,
+}: props) => {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -38,13 +48,13 @@ const Home = ({ profile, nickname, posts }: props) => {
 
             <div className="follow">
               <button>
-                게시물 <span className="num">0</span>
+                게시물 <span className="num">{postCount}</span>
               </button>
               <button>
-                팔로워 <span className="num">0</span>
+                팔로워 <span className="num">{followers.length}</span>
               </button>
               <button>
-                팔로우 <span className="num">0</span>
+                팔로잉 <span className="num">{followings.length}</span>
               </button>
             </div>
           </div>

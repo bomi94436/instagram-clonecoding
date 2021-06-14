@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import {
   BsBookmark,
   BsHeart,
@@ -31,6 +31,7 @@ const Card = ({ likedPost, post, onClickLike, onClickUnlike }: props) => {
   const [comment, onChangeComment, setComment] = useInput('');
   const [openEmojiPicker, setOpenEmojiPicker] = useState<boolean>(false);
   const [current, setCurrent] = useState<number>(0);
+  const commentRef = useRef<HTMLInputElement>(null);
 
   const sliderSettings = {
     dots: true,
@@ -99,7 +100,7 @@ const Card = ({ likedPost, post, onClickLike, onClickUnlike }: props) => {
                   <BsHeart />
                 </button>
               )}
-              <button>
+              <button onClick={() => commentRef.current?.focus()}>
                 <IoChatbubbleOutline />
               </button>
             </div>
@@ -131,6 +132,7 @@ const Card = ({ likedPost, post, onClickLike, onClickUnlike }: props) => {
               value={comment}
               onChange={onChangeComment}
               onClick={() => setOpenEmojiPicker(false)}
+              ref={commentRef}
               placeholder="댓글 달기..."
             />
           </div>

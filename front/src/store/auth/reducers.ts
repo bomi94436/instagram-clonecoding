@@ -9,6 +9,9 @@ const initialState: AuthState = {
     nickname: null,
     profile: undefined,
     likedPost: [],
+    postCount: null,
+    followings: [],
+    followers: [],
   },
   signup: asyncState.initial(),
   login: asyncState.initial(),
@@ -16,6 +19,7 @@ const initialState: AuthState = {
   likePost: asyncState.initial(),
   unlikePost: asyncState.initial(),
   logout: asyncState.initial(),
+  getUserStatus: asyncState.initial(),
   timer: null,
 };
 
@@ -89,6 +93,17 @@ const auth = (state: AuthState = initialState, action: AuthAction) =>
         break;
       case 'auth/UNLIKE_POST_ERROR':
         draft.unlikePost = asyncState.error(action.payload);
+        break;
+
+      case 'auth/GET_USER_STATUS':
+        draft.getUserStatus = asyncState.loading();
+        break;
+      case 'auth/GET_USER_STATUS_SUCCESS':
+        draft.getUserStatus = asyncState.success(action.payload);
+        draft.user = action.payload.data;
+        break;
+      case 'auth/GET_USER_STATUS_ERROR':
+        draft.getUserStatus = asyncState.error(action.payload);
         break;
 
       case 'auth/SET_AUTO_LOGIN':

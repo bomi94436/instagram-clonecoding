@@ -2,6 +2,7 @@ import { AsyncState } from '../../lib/reducerUtils';
 import { ActionType } from 'typesafe-actions';
 import {
   clearAutoLogin,
+  getUserStatusAsync,
   likePostAsync,
   loginAsync,
   logoutAsync,
@@ -19,6 +20,7 @@ export type AuthState = {
   likePost: AsyncState<ResponseData, ResponseData>;
   unlikePost: AsyncState<ResponseData, ResponseData>;
   logout: AsyncState<ResponseData, ResponseData>;
+  getUserStatus: AsyncState<ResponseData, ResponseData>;
   timer: NodeJS.Timeout | null;
 };
 
@@ -29,6 +31,7 @@ export type AuthAction = ActionType<
   | typeof logoutAsync
   | typeof likePostAsync
   | typeof unlikePostAsync
+  | typeof getUserStatusAsync
   | typeof setAutoLogin
   | typeof clearAutoLogin
 >;

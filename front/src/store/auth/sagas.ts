@@ -13,6 +13,8 @@ import {
   likePostAsync,
   LIKE_POST,
   UNLIKE_POST,
+  getUserStatusAsync,
+  GET_USER_STATUS,
 } from './actions';
 import { LoginData, SignUpData } from './types';
 import history from '../../lib/history';
@@ -101,6 +103,20 @@ function* unlikePostSaga(action: ReturnType<typeof unlikePostAsync.request>) {
   }
 }
 
+const getUserStatusAPI = () => axios.get(`/users/status`);
+
+function* getUserStatusSaga(
+  action: ReturnType<typeof getUserStatusAsync.request>
+) {
+  try {
+    const response: AxiosResponse = yield call(getUserStatusAPI);
+    yield put(getUserStatusAsync.success(response.data));
+  } catch (e) {
+    alert(e.response.data.message);
+    yield put(getUserStatusAsync.failure(e.response.data));
+  }
+}
+
 export function* authSaga() {
   yield takeLatest(SIGN_UP, signUpSaga);
   yield takeLatest(LOGIN, loginSaga);
@@ -108,4 +124,5 @@ export function* authSaga() {
   yield takeEvery(LOGOUT, logoutSaga);
   yield throttle(2000, LIKE_POST, likePostSaga);
   yield throttle(2000, UNLIKE_POST, unlikePostSaga);
+  yield takeEvery(GET_USER_STATUS, getUserStatusSaga);
 }
