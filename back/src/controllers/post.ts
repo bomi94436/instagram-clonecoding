@@ -63,6 +63,25 @@ const PostController = {
     });
   },
 
+  createComment: async (
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction
+  ): Promise<void> => {
+    const comment = await PostService.createComment(
+      req.user.id,
+      Number(req.params.postId),
+      req.body.content,
+      req.body.replyId
+    );
+
+    res.status(200).json(<ResponseData>{
+      success: true,
+      message: '댓글 작성이 완료되었습니다.',
+      data: comment,
+    });
+  },
+
   likePost: async (
     req: express.Request,
     res: express.Response,

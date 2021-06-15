@@ -1,5 +1,14 @@
 import { Sequelize } from 'sequelize-typescript';
-import { Follow, Hashtag, Picture, Post, PostHashtag, User } from './index';
+import {
+  Comment,
+  CommentLike,
+  Follow,
+  Hashtag,
+  Picture,
+  Post,
+  PostHashtag,
+  User,
+} from './index';
 import PostLike from './postlike';
 
 const env = process.env.NODE_ENV || 'development';
@@ -24,6 +33,8 @@ sequelize.addModels([
   PostHashtag,
   Follow,
   PostLike,
+  Comment,
+  CommentLike,
 ]);
 
 export default sequelize;

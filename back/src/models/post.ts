@@ -9,13 +9,13 @@ import {
   Table,
 } from 'sequelize-typescript';
 import { IsDefined, IsString } from 'class-validator';
-import { Hashtag, Picture, PostHashtag, User } from './index';
+import { Comment, Hashtag, Picture, PostHashtag, User } from './index';
 import PostLike from './postlike';
 import { DataTypes } from 'sequelize';
 
 @Table({
-  charset: 'utf8',
-  collate: 'utf8_general_ci',
+  charset: 'utf8mb4',
+  collate: 'utf8mb4_unicode_ci',
 })
 export default class Post extends Model {
   @IsDefined({
@@ -44,4 +44,7 @@ export default class Post extends Model {
 
   @HasMany(() => PostLike)
   likedUser: PostLike[];
+
+  @HasMany(() => Comment)
+  comments: Comment[];
 }

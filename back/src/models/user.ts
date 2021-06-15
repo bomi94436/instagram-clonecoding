@@ -6,7 +6,7 @@ import {
   Length,
   Matches,
 } from 'class-validator';
-import { Follow, Post } from '.';
+import { Comment, CommentLike, Follow, Post } from '.';
 import PostLike from './postlike';
 
 @Table({
@@ -52,6 +52,9 @@ export default class User extends Model {
   @HasMany(() => Post)
   posts: Post[];
 
+  @HasMany(() => Comment)
+  comments: Comment[];
+
   // 누군가 -> 나
   @HasMany(() => Follow, 'followingId')
   followers: Follow[];
@@ -62,6 +65,9 @@ export default class User extends Model {
 
   @HasMany(() => PostLike)
   likedPost: PostLike[];
+
+  @HasMany(() => CommentLike)
+  likedComment: CommentLike[];
 
   @Default(0)
   @Column

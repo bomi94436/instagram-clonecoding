@@ -50,6 +50,11 @@ router.post(
   upload.array('upload'),
   wrapAsync(PostController.uploadPicture)
 );
+router.post(
+  '/:postId/comment',
+  isLoggedIn,
+  wrapAsync(PostController.createComment)
+);
 router.patch('/:postId/like', isLoggedIn, wrapAsync(PostController.likePost));
 router.delete(
   '/:postId/like',

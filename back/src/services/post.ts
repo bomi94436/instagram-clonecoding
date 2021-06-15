@@ -1,4 +1,12 @@
-import { Follow, Hashtag, Picture, Post, PostLike, User } from '../models';
+import {
+  Comment,
+  Follow,
+  Hashtag,
+  Picture,
+  Post,
+  PostLike,
+  User,
+} from '../models';
 import { createModelAndValidation, CustomError } from '../utils';
 import { Op, Transaction } from 'sequelize';
 import sequelize from '../models/sequelize';
@@ -72,6 +80,7 @@ const PostService = {
       order: [
         ['createdAt', 'DESC'],
         [{ model: Picture, as: 'pictures' }, 'id', 'ASC'],
+        [{ model: Comment, as: 'comments' }, 'createdAt', 'ASC'],
       ],
       attributes: {
         exclude: ['userId'],
@@ -85,6 +94,19 @@ const PostService = {
         {
           model: Picture,
           attributes: ['id', 'type', 'src'],
+        },
+        {
+          model: Comment,
+          attributes: {
+            exclude: ['postId', 'userId'],
+          },
+          include: [
+            {
+              model: User,
+              as: 'user',
+              attributes: ['id', 'nickname'],
+            },
+          ],
         },
       ],
     });
@@ -168,6 +190,57 @@ const PostService = {
       await transaction.rollback();
       throw error;
     }
+  },
+
+  createComment: async (
+    userId: number,
+    postId: number,
+    content: string,
+    replyId?: number
+  ): Promise<Comment> => {
+    await createModelAndValidation(Comment, { content });
+
+    const post = await Post.findOne({
+      where: {
+        id: postId,
+      },
+    });
+    if (!post) throw new CustomError(403, '존재하지 않는 게시글입니다.');
+
+    if (replyId) {
+      const comment = await Comment.findOne({
+        where: {
+          id: replyId,
+          postId,
+        },
+      });
+      if (!comment) throw new CustomError(403, '존재하지 않는 댓글입니다.');
+      if (comment.replyId)
+        throw new CustomError(403, '답글에 답글을 달 수 없습니다.');
+    }
+
+    const comment = await Comment.create({
+      userId,
+      postId,
+      content,
+      replyId,
+    });
+
+    return await Comment.findOne({
+      where: {
+        id: comment.id,
+      },
+      attributes: {
+        exclude: ['userId'],
+      },
+      include: [
+        {
+          model: User,
+          as: 'user',
+          attributes: ['id', 'nickname'],
+        },
+      ],
+    });
   },
 
   likePost: async (userId: number, postId: number): Promise<void> => {
