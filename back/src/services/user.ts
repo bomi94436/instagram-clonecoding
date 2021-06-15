@@ -1,7 +1,7 @@
 import to from 'await-to-js';
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-import { PostLike, User } from '../models';
+import { Follow, PostLike, User } from '../models';
 import { CustomError } from '../utils';
 import { VerifyErrors } from 'jsonwebtoken';
 const config = require('../config');
@@ -117,11 +117,21 @@ const UserService = {
         where: {
           email: userData.email,
         },
-        attributes: ['id', 'email', 'nickname'],
+        attributes: ['id', 'email', 'nickname', 'postCount'],
         include: [
           {
             model: PostLike,
             attributes: ['postId'],
+          },
+          {
+            model: Follow,
+            as: 'followings',
+            attributes: ['followingId'],
+          },
+          {
+            model: Follow,
+            as: 'followers',
+            attributes: ['followerId'],
           },
         ],
       })
@@ -196,6 +206,30 @@ const UserService = {
     );
     if (err) throw err;
   },
+
+  getUser: async (nickname: string): Promise<User> =>
+    await User.findOne({
+      where: {
+        nickname,
+      },
+      attributes: ['id', 'email', 'nickname', 'postCount'],
+      include: [
+        {
+          model: PostLike,
+          attributes: ['postId'],
+        },
+        {
+          model: Follow,
+          as: 'followings',
+          attributes: ['followingId'],
+        },
+        {
+          model: Follow,
+          as: 'followers',
+          attributes: ['followerId'],
+        },
+      ],
+    }),
 };
 
 export default UserService;

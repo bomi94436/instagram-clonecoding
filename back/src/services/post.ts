@@ -156,6 +156,13 @@ const PostService = {
       );
       await post.$add('pictures', pictures, { transaction });
 
+      await user.update(
+        {
+          postCount: user.postCount + 1,
+        },
+        { transaction }
+      );
+
       await transaction.commit();
     } catch (error) {
       await transaction.rollback();

@@ -1,10 +1,4 @@
-import {
-  BelongsToMany,
-  Column,
-  HasMany,
-  Model,
-  Table,
-} from 'sequelize-typescript';
+import { Column, Default, HasMany, Model, Table } from 'sequelize-typescript';
 import {
   IsDefined,
   IsEmail,
@@ -59,13 +53,17 @@ export default class User extends Model {
   posts: Post[];
 
   // 누군가 -> 나
-  @BelongsToMany(() => User, () => Follow, 'followingId')
+  @HasMany(() => Follow, 'followingId')
   followers: Follow[];
 
   // 나 -> 누군가
-  @BelongsToMany(() => User, () => Follow, 'followerId')
+  @HasMany(() => Follow, 'followerId')
   followings: Follow[];
 
   @HasMany(() => PostLike)
   likedPost: PostLike[];
+
+  @Default(0)
+  @Column
+  postCount: number;
 }
