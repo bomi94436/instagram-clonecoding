@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
   BsBookmark,
   BsHeart,
@@ -21,6 +21,7 @@ import Video from './Video';
 import { Picture, Post } from '../../store/post/types';
 import { timeForToday } from '../../lib/util';
 import Modal from '../common/Modal';
+import CardComment from './CardComment';
 
 interface props {
   userId: number | null;
@@ -32,6 +33,9 @@ interface props {
   onClickUnlike: (
     e: React.MouseEvent<HTMLButtonElement>
   ) => (postId: number) => void;
+  onSubmitComment: (
+    e: React.FormEvent<HTMLFormElement>
+  ) => (postId: number, content: string, replyId?: number | undefined) => void;
 }
 
 const Card = ({
@@ -40,12 +44,29 @@ const Card = ({
   likedPost,
   onClickLike,
   onClickUnlike,
+  onSubmitComment,
 }: props) => {
   const [comment, onChangeComment, setComment] = useInput('');
   const [openEmojiPicker, setOpenEmojiPicker] = useState<boolean>(false);
   const [current, setCurrent] = useState<number>(0);
+  const [openModal, setOpenModal] = useState<boolean>(false);
   const commentRef = useRef<HTMLInputElement>(null);
-  const [openModal, setOpenModal] = useState(false);
+  const emojiRef = useRef<HTMLDivElement>(null);
+
+  const handleClickOutsideEmoji = useCallback(
+    ({ target }) => {
+      if (openEmojiPicker && !emojiRef.current?.contains(target))
+        setOpenEmojiPicker(false);
+    },
+    [openEmojiPicker, setOpenEmojiPicker]
+  );
+
+  useEffect(() => {
+    window.addEventListener('click', handleClickOutsideEmoji);
+    return () => {
+      window.removeEventListener('click', handleClickOutsideEmoji);
+    };
+  }, [handleClickOutsideEmoji]);
 
   const sliderSettings = {
     dots: true,
@@ -130,19 +151,31 @@ const Card = ({
 
           <CardContent nickname={post.user.nickname} content={post.content} />
 
+          <CardComment comments={post.comments} />
+
           <div className="time">{timeForToday(post.createdAt)}</div>
         </div>
 
-        <div className="comment">
+        <form
+          className="comment-form"
+          onSubmit={(e) => {
+            onSubmitComment(e)(post.id, comment);
+            setOpenEmojiPicker(false);
+            setComment('');
+            commentRef.current?.blur();
+          }}
+        >
           <div className="left">
             <button
+              type="button"
               className="emoji"
-              onClick={() => setOpenEmojiPicker((prev) => (prev = !prev))}
+              onClick={() => setOpenEmojiPicker((prev) => !prev)}
             >
               <VscSmiley className="icon" />
             </button>
 
             <input
+              type="text"
               value={comment}
               onChange={onChangeComment}
               onClick={() => setOpenEmojiPicker(false)}
@@ -152,19 +185,17 @@ const Card = ({
           </div>
 
           <button
+            type="submit"
             className={`submit${!comment ? ' disabled' : ''}`}
             disabled={!comment}
-            onClick={() => {
-              setOpenEmojiPicker(false);
-            }}
           >
             게시
           </button>
-        </div>
+        </form>
       </StyledCard>
 
       {openEmojiPicker && (
-        <div className="emoji-picker">
+        <div className="emoji-picker" ref={emojiRef}>
           <Picker
             onEmojiClick={(event, data) => setComment(comment + data.emoji)}
           />

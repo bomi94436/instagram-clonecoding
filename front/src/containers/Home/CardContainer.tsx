@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useCallback } from 'react';
 import { likePostAsync, unlikePostAsync } from '../../store/auth/actions';
 import { RootState } from '../../store';
+import { createCommentAsync } from '../../store/post/actions';
 
 interface props {
   post: Post;
@@ -31,6 +32,24 @@ const CardContainer = ({ post }: props) => {
     [dispatch]
   );
 
+  const onSubmitComment = useCallback(
+    (e: React.FormEvent<HTMLFormElement>) => (
+      postId: number,
+      content: string,
+      replyId?: number
+    ) => {
+      e.preventDefault();
+      dispatch(
+        createCommentAsync.request({
+          postId,
+          content,
+          replyId,
+        })
+      );
+    },
+    [dispatch]
+  );
+
   return (
     <Card
       userId={userId}
@@ -38,6 +57,7 @@ const CardContainer = ({ post }: props) => {
       likedPost={likedPost}
       onClickLike={onClickLike}
       onClickUnlike={onClickUnlike}
+      onSubmitComment={onSubmitComment}
     />
   );
 };

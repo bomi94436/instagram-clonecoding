@@ -46,10 +46,6 @@ const SignUp = () => {
     [dispatch, form]
   );
 
-  const onClickEye = useCallback(() => {
-    setViewPassword((prev) => (prev = !prev));
-  }, []);
-
   useEffect(() => {
     if (
       errorMessage.email === '' &&
@@ -92,7 +88,10 @@ const SignUp = () => {
               onChange={onChangeForm}
               placeholder="비밀번호"
             />
-            <button type="button" onClick={onClickEye}>
+            <button
+              type="button"
+              onClick={() => setViewPassword((prev) => !prev)}
+            >
               {viewPassword ? <AiFillEye /> : <AiFillEyeInvisible />}
             </button>
           </div>

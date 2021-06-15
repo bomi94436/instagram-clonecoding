@@ -61,26 +61,36 @@ export const StyledSection = styled.div`
     overflow: hidden;
     padding: 0;
 
-    img,
-    video {
+    .cover {
       position: absolute;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      object-fit: cover;
     }
 
-    .icon {
-      position: absolute;
-      top: 15px;
-      right: 15px;
-      color: white;
-      filter: drop-shadow(0 0 2px gray);
+    .contents {
+      img,
+      video {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
 
-      svg {
-        width: 24px;
-        height: 24px;
+      .icon {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        color: white;
+        filter: drop-shadow(0 0 2px gray);
+
+        svg {
+          width: 24px;
+          height: 24px;
+        }
       }
     }
   }

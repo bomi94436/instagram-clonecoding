@@ -25,9 +25,9 @@ export const UNLIKE_POST = 'auth/UNLIKE_POST';
 export const UNLIKE_POST_SUCCESS = 'auth/UNLIKE_POST_SUCCESS';
 export const UNLIKE_POST_ERROR = 'auth/UNLIKE_POST_ERROR';
 
-export const GET_USER_STATUS = 'auth/GET_USER_STATUS';
-export const GET_USER_STATUS_SUCCESS = 'auth/GET_USER_STATUS_SUCCESS';
-export const GET_USER_STATUS_ERROR = 'auth/GET_USER_STATUS_ERROR';
+export const GET_USER_INFO = 'auth/GET_USER_INFO';
+export const GET_USER_INFO_SUCCESS = 'auth/GET_USER_INFO_SUCCESS';
+export const GET_USER_INFO_ERROR = 'auth/GET_USER_INFO_ERROR';
 
 export const SET_AUTO_LOGIN = 'auth/SET_AUTO_LOGIN';
 export const CLEAR_AUTO_LOGIN = 'auth/CLEAR_AUTO_LOGIN';
@@ -68,11 +68,11 @@ export const unlikePostAsync = createAsyncAction(
   UNLIKE_POST_ERROR
 )<{ postId: number }, ResponseData, ResponseData>();
 
-export const getUserStatusAsync = createAsyncAction(
-  GET_USER_STATUS,
-  GET_USER_STATUS_SUCCESS,
-  GET_USER_STATUS_ERROR
-)<undefined, ResponseData, ResponseData>();
+export const getUserInfoAsync = createAsyncAction(
+  GET_USER_INFO,
+  GET_USER_INFO_SUCCESS,
+  GET_USER_INFO_ERROR
+)<{ nickname: string }, ResponseData, ResponseData>();
 
 export const setAutoLogin = createAction(SET_AUTO_LOGIN, ({ timer }) => ({
   timer,

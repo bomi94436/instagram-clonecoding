@@ -4,6 +4,7 @@ import {
   createPostData,
   readHomePostParams,
   readPostParams,
+  createCommentData,
 } from './types';
 
 export const UPLOAD_PICTURE = 'post/UPLOAD_PICTURE';
@@ -13,6 +14,10 @@ export const UPLOAD_PICTURE_ERROR = 'post/UPLOAD_PICTURE_ERROR';
 export const CREATE_POST = 'post/CREATE_POST';
 export const CREATE_POST_SUCCESS = 'post/CREATE_POST_SUCCESS';
 export const CREATE_POST_ERROR = 'post/CREATE_POST_ERROR';
+
+export const CREATE_COMMENT = 'post/CREATE_COMMENT';
+export const CREATE_COMMENT_SUCCESS = 'post/CREATE_COMMENT_SUCCESS';
+export const CREATE_COMMENT_ERROR = 'post/CREATE_COMMENT_ERROR';
 
 export const READ_HOME_POST = 'post/READ_HOME_POST';
 export const READ_HOME_POST_SUCCESS = 'post/READ_HOME_POST_SUCCESS';
@@ -39,6 +44,12 @@ export const createPostAsync = createAsyncAction(
   CREATE_POST_SUCCESS,
   CREATE_POST_ERROR
 )<createPostData, ResponseData, ResponseData>();
+
+export const createCommentAsync = createAsyncAction(
+  CREATE_COMMENT,
+  CREATE_COMMENT_SUCCESS,
+  CREATE_COMMENT_ERROR
+)<createCommentData, ResponseData, ResponseData>();
 
 export const readHomePostAsync = createAsyncAction(
   READ_HOME_POST,

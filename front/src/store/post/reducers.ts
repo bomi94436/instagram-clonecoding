@@ -5,6 +5,7 @@ import produce from 'immer';
 const initialState: PostState = {
   upload: asyncState.initial(),
   createPost: asyncState.initial(),
+  createComment: asyncState.initial(),
   readHomePost: asyncState.initial(),
   readPost: asyncState.initial(),
   uploadedPicture: [],
@@ -45,6 +46,20 @@ const post = (state: PostState = initialState, action: PostAction) =>
         break;
       case 'post/CREATE_POST_ERROR':
         draft.createPost = asyncState.error(action.payload);
+        break;
+
+      case 'post/CREATE_COMMENT':
+        draft.createComment = asyncState.loading();
+        break;
+      case 'post/CREATE_COMMENT_SUCCESS':
+        draft.createComment = asyncState.success(action.payload);
+        const post = draft.readHomePost.data?.data.find(
+          (post: Post) => post.id === action.payload.data.postId
+        );
+        post.comments.push(action.payload.data);
+        break;
+      case 'post/CREATE_COMMENT_ERROR':
+        draft.createComment = asyncState.error(action.payload);
         break;
 
       case 'post/READ_HOME_POST':

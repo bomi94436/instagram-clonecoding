@@ -145,7 +145,7 @@ export const StyledMenu = styled.div`
 
 export const StyledModal = styled.div<{ openModal: boolean }>`
   position: fixed;
-  z-index: 4;
+  z-index: 999;
   top: 0;
   left: 0;
 

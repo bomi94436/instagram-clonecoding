@@ -9,19 +9,22 @@ import {
   readPostAsync,
   increaseLikePost,
   decreaseLikePost,
+  createCommentAsync,
 } from './actions';
 
 export type PostState = {
-  upload: AsyncState<ResponseData>;
-  createPost: AsyncState<ResponseData>;
-  readHomePost: AsyncState<ResponseData>;
-  readPost: AsyncState<ResponseData>;
+  upload: AsyncState<ResponseData, ResponseData>;
+  createPost: AsyncState<ResponseData, ResponseData>;
+  createComment: AsyncState<ResponseData, ResponseData>;
+  readHomePost: AsyncState<ResponseData, ResponseData>;
+  readPost: AsyncState<ResponseData, ResponseData>;
   uploadedPicture: UploadedPicture[];
 };
 
 export type PostAction = ActionType<
   | typeof uploadPictureAsync
   | typeof createPostAsync
+  | typeof createCommentAsync
   | typeof readHomePostAsync
   | typeof readPostAsync
   | typeof reorderPicture
@@ -60,15 +63,29 @@ export interface Picture {
   type: 'image' | 'video';
 }
 
+interface User {
+  id: number;
+  nickname: string;
+  profile?: string;
+}
+
 export interface Post {
   id: number;
   content: string;
   likeCount: number;
   createdAt: Date;
-  user: {
-    id: number;
-    nickname: string;
-    profile?: string;
-  };
+  user: User;
   pictures: Picture[];
+  comments: {
+    id: number;
+    content: string;
+    replyId?: number;
+    user: User;
+  }[];
+}
+
+export interface createCommentData {
+  postId: number;
+  content: string;
+  replyId?: number;
 }

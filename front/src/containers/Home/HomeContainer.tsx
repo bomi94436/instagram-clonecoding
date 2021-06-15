@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { readHomePostAsync } from '../../store/post/actions';
 import { RootState } from '../../store';
-import { getUserStatusAsync } from '../../store/auth/actions';
+import { getUserInfoAsync } from '../../store/auth/actions';
 
 const HomeContainer = () => {
   const dispatch = useDispatch();
@@ -16,8 +16,8 @@ const HomeContainer = () => {
 
   useEffect(() => {
     dispatch(readHomePostAsync.request({}));
-    dispatch(getUserStatusAsync.request());
-  }, [dispatch]);
+    nickname && dispatch(getUserInfoAsync.request({ nickname }));
+  }, [dispatch, nickname]);
 
   return (
     <Home

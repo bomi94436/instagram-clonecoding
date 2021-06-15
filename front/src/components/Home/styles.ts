@@ -3,7 +3,6 @@ import { media } from '../../styles/media';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-import { Link } from 'react-router-dom';
 
 export const Wrapper = styled.div`
   display: flex;
@@ -73,7 +72,7 @@ export const StyledCardWrapper = styled.div`
     position: absolute;
     bottom: 50px;
     left: 10px;
-    z-index: 1;
+    z-index: 4;
   }
 `;
 
@@ -186,7 +185,7 @@ export const StyledCard = styled.div`
     }
   }
 
-  .comment {
+  .comment-form {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -301,12 +300,7 @@ export const StyledSlider = styled(Slider)`
   }
 `;
 
-export const StyledLink = styled(Link)`
-  text-decoration: none;
-  color: ${({ theme }) => theme.fontColor.navy};
-`;
-
-export const StyledButton = styled.button<{ isPlayed: boolean }>`
+export const StyledPlayButton = styled.button<{ isPlayed: boolean }>`
   position: absolute;
   top: 0;
   left: 0;
@@ -332,14 +326,13 @@ export const StyledButton = styled.button<{ isPlayed: boolean }>`
 
 export const StyledCardContent = styled.div<{ isOpened: boolean }>`
   white-space: pre-wrap;
+  line-height: 18px;
+  margin-bottom: 4px;
 
   button {
     padding: 0;
     color: ${({ theme }) => theme.fontColor.gray};
     font-weight: 600;
-  }
-  > {
-    float: left;
   }
 
   > :first-child {
@@ -353,6 +346,40 @@ export const StyledCardContent = styled.div<{ isOpened: boolean }>`
 
       -webkit-line-clamp: 1;
       -webkit-box-orient: vertical;
+    }
+  }
+`;
+
+export const StyledCardComment = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+
+  > * {
+    height: 18px;
+    margin-bottom: 4px;
+  }
+
+  button {
+    padding: 0;
+    color: ${({ theme }) => theme.fontColor.gray};
+    font-weight: 600;
+  }
+
+  .nickname {
+    font-weight: 600;
+  }
+
+  .comment {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    width: 100%;
+
+    svg {
+      width: 12px;
+      height: 12px;
     }
   }
 `;

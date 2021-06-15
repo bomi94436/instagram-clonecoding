@@ -13,8 +13,8 @@ import {
   likePostAsync,
   LIKE_POST,
   UNLIKE_POST,
-  getUserStatusAsync,
-  GET_USER_STATUS,
+  getUserInfoAsync,
+  GET_USER_INFO,
 } from './actions';
 import { LoginData, SignUpData } from './types';
 import history from '../../lib/history';
@@ -103,17 +103,16 @@ function* unlikePostSaga(action: ReturnType<typeof unlikePostAsync.request>) {
   }
 }
 
-const getUserStatusAPI = () => axios.get(`/users/status`);
+const getUserInfoAPI = (params: { nickname: string }) =>
+  axios.get(`/users/${params.nickname}`);
 
-function* getUserStatusSaga(
-  action: ReturnType<typeof getUserStatusAsync.request>
-) {
+function* getUserInfoSaga(action: ReturnType<typeof getUserInfoAsync.request>) {
   try {
-    const response: AxiosResponse = yield call(getUserStatusAPI);
-    yield put(getUserStatusAsync.success(response.data));
+    const response: AxiosResponse = yield call(getUserInfoAPI, action.payload);
+    yield put(getUserInfoAsync.success(response.data));
   } catch (e) {
     alert(e.response.data.message);
-    yield put(getUserStatusAsync.failure(e.response.data));
+    yield put(getUserInfoAsync.failure(e.response.data));
   }
 }
 
@@ -124,5 +123,5 @@ export function* authSaga() {
   yield takeEvery(LOGOUT, logoutSaga);
   yield throttle(2000, LIKE_POST, likePostSaga);
   yield throttle(2000, UNLIKE_POST, unlikePostSaga);
-  yield takeEvery(GET_USER_STATUS, getUserStatusSaga);
+  yield takeEvery(GET_USER_INFO, getUserInfoSaga);
 }

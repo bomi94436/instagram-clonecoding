@@ -19,7 +19,7 @@ const initialState: AuthState = {
   likePost: asyncState.initial(),
   unlikePost: asyncState.initial(),
   logout: asyncState.initial(),
-  getUserStatus: asyncState.initial(),
+  getUserInfo: asyncState.initial(),
   timer: null,
 };
 
@@ -95,15 +95,15 @@ const auth = (state: AuthState = initialState, action: AuthAction) =>
         draft.unlikePost = asyncState.error(action.payload);
         break;
 
-      case 'auth/GET_USER_STATUS':
-        draft.getUserStatus = asyncState.loading();
+      case 'auth/GET_USER_INFO':
+        draft.getUserInfo = asyncState.loading();
         break;
-      case 'auth/GET_USER_STATUS_SUCCESS':
-        draft.getUserStatus = asyncState.success(action.payload);
+      case 'auth/GET_USER_INFO_SUCCESS':
+        draft.getUserInfo = asyncState.success(action.payload);
         draft.user = action.payload.data;
         break;
-      case 'auth/GET_USER_STATUS_ERROR':
-        draft.getUserStatus = asyncState.error(action.payload);
+      case 'auth/GET_USER_INFO_ERROR':
+        draft.getUserInfo = asyncState.error(action.payload);
         break;
 
       case 'auth/SET_AUTO_LOGIN':

@@ -9,8 +9,15 @@ import {
   READ_HOME_POST,
   readPostAsync,
   READ_POST,
+  createCommentAsync,
+  CREATE_COMMENT,
 } from './actions';
-import { createPostData, readHomePostParams, readPostParams } from './types';
+import {
+  createCommentData,
+  createPostData,
+  readHomePostParams,
+  readPostParams,
+} from './types';
 import history from '../../lib/history';
 
 const uploadAPI = (data: FormData) => axios.post('/posts/pictures', data);
@@ -36,6 +43,27 @@ function* createPostSaga(action: ReturnType<typeof createPostAsync.request>) {
   } catch (e) {
     alert(e.response.data.message);
     yield put(createPostAsync.failure(e.response.data));
+  }
+}
+
+const createCommentAPI = (data: createCommentData) =>
+  axios.post(`/posts/${data.postId}/comment`, {
+    content: data.content,
+    replyId: data.replyId,
+  });
+
+function* createCommentSaga(
+  action: ReturnType<typeof createCommentAsync.request>
+) {
+  try {
+    const response: AxiosResponse = yield call(
+      createCommentAPI,
+      action.payload
+    );
+    yield put(createCommentAsync.success(response.data));
+  } catch (e) {
+    alert(e.response.data.message);
+    yield put(createCommentAsync.failure(e.response.data));
   }
 }
 
@@ -69,6 +97,7 @@ function* readPostSaga(action: ReturnType<typeof readPostAsync.request>) {
 export function* postSaga() {
   yield takeLatest(UPLOAD_PICTURE, uploadSaga);
   yield takeLatest(CREATE_POST, createPostSaga);
+  yield takeLatest(CREATE_COMMENT, createCommentSaga);
   yield takeEvery(READ_HOME_POST, readHomePostSaga);
   yield takeEvery(READ_POST, readPostSaga);
 }

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { StyledNavBar, StyledMenu } from './styles';
 import {
   BsGearWide,
@@ -25,6 +25,22 @@ const NavBar = ({
   location,
 }: props & RouteComponentProps) => {
   const [openProfileMenu, setOpenProfileMenu] = useState<boolean>(false);
+  const profileMenuRef = useRef<HTMLDivElement>(null);
+
+  const handleClickOutside = useCallback(
+    ({ target }) => {
+      if (openProfileMenu && !profileMenuRef.current?.contains(target))
+        setOpenProfileMenu(false);
+    },
+    [openProfileMenu, setOpenProfileMenu]
+  );
+
+  useEffect(() => {
+    window.addEventListener('click', handleClickOutside);
+    return () => {
+      window.removeEventListener('click', handleClickOutside);
+    };
+  }, [handleClickOutside]);
 
   return (
     <StyledNavBar>
@@ -69,17 +85,20 @@ const NavBar = ({
               <img
                 src={`http://localhost:3065/${user.profile}`}
                 alt={user.profile}
-                onClick={() => setOpenProfileMenu((prev) => (prev = !prev))}
+                onClick={() => setOpenProfileMenu((prev) => !prev)}
               />
             ) : (
               <img
                 src={defaultProfile}
                 alt="default profile"
-                onClick={() => setOpenProfileMenu((prev) => (prev = !prev))}
+                onClick={() => setOpenProfileMenu((prev) => !prev)}
               />
             )}
 
-            <div className={`menu${openProfileMenu ? ' opened' : ' closed'}`}>
+            <div
+              className={`menu${openProfileMenu ? ' opened' : ' closed'}`}
+              ref={profileMenuRef}
+            >
               <button>
                 <CgProfile />
                 프로필

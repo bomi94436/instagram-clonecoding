@@ -1,3 +1,6 @@
+import React from 'react';
+import { StyledLink } from '../styles/util';
+
 export const shortNum = (num: number) => {
   if (num >= 1000 && num < 1000000) {
     return `${String(num).slice(-4, 1)}k`;
@@ -35,3 +38,21 @@ export const timeForToday = (value: Date) => {
 
   return `${Math.floor(betweenTimeDay / 365)}년전`;
 };
+
+export const filterHashAndAt = (content: string) =>
+  content.split(/(#[^\s#]+|@[^\s@]+)/g).map((v) => {
+    if (v.match(/(#[^\s#]+)/)) {
+      return (
+        <StyledLink to={`/explore/tags/${v.slice(1)}`} key={v}>
+          {v}
+        </StyledLink>
+      );
+    } else if (v.match(/(@[^\s@]+)/)) {
+      return (
+        <StyledLink to={`/${v.slice(1)}`} key={v}>
+          {v}
+        </StyledLink>
+      );
+    }
+    return v;
+  });
