@@ -33,8 +33,6 @@ const LoginContainer = () => {
       }, 1000 * 60 * 59);
 
       dispatch(setAutoLogin({ timer }));
-
-      history.push('/');
     }
   }, [dispatch, history, user]);
 

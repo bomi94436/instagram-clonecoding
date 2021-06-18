@@ -8,13 +8,17 @@ import { myTheme } from './styles/theme';
 import GlobalStyle from './styles/global-style';
 import './index.css';
 import store from './store/configStore';
+import history from './lib/history';
+import { Router } from 'react-router';
 
 ReactDOM.render(
   <ThemeProvider theme={myTheme}>
     <Provider store={store}>
       <React.StrictMode>
         <GlobalStyle />
-        <App />
+        <Router history={history}>
+          <App />
+        </Router>
       </React.StrictMode>
     </Provider>
   </ThemeProvider>,

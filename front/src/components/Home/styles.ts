@@ -184,51 +184,9 @@ export const StyledCard = styled.div`
       color: ${({ theme }) => theme.fontColor.gray};
     }
   }
-
-  .comment-form {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-
-    height: 55px;
-    padding: 0 14px;
-    font-size: 14px;
-    border-top: 1px solid rgba(var(--ce3, 239, 239, 239), 1);
-
-    .left {
-      display: flex;
-      align-items: center;
-      flex-grow: 1;
-
-      .emoji {
-        padding: 8px 16px 8px 0;
-        .icon {
-          width: 24px;
-          height: 24px;
-        }
-      }
-    }
-
-    .submit {
-      font-weight: 600;
-      color: ${({ theme }) => theme.fontColor.blue};
-    }
-
-    .disabled {
-      opacity: 0.5;
-      cursor: default;
-    }
-
-    input {
-      width: 100%;
-      border: none;
-      background: none;
-      outline: none;
-    }
-  }
 `;
 
-export const StyledSlider = styled(Slider)`
+export const StyledSlider = styled(Slider)<{ isModal: boolean }>`
   position: relative;
   width: 600px;
   height: 600px;
@@ -272,6 +230,7 @@ export const StyledSlider = styled(Slider)`
 
   .slick-dots {
     width: 600px;
+    bottom: ${(props) => (props.isModal ? '10px' : '-27px')};
 
     li {
       margin: 0 2px;
@@ -287,7 +246,7 @@ export const StyledSlider = styled(Slider)`
     button::before {
       content: '';
       opacity: 0.25;
-      background-color: black;
+      background-color: gray;
       border-radius: 70%;
       width: 6px;
       height: 6px;
@@ -296,7 +255,8 @@ export const StyledSlider = styled(Slider)`
 
   li.slick-active button::before {
     opacity: 1;
-    background-color: ${({ theme }) => theme.fontColor.blue};
+    background-color: ${(props) =>
+      props.isModal ? 'white' : props.theme.fontColor.blue};
   }
 `;
 
@@ -409,4 +369,46 @@ export const StyledMorePostModal = styled.div`
     }
   }
   background-color: white;
+`;
+
+export const StyledCardCommentForm = styled.form`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  height: 55px;
+  padding: 0 14px;
+  font-size: 14px;
+  border-top: 1px solid rgba(var(--ce3, 239, 239, 239), 1);
+
+  .left {
+    display: flex;
+    align-items: center;
+    flex-grow: 1;
+
+    .emoji {
+      padding: 8px 16px 8px 0;
+      .icon {
+        width: 24px;
+        height: 24px;
+      }
+    }
+  }
+
+  .submit {
+    font-weight: 600;
+    color: ${({ theme }) => theme.fontColor.blue};
+  }
+
+  .disabled {
+    opacity: 0.5;
+    cursor: default;
+  }
+
+  input {
+    width: 100%;
+    border: none;
+    background: none;
+    outline: none;
+  }
 `;

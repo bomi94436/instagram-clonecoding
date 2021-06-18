@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import AppLayout from '../common/AppLayout';
 import { Wrapper } from './styles';
 import defaultProfile from '../../lib/assets/default_profile.jpg';
@@ -22,10 +22,6 @@ const Home = ({
   followings,
   followers,
 }: props) => {
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
-
   return (
     <AppLayout>
       <Wrapper>

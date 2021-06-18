@@ -5,6 +5,7 @@ import {
   readHomePostParams,
   readPostParams,
   createCommentData,
+  Post,
 } from './types';
 
 export const UPLOAD_PICTURE = 'post/UPLOAD_PICTURE';
@@ -55,13 +56,13 @@ export const readHomePostAsync = createAsyncAction(
   READ_HOME_POST,
   READ_HOME_POST_SUCCESS,
   READ_HOME_POST_ERROR
-)<readHomePostParams, ResponseData, ResponseData>();
+)<readHomePostParams, ResponseData<Post>, ResponseData>();
 
 export const readPostAsync = createAsyncAction(
   READ_POST,
   READ_POST_SUCCESS,
   READ_POST_ERROR
-)<readPostParams, ResponseData, ResponseData>();
+)<readPostParams, ResponseData<Post>, ResponseData>();
 
 export const reorderPicture = createAction(
   REORDER_UPLOADED,

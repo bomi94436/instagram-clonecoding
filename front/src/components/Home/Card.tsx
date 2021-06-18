@@ -5,7 +5,6 @@ import {
   BsHeartFill,
   FiMoreHorizontal,
   IoChatbubbleOutline,
-  VscSmiley,
 } from 'react-icons/all';
 import Picker from 'emoji-picker-react';
 import useInput from '../../lib/hooks/useInput';
@@ -19,9 +18,10 @@ import CardContent from './CardContent';
 import defaultProfile from '../../lib/assets/default_profile.jpg';
 import Video from './Video';
 import { Picture, Post } from '../../store/post/types';
-import { timeForToday } from '../../lib/util';
+import { sliderSettings, timeForToday } from '../../lib/util';
 import Modal from '../common/Modal';
 import CardComment from './CardComment';
+import CardCommentForm from './CardCommentForm';
 
 interface props {
   userId: number | null;
@@ -50,8 +50,8 @@ const Card = ({
   const [openEmojiPicker, setOpenEmojiPicker] = useState<boolean>(false);
   const [current, setCurrent] = useState<number>(0);
   const [openModal, setOpenModal] = useState<boolean>(false);
-  const commentRef = useRef<HTMLInputElement>(null);
   const emojiRef = useRef<HTMLDivElement>(null);
+  const commentRef = useRef<HTMLInputElement>(null);
 
   const handleClickOutsideEmoji = useCallback(
     ({ target }) => {
@@ -67,22 +67,6 @@ const Card = ({
       window.removeEventListener('click', handleClickOutsideEmoji);
     };
   }, [handleClickOutsideEmoji]);
-
-  const sliderSettings = {
-    dots: true,
-    infinite: false,
-    speed: 500,
-    arrows: true,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-    className: 'view',
-    appendDots: (dots: JSX.Element) => (
-      <div>
-        <ul style={{ margin: '5px', padding: '0' }}>{dots}</ul>
-      </div>
-    ),
-    afterChange: (current: number) => setCurrent(current),
-  };
 
   return (
     <StyledCardWrapper>
@@ -106,7 +90,7 @@ const Card = ({
           </button>
         </div>
 
-        <StyledSlider {...sliderSettings}>
+        <StyledSlider {...sliderSettings(setCurrent)} isModal={false}>
           {post.pictures.map((picture: Picture) =>
             picture.type === 'image' ? (
               <img
@@ -151,47 +135,20 @@ const Card = ({
 
           <CardContent nickname={post.user.nickname} content={post.content} />
 
-          <CardComment comments={post.comments} />
+          <CardComment post={post} comments={post.comments} />
 
           <div className="time">{timeForToday(post.createdAt)}</div>
         </div>
 
-        <form
-          className="comment-form"
-          onSubmit={(e) => {
-            onSubmitComment(e)(post.id, comment);
-            setOpenEmojiPicker(false);
-            setComment('');
-            commentRef.current?.blur();
-          }}
-        >
-          <div className="left">
-            <button
-              type="button"
-              className="emoji"
-              onClick={() => setOpenEmojiPicker((prev) => !prev)}
-            >
-              <VscSmiley className="icon" />
-            </button>
-
-            <input
-              type="text"
-              value={comment}
-              onChange={onChangeComment}
-              onClick={() => setOpenEmojiPicker(false)}
-              ref={commentRef}
-              placeholder="댓글 달기..."
-            />
-          </div>
-
-          <button
-            type="submit"
-            className={`submit${!comment ? ' disabled' : ''}`}
-            disabled={!comment}
-          >
-            게시
-          </button>
-        </form>
+        <CardCommentForm
+          postId={post.id}
+          comment={comment}
+          setComment={setComment}
+          onChangeComment={onChangeComment}
+          onSubmitComment={onSubmitComment}
+          setOpenEmojiPicker={setOpenEmojiPicker}
+          commentRef={commentRef}
+        />
       </StyledCard>
 
       {openEmojiPicker && (

@@ -40,19 +40,37 @@ export const timeForToday = (value: Date) => {
 };
 
 export const filterHashAndAt = (content: string) =>
-  content.split(/(#[^\s#]+|@[^\s@]+)/g).map((v) => {
+  content.split(/(#[^\s#]+|@[^\s@]+)/g).map((v, index) => {
     if (v.match(/(#[^\s#]+)/)) {
       return (
-        <StyledLink to={`/explore/tags/${v.slice(1)}`} key={v}>
+        <StyledLink to={`/explore/tags/${v.slice(1)}`} key={index}>
           {v}
         </StyledLink>
       );
     } else if (v.match(/(@[^\s@]+)/)) {
       return (
-        <StyledLink to={`/${v.slice(1)}`} key={v}>
+        <StyledLink to={`/${v.slice(1)}`} key={index}>
           {v}
         </StyledLink>
       );
     }
     return v;
   });
+
+export const sliderSettings = (
+  setCurrent: React.Dispatch<React.SetStateAction<number>>
+) => ({
+  dots: true,
+  infinite: false,
+  speed: 500,
+  arrows: true,
+  slidesToShow: 1,
+  slidesToScroll: 1,
+  className: 'view',
+  appendDots: (dots: JSX.Element) => (
+    <div>
+      <ul style={{ margin: '5px', padding: '0' }}>{dots}</ul>
+    </div>
+  ),
+  afterChange: (current: number) => setCurrent(current),
+});

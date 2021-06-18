@@ -52,6 +52,7 @@ const auth = (state: AuthState = initialState, action: AuthAction) =>
         break;
       case 'auth/SILENT_REFRESH_SUCCESS':
         draft.silentRefresh = asyncState.success(null);
+        draft.user = action.payload.data.info;
         break;
       case 'auth/SILENT_REFRESH_ERROR':
         draft.silentRefresh = asyncState.error(action.payload);

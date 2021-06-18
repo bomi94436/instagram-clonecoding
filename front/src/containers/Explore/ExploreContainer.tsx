@@ -9,8 +9,9 @@ const ExploreContainer = () => {
   const posts = useSelector((state: RootState) => state.post.readPost.data);
 
   useEffect(() => {
-    dispatch(readPostAsync.request({}));
-  }, [dispatch]);
+    !posts && dispatch(readPostAsync.request({}));
+  }, [dispatch, posts]);
+
   return <Explore posts={posts?.data} />;
 };
 

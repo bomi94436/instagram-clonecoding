@@ -63,7 +63,7 @@ const post = (state: PostState = initialState, action: PostAction) =>
         break;
 
       case 'post/READ_HOME_POST':
-        draft.readHomePost = asyncState.loading();
+        draft.readHomePost = asyncState.loading(draft.readHomePost.data);
         break;
       case 'post/READ_HOME_POST_SUCCESS':
         draft.readHomePost = asyncState.success(action.payload);
@@ -73,7 +73,7 @@ const post = (state: PostState = initialState, action: PostAction) =>
         break;
 
       case 'post/READ_POST':
-        draft.readPost = asyncState.loading();
+        draft.readPost = asyncState.loading(draft.readPost.data);
         break;
       case 'post/READ_POST_SUCCESS':
         draft.readPost = asyncState.success(action.payload);

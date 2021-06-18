@@ -1,5 +1,4 @@
-import React, { useCallback, useRef } from 'react';
-import { useEffect } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import { StyledModal } from './styles';
 
 interface props {
@@ -9,11 +8,11 @@ interface props {
 }
 
 const Modal = ({ children, openModal, setOpenModal }: props) => {
-  const modalEl = useRef<HTMLDivElement>(null);
+  const modalRef = useRef<HTMLDivElement>(null);
 
   const handleClickOutside = useCallback(
     ({ target }) => {
-      if (openModal && !modalEl.current?.contains(target)) setOpenModal(false);
+      if (openModal && !modalRef.current?.contains(target)) setOpenModal(false);
     },
     [setOpenModal, openModal]
   );
@@ -28,8 +27,8 @@ const Modal = ({ children, openModal, setOpenModal }: props) => {
   }, [handleClickOutside]);
 
   return (
-    <StyledModal openModal={openModal}>
-      <div ref={modalEl}>{children}</div>
+    <StyledModal>
+      <div ref={modalRef}>{children}</div>
     </StyledModal>
   );
 };

@@ -2,8 +2,12 @@ import React from 'react';
 import { filterHashAndAt } from '../../lib/util';
 import { StyledCardComment } from './styles';
 import { BsHeart } from 'react-icons/all';
+import { Link, RouteComponentProps, useLocation } from 'react-router-dom';
+import { withRouter } from 'react-router';
+import { Post } from '../../store/post/types';
 
 interface props {
+  post: Post;
   comments: {
     id: number;
     content: string;
@@ -16,11 +20,20 @@ interface props {
   }[];
 }
 
-const CardComment = ({ comments }: props) => {
+const CardComment = ({ post, comments }: props & RouteComponentProps) => {
+  const location = useLocation();
+
   return (
     <StyledCardComment>
       {comments.length > 2 && (
-        <button>댓글 {comments.length}개 모두 보기</button>
+        <Link
+          to={{
+            pathname: `/post-detail/${post.id}`,
+            state: { postDetail: location, mode: 'home', post },
+          }}
+        >
+          <button>댓글 {comments.length}개 모두 보기</button>
+        </Link>
       )}
       {comments.length > 1 && (
         <div className="comment">
@@ -52,4 +65,4 @@ const CardComment = ({ comments }: props) => {
   );
 };
 
-export default CardComment;
+export default withRouter(CardComment);

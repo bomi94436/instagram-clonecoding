@@ -1,7 +1,7 @@
-declare interface ResponseData {
+declare interface ResponseData<D = any> {
   success: boolean;
   message: string;
-  data?: any;
+  data?: D;
 }
 
 declare interface UserInfo {
