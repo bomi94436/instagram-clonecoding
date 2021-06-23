@@ -5,19 +5,18 @@ import {
   ExploreContainer,
   HomeContainer,
   LoginContainer,
-  PostDetailModalContainer,
   UploadContainer,
+  PostDetailContainer,
 } from './containers';
 import AuthRoute from './AuthRoute';
 import { Redirect, StaticContext, withRouter } from 'react-router';
-import { Post } from './store/post/types';
 
 function App({
   location,
 }: RouteComponentProps<
   {},
   StaticContext,
-  { postDetail: any; mode: 'home' | 'explore'; post: Post }
+  { postDetail: any; mode: 'home' | 'explore' }
 >) {
   const postDetail = location.state && location.state.postDetail;
 
@@ -65,12 +64,8 @@ function App({
         <AuthRoute
           authenticated="loggedIn"
           path="/post-detail/:postId"
-          component={() => (
-            <PostDetailModalContainer
-              mode={location.state.mode}
-              post={location.state.post}
-            />
-          )}
+          component={() => <PostDetailContainer />}
+          option="modal"
           exact
         />
       )}

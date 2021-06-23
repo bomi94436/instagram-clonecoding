@@ -50,6 +50,7 @@ const Card = ({
   const [openEmojiPicker, setOpenEmojiPicker] = useState<boolean>(false);
   const [current, setCurrent] = useState<number>(0);
   const [openModal, setOpenModal] = useState<boolean>(false);
+  const [fadeHeart, setFadeHeart] = useState<boolean>(false);
   const emojiRef = useRef<HTMLDivElement>(null);
   const commentRef = useRef<HTMLInputElement>(null);
 
@@ -109,8 +110,12 @@ const Card = ({
             <div className="left">
               {likedPost.find((v) => v.postId === post.id) ? (
                 <button
-                  className="fill-heart"
-                  onClick={(e) => onClickUnlike(e)(post.id)}
+                  className={`fill-heart${fadeHeart ? ' fade' : ''}`}
+                  onClick={(e) => {
+                    onClickUnlike(e)(post.id);
+                    setFadeHeart(true);
+                  }}
+                  onAnimationEnd={() => setFadeHeart(false)}
                 >
                   <BsHeartFill />
                 </button>

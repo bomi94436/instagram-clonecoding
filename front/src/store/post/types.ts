@@ -69,6 +69,15 @@ interface User {
   profile?: string;
 }
 
+export interface Comment {
+  id: number;
+  content: string;
+  user: User;
+  createdAt: Date;
+  replyId?: number;
+  replies: Comment[];
+}
+
 export interface Post {
   id: number;
   content: string;
@@ -76,16 +85,12 @@ export interface Post {
   createdAt: Date;
   user: User;
   pictures: Picture[];
-  comments: {
-    id: number;
-    content: string;
-    replyId?: number;
-    user: User;
-  }[];
+  comments: Comment[];
 }
 
 export interface createCommentData {
   postId: number;
   content: string;
   replyId?: number;
+  mode?: 'home' | 'explore';
 }

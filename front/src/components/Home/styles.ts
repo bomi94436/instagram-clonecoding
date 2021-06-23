@@ -130,6 +130,12 @@ export const StyledCard = styled.div`
         display: flex;
 
         .fill-heart {
+          svg {
+            color: ${({ theme }) => theme.icon.red};
+          }
+        }
+
+        .fade {
           @keyframes heart-beat {
             0% {
               transform: scale(0.5);
@@ -142,10 +148,6 @@ export const StyledCard = styled.div`
             }
           }
           animation: heart-beat 0.2s linear;
-
-          svg {
-            color: ${({ theme }) => theme.icon.red};
-          }
         }
       }
 

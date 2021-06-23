@@ -60,7 +60,12 @@ function* createCommentSaga(
       createCommentAPI,
       action.payload
     );
-    yield put(createCommentAsync.success(response.data));
+    yield put(
+      createCommentAsync.success({
+        ...response.data,
+        mode: action.payload.mode,
+      })
+    );
   } catch (e) {
     alert(e.response.data.message);
     yield put(createCommentAsync.failure(e.response.data));

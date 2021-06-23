@@ -1,15 +1,16 @@
-import React, { useRef, useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import { StyledMorePostModal, StyledSlider } from '../Home/styles';
 import { filterHashAndAt, sliderSettings, timeForToday } from '../../lib/util';
-import { Picture, Post } from '../../store/post/types';
+import { Comment, Picture, Post } from '../../store/post/types';
 import Video from '../Home/Video';
-import { StyledPostDetailModal } from './styles';
 import defaultProfile from '../../lib/assets/default_profile.jpg';
 import { FiMoreHorizontal } from 'react-icons/all';
 import Picker from 'emoji-picker-react';
-import Modal from './Modal';
+import Modal from '../common/Modal';
 import useInput from '../../lib/hooks/useInput';
 import CardCommentForm from '../Home/CardCommentForm';
+import { StyledPostDetailModal } from './styles';
+import PostDetailComment from './PostDetailComment';
 
 interface props {
   userId: number | null;
@@ -23,7 +24,7 @@ interface props {
   ) => (postId: number, content: string, replyId?: number | undefined) => void;
 }
 
-const PostDetailModal = ({
+const PostDetail = ({
   userId,
   post,
   handleClickOutside,
@@ -33,9 +34,19 @@ const PostDetailModal = ({
   const [current, setCurrent] = useState<number>(0);
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [openEmojiPicker, setOpenEmojiPicker] = useState<boolean>(false);
+  const [replyId, setReplyId] = useState<number | undefined>(undefined);
   const [comment, onChangeComment, setComment] = useInput('');
   const emojiRef = useRef<HTMLDivElement>(null);
   const commentRef = useRef<HTMLInputElement>(null);
+
+  const onClickReply = useCallback(
+    (replyId: number | undefined, nickname: string) => {
+      setReplyId(replyId);
+      setComment(`@${nickname} `);
+      commentRef.current?.focus();
+    },
+    [setReplyId, setComment]
+  );
 
   return (
     <StyledPostDetailModal onClick={handleClickOutside}>
@@ -87,14 +98,23 @@ const PostDetailModal = ({
                 <img src={defaultProfile} alt="default profile" />
               )}
 
-              <div>
-                <>
+              <div className="content-middle">
+                <div>
                   <span className="nickname">{post.user.nickname} </span>
                   <span>{filterHashAndAt(post.content)}</span>
-                </>
-                <span className="time">{timeForToday(post.createdAt)}</span>
+                </div>
+                <div>
+                  <span className="time">{timeForToday(post.createdAt)}</span>
+                </div>
               </div>
             </div>
+
+            {post.comments.map((comment: Comment) => (
+              <PostDetailComment
+                comment={comment}
+                onClickReply={onClickReply}
+              />
+            ))}
           </div>
 
           <CardCommentForm
@@ -105,6 +125,7 @@ const PostDetailModal = ({
             onSubmitComment={onSubmitComment}
             setOpenEmojiPicker={setOpenEmojiPicker}
             commentRef={commentRef}
+            replyId={replyId}
           />
         </div>
       </div>
@@ -132,4 +153,4 @@ const PostDetailModal = ({
   );
 };
 
-export default PostDetailModal;
+export default PostDetail;

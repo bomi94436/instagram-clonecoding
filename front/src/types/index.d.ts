@@ -2,6 +2,7 @@ declare interface ResponseData<D = any> {
   success: boolean;
   message: string;
   data?: D;
+  mode?: 'home' | 'explore';
 }
 
 declare interface UserInfo {

@@ -44,6 +44,7 @@ const CardContainer = ({ post }: props) => {
           postId,
           content,
           replyId,
+          mode: 'home',
         })
       );
     },
