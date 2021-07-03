@@ -20,14 +20,14 @@ const CardContainer = ({ post }: props) => {
 
   const onClickLike = useCallback(
     (e: React.MouseEvent<HTMLButtonElement>) => (postId: number) => {
-      dispatch(likePostAsync.request({ postId }));
+      dispatch(likePostAsync.request({ postId, mode: 'home' }));
     },
     [dispatch]
   );
 
   const onClickUnlike = useCallback(
     (e: React.MouseEvent<HTMLButtonElement>) => (postId: number) => {
-      dispatch(unlikePostAsync.request({ postId }));
+      dispatch(unlikePostAsync.request({ postId, mode: 'home' }));
     },
     [dispatch]
   );

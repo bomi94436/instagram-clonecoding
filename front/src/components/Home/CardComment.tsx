@@ -3,24 +3,33 @@ import { filterHashAndAt } from '../../lib/util';
 import { StyledCardComment } from './styles';
 import { BsHeart } from 'react-icons/all';
 import { Link, useLocation } from 'react-router-dom';
-import { Post } from '../../store/post/types';
+import { Comment, Post } from '../../store/post/types';
 
 interface props {
   post: Post;
-  comments: {
-    id: number;
-    content: string;
-    replyId?: number;
-    user: {
-      id: number;
-      nickname: string;
-      profile?: string;
-    };
-  }[];
+  comments: Comment[];
 }
 
 const CardComment = ({ post, comments }: props) => {
   const location = useLocation();
+  const sortComments: Comment[] = [];
+
+  if (comments.length > 1) {
+    sortComments.push(comments[comments.length - 2]);
+    if (comments[comments.length - 2].replies?.length > 0) {
+      comments[comments.length - 2].replies.forEach((reply) =>
+        sortComments.push(reply)
+      );
+    }
+  }
+  if (comments.length > 0) {
+    sortComments.push(comments[comments.length - 1]);
+    if (comments[comments.length - 1].replies?.length > 0) {
+      comments[comments.length - 1].replies.forEach((reply) =>
+        sortComments.push(reply)
+      );
+    }
+  }
 
   return (
     <StyledCardComment>
@@ -34,30 +43,34 @@ const CardComment = ({ post, comments }: props) => {
           <button>댓글 {comments.length}개 모두 보기</button>
         </Link>
       )}
-      {comments.length > 1 && (
+      {sortComments.length > 1 && (
         <div className="comment">
           <div>
             <span className="nickname">
-              {comments[comments.length - 2].user.nickname}{' '}
+              {sortComments[sortComments.length - 2].user.nickname}{' '}
             </span>
             <span>
-              {filterHashAndAt(comments[comments.length - 2].content)}
+              {filterHashAndAt(sortComments[sortComments.length - 2].content)}
             </span>
           </div>
-          <BsHeart />
+          <button>
+            <BsHeart />
+          </button>
         </div>
       )}
-      {(comments.length === 1 || comments.length > 1) && (
+      {sortComments.length > 0 && (
         <div className="comment">
           <div>
             <span className="nickname">
-              {comments[comments.length - 1].user.nickname}{' '}
+              {sortComments[sortComments.length - 1].user.nickname}{' '}
             </span>
             <span>
-              {filterHashAndAt(comments[comments.length - 1].content)}
+              {filterHashAndAt(sortComments[sortComments.length - 1].content)}
             </span>
           </div>
-          <BsHeart />
+          <button>
+            <BsHeart />
+          </button>
         </div>
       )}
     </StyledCardComment>

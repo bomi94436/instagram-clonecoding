@@ -15,7 +15,8 @@ export const StyledPostDetailModal = styled.div`
 
   background-color: rgba(0, 0, 0, 0.4);
 
-  > div {
+  > article {
+    position: relative;
     display: flex;
   }
 
@@ -49,7 +50,7 @@ export const StyledPostDetailModal = styled.div`
       }
     }
 
-    .top {
+    header {
       display: flex;
       justify-content: space-between;
 
@@ -76,6 +77,7 @@ export const StyledPostDetailModal = styled.div`
 
       .content,
       .comment {
+        position: relative;
         display: flex;
         white-space: pre-wrap;
         margin-bottom: 16px;
@@ -90,37 +92,56 @@ export const StyledPostDetailModal = styled.div`
           display: flex;
         }
 
-        button {
-          margin-top: 5px;
+        :hover {
+          .more-button {
+            display: block;
+          }
+        }
+
+        .content-middle,
+        .comment-middle {
+          display: flex;
+          flex-direction: column;
+
+          > :nth-child(2) {
+            margin: 16px 0 4px;
+          }
+
+          .time {
+            margin-right: 12px;
+            font-weight: 600;
+            font-size: 12px;
+            color: ${({ theme }) => theme.fontColor.gray};
+          }
+        }
+
+        .more-button {
+          position: absolute;
+          top: -8px;
+          right: 24px;
+
+          display: none;
+
+          padding: 16px;
+          background: radial-gradient(
+            rgba(255, 255, 255, 0.9) 60%,
+            rgba(0, 0, 0, 0)
+          );
+
+          svg {
+            width: 16px;
+            height: 16px;
+            color: ${({ theme }) => theme.fontColor.gray};
+          }
+        }
+
+        .heart-button {
+          margin-top: 8px;
           svg {
             width: 12px;
             height: 12px;
           }
         }
-      }
-
-      .content-middle,
-      .comment-middle {
-        display: flex;
-        flex-direction: column;
-
-        > :nth-child(2) {
-          margin: 16px 0 4px;
-        }
-      }
-
-      .time {
-        margin-right: 12px;
-        font-weight: 600;
-        font-size: 12px;
-        color: ${({ theme }) => theme.fontColor.gray};
-      }
-
-      .reply-button {
-        cursor: pointer;
-        font-weight: 700;
-        font-size: 12px;
-        color: ${({ theme }) => theme.fontColor.gray};
       }
 
       .reply-cover {
@@ -137,6 +158,61 @@ export const StyledPostDetailModal = styled.div`
             margin-right: 16px;
           }
         }
+      }
+
+      .reply-button {
+        cursor: pointer;
+        font-weight: 700;
+        font-size: 12px;
+        color: ${({ theme }) => theme.fontColor.gray};
+      }
+    }
+
+    .bottom {
+      border-top: 1px solid rgba(var(--ce3, 239, 239, 239), 1);
+      margin-top: 4px;
+      padding: 4px 16px 0 16px;
+
+      svg {
+        width: 24px;
+        height: 24px;
+      }
+
+      .icons {
+        display: flex;
+        justify-content: space-between;
+
+        button {
+          padding: 8px;
+        }
+        button:first-child {
+          padding-left: 0;
+        }
+        button:last-child {
+          padding-right: 0;
+        }
+
+        .fill-heart {
+          svg {
+            color: ${({ theme }) => theme.icon.red};
+          }
+        }
+      }
+
+      .liked {
+        font-size: 14px;
+        line-height: 18px;
+        margin-bottom: 4px;
+        span {
+          font-weight: 600;
+        }
+      }
+
+      .time {
+        font-size: 10px;
+        font-weight: 600;
+        line-height: 18px;
+        color: ${({ theme }) => theme.fontColor.gray};
       }
     }
   }

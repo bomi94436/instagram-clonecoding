@@ -60,13 +60,13 @@ export const likePostAsync = createAsyncAction(
   LIKE_POST,
   LIKE_POST_SUCCESS,
   LIKE_POST_ERROR
-)<{ postId: number }, ResponseData, ResponseData>();
+)<{ postId: number; mode: 'home' | 'explore' }, ResponseData, ResponseData>();
 
 export const unlikePostAsync = createAsyncAction(
   UNLIKE_POST,
   UNLIKE_POST_SUCCESS,
   UNLIKE_POST_ERROR
-)<{ postId: number }, ResponseData, ResponseData>();
+)<{ postId: number; mode: 'home' | 'explore' }, ResponseData, ResponseData>();
 
 export const getUserInfoAsync = createAsyncAction(
   GET_USER_INFO,

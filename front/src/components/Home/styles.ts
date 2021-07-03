@@ -67,13 +67,6 @@ export const Wrapper = styled.div`
 
 export const StyledCardWrapper = styled.div`
   position: relative;
-  // 278 x 318
-  .emoji-picker {
-    position: absolute;
-    bottom: 50px;
-    left: 10px;
-    z-index: 4;
-  }
 `;
 
 export const StyledCard = styled.div`
@@ -116,6 +109,9 @@ export const StyledCard = styled.div`
   }
 
   .content {
+    display: flex;
+    flex-direction: column;
+
     padding: 0 14px;
     font-size: 14px;
 
@@ -137,10 +133,7 @@ export const StyledCard = styled.div`
 
         .fade {
           @keyframes heart-beat {
-            0% {
-              transform: scale(0.5);
-            }
-            70% {
+            50% {
               transform: scale(1.5);
             }
             100% {
@@ -318,7 +311,7 @@ export const StyledCardComment = styled.div`
   align-items: flex-start;
 
   > * {
-    height: 18px;
+    line-height: 18px;
     margin-bottom: 4px;
   }
 
@@ -338,6 +331,10 @@ export const StyledCardComment = styled.div`
     align-items: center;
 
     width: 100%;
+
+    button {
+      padding: 0 3px;
+    }
 
     svg {
       width: 12px;
@@ -382,6 +379,7 @@ export const StyledCardCommentForm = styled.form`
   padding: 0 14px;
   font-size: 14px;
   border-top: 1px solid rgba(var(--ce3, 239, 239, 239), 1);
+  margin-top: 8px;
 
   .left {
     display: flex;

@@ -82,7 +82,7 @@ function* likePostSaga(action: ReturnType<typeof likePostAsync.request>) {
   try {
     const response: AxiosResponse = yield call(likePostAPI, action.payload);
     yield put(likePostAsync.success(response.data));
-    yield put(increaseLikePost(response.data.data.postId));
+    yield put(increaseLikePost(response.data.data.postId, action.payload.mode));
   } catch (e) {
     alert(e.response.data.message);
     yield put(likePostAsync.failure(e.response.data));
@@ -96,7 +96,7 @@ function* unlikePostSaga(action: ReturnType<typeof unlikePostAsync.request>) {
   try {
     const response: AxiosResponse = yield call(unlikePostAPI, action.payload);
     yield put(unlikePostAsync.success(response.data));
-    yield put(decreaseLikePost(response.data.data.postId));
+    yield put(decreaseLikePost(response.data.data.postId, action.payload.mode));
   } catch (e) {
     alert(e.response.data.message);
     yield put(unlikePostAsync.failure(e.response.data));

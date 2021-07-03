@@ -10,7 +10,7 @@ export const StyledNavBar = styled.div`
   width: 100%;
   height: 54px;
 
-  z-index: 2;
+  z-index: 999;
 
   background-color: white;
   border-bottom: 1px solid ${(props) => props.theme.border.gray};
@@ -168,5 +168,19 @@ export const StyledModal = styled.div`
       }
     }
     animation: fade-in 0.2s ease;
+  }
+`;
+
+export const StyledEmojiPicker = styled.div`
+  position: absolute;
+  bottom: 50px;
+  z-index: 4;
+
+  &.home {
+    left: 10px;
+  }
+
+  &.post-detail {
+    right: 50px;
   }
 `;

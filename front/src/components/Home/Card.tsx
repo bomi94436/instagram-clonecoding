@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import {
   BsBookmark,
   BsHeart,
@@ -6,7 +6,6 @@ import {
   FiMoreHorizontal,
   IoChatbubbleOutline,
 } from 'react-icons/all';
-import Picker from 'emoji-picker-react';
 import useInput from '../../lib/hooks/useInput';
 import {
   StyledCard,
@@ -22,6 +21,7 @@ import { sliderSettings, timeForToday } from '../../lib/util';
 import Modal from '../common/Modal';
 import CardComment from './CardComment';
 import CardCommentForm from './CardCommentForm';
+import { EmojiPicker } from '../index';
 
 interface props {
   userId: number | null;
@@ -51,23 +51,7 @@ const Card = ({
   const [current, setCurrent] = useState<number>(0);
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [fadeHeart, setFadeHeart] = useState<boolean>(false);
-  const emojiRef = useRef<HTMLDivElement>(null);
   const commentRef = useRef<HTMLInputElement>(null);
-
-  const handleClickOutsideEmoji = useCallback(
-    ({ target }) => {
-      if (openEmojiPicker && !emojiRef.current?.contains(target))
-        setOpenEmojiPicker(false);
-    },
-    [openEmojiPicker, setOpenEmojiPicker]
-  );
-
-  useEffect(() => {
-    window.addEventListener('click', handleClickOutsideEmoji);
-    return () => {
-      window.removeEventListener('click', handleClickOutsideEmoji);
-    };
-  }, [handleClickOutsideEmoji]);
 
   return (
     <StyledCardWrapper>
@@ -120,7 +104,14 @@ const Card = ({
                   <BsHeartFill />
                 </button>
               ) : (
-                <button onClick={(e) => onClickLike(e)(post.id)}>
+                <button
+                  className={`${fadeHeart ? ' fade' : ''}`}
+                  onClick={(e) => {
+                    onClickLike(e)(post.id);
+                    setFadeHeart(true);
+                  }}
+                  onAnimationEnd={() => setFadeHeart(false)}
+                >
                   <BsHeart />
                 </button>
               )}
@@ -134,9 +125,15 @@ const Card = ({
             </button>
           </div>
 
-          <div className="liked">
-            좋아요 <span>{post.likeCount}</span>개
-          </div>
+          {post.likeCount > 0 ? (
+            <div className="liked">
+              좋아요 <span>{post.likeCount}</span>개
+            </div>
+          ) : (
+            <div className="liked">
+              가장 먼저 <span>좋아요</span>를 눌러보세요
+            </div>
+          )}
 
           <CardContent nickname={post.user.nickname} content={post.content} />
 
@@ -157,11 +154,12 @@ const Card = ({
       </StyledCard>
 
       {openEmojiPicker && (
-        <div className="emoji-picker" ref={emojiRef}>
-          <Picker
-            onEmojiClick={(event, data) => setComment(comment + data.emoji)}
-          />
-        </div>
+        <EmojiPicker
+          component="home"
+          comment={comment}
+          setComment={setComment}
+          setOpenEmojiPicker={setOpenEmojiPicker}
+        />
       )}
 
       {openModal && (

@@ -1,16 +1,29 @@
 import React, { useState } from 'react';
 import { filterHashAndAt, timeForToday } from '../../lib/util';
-import { BsHeart } from 'react-icons/all';
+import { BsHeart, FiMoreHorizontal } from 'react-icons/all';
 import defaultProfile from '../../lib/assets/default_profile.jpg';
 import { Comment } from '../../store/post/types';
+import Modal from '../common/Modal';
+import { StyledMorePostModal } from '../Home/styles';
 
 interface props {
+  userId: number | null;
+  postId: number;
   comment: Comment;
   onClickReply: (replyId: number | undefined, nickname: string) => void;
+  onClickDeleteComment: (postId: number, commentId: number) => void;
 }
 
-const PostDetailComment = ({ comment, onClickReply }: props) => {
+const PostDetailComment = ({
+  userId,
+  postId,
+  comment,
+  onClickReply,
+  onClickDeleteComment,
+}: props) => {
   const [openReply, setOpenReply] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
+  const [openReplyModal, setOpenReplyModal] = useState(false);
 
   return (
     <div key={comment.id}>
@@ -42,7 +55,13 @@ const PostDetailComment = ({ comment, onClickReply }: props) => {
           </div>
         </div>
 
-        <button>
+        {userId === comment.user.id && (
+          <button className="more-button" onClick={() => setOpenModal(true)}>
+            <FiMoreHorizontal />
+          </button>
+        )}
+
+        <button className="heart-button">
           <BsHeart />
         </button>
       </div>
@@ -95,12 +114,54 @@ const PostDetailComment = ({ comment, onClickReply }: props) => {
                   </div>
                 </div>
 
-                <button>
+                {userId === comment.user.id && (
+                  <button
+                    className="more-button"
+                    onClick={() => setOpenReplyModal(true)}
+                  >
+                    <FiMoreHorizontal />
+                  </button>
+                )}
+
+                <button className="heart-button">
                   <BsHeart />
                 </button>
+
+                {openReplyModal && (
+                  <Modal
+                    openModal={openReplyModal}
+                    setOpenModal={setOpenReplyModal}
+                  >
+                    <StyledMorePostModal>
+                      <button
+                        className="delete"
+                        onClick={() => onClickDeleteComment(postId, reply.id)}
+                      >
+                        삭제
+                      </button>
+                      <button onClick={() => setOpenReplyModal(false)}>
+                        취소
+                      </button>
+                    </StyledMorePostModal>
+                  </Modal>
+                )}
               </div>
             ))}
         </div>
+      )}
+
+      {openModal && (
+        <Modal openModal={openModal} setOpenModal={setOpenModal}>
+          <StyledMorePostModal>
+            <button
+              className="delete"
+              onClick={() => onClickDeleteComment(postId, comment.id)}
+            >
+              삭제
+            </button>
+            <button onClick={() => setOpenModal(false)}>취소</button>
+          </StyledMorePostModal>
+        </Modal>
       )}
     </div>
   );

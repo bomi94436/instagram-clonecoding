@@ -5,3 +5,4 @@ export { default as SignUp } from './Auth/SignUp';
 export { default as Upload } from './Upload/Upload';
 export { default as Tags } from './Tags/Tags';
 export { default as PostDetail } from './PostDetail/PostDetail';
+export { default as EmojiPicker } from './common/EmojiPicker';

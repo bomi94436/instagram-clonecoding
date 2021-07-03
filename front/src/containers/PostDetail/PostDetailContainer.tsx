@@ -1,10 +1,12 @@
 import React, { useCallback, useEffect, useRef } from 'react';
 import { createCommentAsync } from '../../store/post/actions';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
 import { StaticContext, withRouter } from 'react-router';
 import HomePostDetailContainer from './HomePostDetailContainer';
 import ExplorePostDetailContainer from './ExplorePostDetailContainer';
+import { likePostAsync, unlikePostAsync } from '../../store/auth/actions';
+import { RootState } from '../../store';
 
 const PostDetailContainer = ({
   history,
@@ -15,7 +17,14 @@ const PostDetailContainer = ({
   { postDetail: any; mode: 'home' | 'explore' }
 >) => {
   const dispatch = useDispatch();
+  const likedPost = useSelector(
+    (state: RootState) => state.auth.user.likedPost
+  );
+  const isCommentLoading = useSelector(
+    (state: RootState) => state.post.createComment.loading
+  );
   const modalRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLElement>(null);
 
   const handleClickOutside = useCallback(
     (e: any) => {
@@ -25,6 +34,20 @@ const PostDetailContainer = ({
       }
     },
     [history]
+  );
+
+  const onClickLike = useCallback(
+    (postId: number) => {
+      dispatch(likePostAsync.request({ postId, mode: location.state.mode }));
+    },
+    [dispatch, location.state.mode]
+  );
+
+  const onClickUnlike = useCallback(
+    (postId: number) => {
+      dispatch(unlikePostAsync.request({ postId, mode: location.state.mode }));
+    },
+    [dispatch, location.state.mode]
   );
 
   const onSubmitComment = useCallback(
@@ -47,17 +70,30 @@ const PostDetailContainer = ({
   );
 
   useEffect(() => {
+    if (isCommentLoading === false) {
+      contentRef.current?.scrollTo(
+        0,
+        contentRef.current?.scrollHeight - contentRef.current?.clientHeight
+      );
+    }
+  }, [isCommentLoading]);
+
+  useEffect(() => {
     document.body.style.overflow = 'hidden';
     return () => {
       document.body.style.overflow = 'unset';
     };
-  }, [handleClickOutside]);
+  }, []);
 
   if (location.state.mode === 'home')
     return (
       <HomePostDetailContainer
         modalRef={modalRef}
+        contentRef={contentRef}
         handleClickOutside={handleClickOutside}
+        likedPost={likedPost}
+        onClickLike={onClickLike}
+        onClickUnlike={onClickUnlike}
         onSubmitComment={onSubmitComment}
       />
     );
@@ -65,7 +101,11 @@ const PostDetailContainer = ({
     return (
       <ExplorePostDetailContainer
         modalRef={modalRef}
+        contentRef={contentRef}
         handleClickOutside={handleClickOutside}
+        likedPost={likedPost}
+        onClickLike={onClickLike}
+        onClickUnlike={onClickUnlike}
         onSubmitComment={onSubmitComment}
       />
     );

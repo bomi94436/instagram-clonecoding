@@ -11,10 +11,14 @@ import {
   READ_POST,
   createCommentAsync,
   CREATE_COMMENT,
+  clearCreateComment,
+  deleteCommentAsync,
+  DELETE_COMMENT,
 } from './actions';
 import {
   createCommentData,
   createPostData,
+  deleteCommentData,
   readHomePostParams,
   readPostParams,
 } from './types';
@@ -66,9 +70,33 @@ function* createCommentSaga(
         mode: action.payload.mode,
       })
     );
+    yield put(clearCreateComment());
   } catch (e) {
     alert(e.response.data.message);
     yield put(createCommentAsync.failure(e.response.data));
+  }
+}
+
+const deleteCommentAPI = (data: deleteCommentData) =>
+  axios.delete(`/posts/${data.postId}/comment/${data.commentId}`);
+
+function* deleteCommentSaga(
+  action: ReturnType<typeof deleteCommentAsync.request>
+) {
+  try {
+    const response: AxiosResponse = yield call(
+      deleteCommentAPI,
+      action.payload
+    );
+    yield put(
+      deleteCommentAsync.success({
+        ...response.data,
+        mode: action.payload.mode,
+      })
+    );
+  } catch (e) {
+    alert(e.response.data.message);
+    yield put(deleteCommentAsync.failure(e.response.data));
   }
 }
 
@@ -103,6 +131,7 @@ export function* postSaga() {
   yield takeLatest(UPLOAD_PICTURE, uploadSaga);
   yield takeLatest(CREATE_POST, createPostSaga);
   yield takeLatest(CREATE_COMMENT, createCommentSaga);
+  yield takeLatest(DELETE_COMMENT, deleteCommentSaga);
   yield takeEvery(READ_HOME_POST, readHomePostSaga);
   yield takeEvery(READ_POST, readPostSaga);
 }

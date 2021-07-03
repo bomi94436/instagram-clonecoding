@@ -7,15 +7,18 @@ import {
   deletePicture,
   readHomePostAsync,
   readPostAsync,
+  createCommentAsync,
+  clearCreateComment,
+  deleteCommentAsync,
   increaseLikePost,
   decreaseLikePost,
-  createCommentAsync,
 } from './actions';
 
 export type PostState = {
   upload: AsyncState<ResponseData, ResponseData>;
   createPost: AsyncState<ResponseData, ResponseData>;
   createComment: AsyncState<ResponseData, ResponseData>;
+  deleteComment: AsyncState<ResponseData, ResponseData>;
   readHomePost: AsyncState<ResponseData, ResponseData>;
   readPost: AsyncState<ResponseData, ResponseData>;
   uploadedPicture: UploadedPicture[];
@@ -25,12 +28,14 @@ export type PostAction = ActionType<
   | typeof uploadPictureAsync
   | typeof createPostAsync
   | typeof createCommentAsync
+  | typeof deleteCommentAsync
   | typeof readHomePostAsync
   | typeof readPostAsync
   | typeof reorderPicture
   | typeof deletePicture
   | typeof increaseLikePost
   | typeof decreaseLikePost
+  | typeof clearCreateComment
 >;
 
 export interface ResponsePicture {
@@ -92,5 +97,11 @@ export interface createCommentData {
   postId: number;
   content: string;
   replyId?: number;
+  mode?: 'home' | 'explore';
+}
+
+export interface deleteCommentData {
+  postId: number;
+  commentId: number;
   mode?: 'home' | 'explore';
 }

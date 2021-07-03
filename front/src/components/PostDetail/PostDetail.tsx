@@ -4,13 +4,19 @@ import { filterHashAndAt, sliderSettings, timeForToday } from '../../lib/util';
 import { Comment, Picture, Post } from '../../store/post/types';
 import Video from '../Home/Video';
 import defaultProfile from '../../lib/assets/default_profile.jpg';
-import { FiMoreHorizontal } from 'react-icons/all';
-import Picker from 'emoji-picker-react';
+import {
+  BsBookmark,
+  BsHeart,
+  BsHeartFill,
+  FiMoreHorizontal,
+  IoChatbubbleOutline,
+} from 'react-icons/all';
 import Modal from '../common/Modal';
 import useInput from '../../lib/hooks/useInput';
 import CardCommentForm from '../Home/CardCommentForm';
 import { StyledPostDetailModal } from './styles';
-import PostDetailComment from './PostDetailComment';
+import { EmojiPicker } from '../index';
+import PostDetailCommentContainer from '../../containers/PostDetail/PostDetailCommentContainer';
 
 interface props {
   userId: number | null;
@@ -19,6 +25,10 @@ interface props {
   nextPost?: Post;
   handleClickOutside: (e: any) => void;
   modalRef: React.RefObject<HTMLDivElement>;
+  contentRef: React.RefObject<HTMLElement>;
+  likedPost: { postId: number }[];
+  onClickLike: (postId: number) => void;
+  onClickUnlike: (postId: number) => void;
   onSubmitComment: (
     e: React.FormEvent<HTMLFormElement>
   ) => (postId: number, content: string, replyId?: number | undefined) => void;
@@ -27,8 +37,14 @@ interface props {
 const PostDetail = ({
   userId,
   post,
+  prevPost,
+  nextPost,
   handleClickOutside,
   modalRef,
+  contentRef,
+  likedPost,
+  onClickLike,
+  onClickUnlike,
   onSubmitComment,
 }: props) => {
   const [current, setCurrent] = useState<number>(0);
@@ -36,7 +52,6 @@ const PostDetail = ({
   const [openEmojiPicker, setOpenEmojiPicker] = useState<boolean>(false);
   const [replyId, setReplyId] = useState<number | undefined>(undefined);
   const [comment, onChangeComment, setComment] = useInput('');
-  const emojiRef = useRef<HTMLDivElement>(null);
   const commentRef = useRef<HTMLInputElement>(null);
 
   const onClickReply = useCallback(
@@ -50,7 +65,7 @@ const PostDetail = ({
 
   return (
     <StyledPostDetailModal onClick={handleClickOutside}>
-      <div ref={modalRef}>
+      <article ref={modalRef}>
         <div className="modal-left">
           <StyledSlider {...sliderSettings(setCurrent)} isModal={true}>
             {post.pictures.map((picture: Picture) =>
@@ -68,7 +83,7 @@ const PostDetail = ({
         </div>
 
         <div className="modal-right">
-          <div className="top">
+          <header>
             <div>
               {post.user?.profile ? (
                 <img
@@ -85,9 +100,9 @@ const PostDetail = ({
             <button onClick={() => setOpenModal(true)}>
               <FiMoreHorizontal />
             </button>
-          </div>
+          </header>
 
-          <div className="middle">
+          <section className="middle" ref={contentRef}>
             <div className="content">
               {post.user?.profile ? (
                 <img
@@ -110,12 +125,55 @@ const PostDetail = ({
             </div>
 
             {post.comments.map((comment: Comment) => (
-              <PostDetailComment
+              <PostDetailCommentContainer
+                key={comment.id}
+                postId={post.id}
                 comment={comment}
                 onClickReply={onClickReply}
               />
             ))}
-          </div>
+          </section>
+
+          <section className="bottom">
+            <div className="icons">
+              <div>
+                {likedPost.find((v) => v.postId === post.id) ? (
+                  <button
+                    className="fill-heart"
+                    onClick={() => {
+                      onClickUnlike(post.id);
+                    }}
+                  >
+                    <BsHeartFill />
+                  </button>
+                ) : (
+                  <button onClick={() => onClickLike(post.id)}>
+                    <BsHeart />
+                  </button>
+                )}
+
+                <button onClick={() => commentRef.current?.focus()}>
+                  <IoChatbubbleOutline />
+                </button>
+              </div>
+
+              <button>
+                <BsBookmark />
+              </button>
+            </div>
+
+            {post.likeCount > 0 ? (
+              <div className="liked">
+                좋아요 <span>{post.likeCount}</span>개
+              </div>
+            ) : (
+              <div className="liked">
+                가장 먼저 <span>좋아요</span>를 눌러보세요
+              </div>
+            )}
+
+            <div className="time">{timeForToday(post.createdAt)}</div>
+          </section>
 
           <CardCommentForm
             postId={post.id}
@@ -128,27 +186,28 @@ const PostDetail = ({
             replyId={replyId}
           />
         </div>
-      </div>
 
-      {openEmojiPicker && (
-        <div className="emoji-picker" ref={emojiRef}>
-          <Picker
-            onEmojiClick={(event, data) => setComment(comment + data.emoji)}
+        {openEmojiPicker && (
+          <EmojiPicker
+            component="postDetail"
+            comment={comment}
+            setComment={setComment}
+            setOpenEmojiPicker={setOpenEmojiPicker}
           />
-        </div>
-      )}
+        )}
 
-      {openModal && (
-        <Modal openModal={openModal} setOpenModal={setOpenModal}>
-          <StyledMorePostModal>
-            {post.user.id === userId && (
-              <button className="delete">삭제</button>
-            )}
-            <button>링크 복사</button>
-            <button onClick={() => setOpenModal(false)}>취소</button>
-          </StyledMorePostModal>
-        </Modal>
-      )}
+        {openModal && (
+          <Modal openModal={openModal} setOpenModal={setOpenModal}>
+            <StyledMorePostModal>
+              {post.user.id === userId && (
+                <button className="delete">삭제</button>
+              )}
+              <button>링크 복사</button>
+              <button onClick={() => setOpenModal(false)}>취소</button>
+            </StyledMorePostModal>
+          </Modal>
+        )}
+      </article>
     </StyledPostDetailModal>
   );
 };

@@ -7,7 +7,11 @@ import { RootState } from '../../store';
 
 interface props {
   modalRef: React.RefObject<HTMLDivElement>;
+  contentRef: React.RefObject<HTMLElement>;
   handleClickOutside: (e: any) => void;
+  likedPost: { postId: number }[];
+  onClickLike: (postId: number) => void;
+  onClickUnlike: (postId: number) => void;
   onSubmitComment: (
     e: React.FormEvent<HTMLFormElement>
   ) => (postId: number, content: string, replyId?: number | undefined) => void;
@@ -16,7 +20,11 @@ interface props {
 const ExplorePostDetailContainer = ({
   match,
   modalRef,
+  contentRef,
   handleClickOutside,
+  likedPost,
+  onClickLike,
+  onClickUnlike,
   onSubmitComment,
 }: props & RouteComponentProps<{ postId: string }>) => {
   const postId = Number(match.params.postId);
@@ -50,6 +58,10 @@ const ExplorePostDetailContainer = ({
       nextPost={nextPost}
       handleClickOutside={handleClickOutside}
       modalRef={modalRef}
+      contentRef={contentRef}
+      likedPost={likedPost}
+      onClickLike={onClickLike}
+      onClickUnlike={onClickUnlike}
       onSubmitComment={onSubmitComment}
     />
   );
