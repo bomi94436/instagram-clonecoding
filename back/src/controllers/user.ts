@@ -50,8 +50,7 @@ const UserController = {
     next: express.NextFunction
   ): Promise<void> => {
     const oldRefreshToken = req.cookies['x-refresh-token'];
-    const { accessToken, refreshToken } = await UserService.silentRefresh(
-      req.user.email,
+    const { accessToken, refreshToken, info } = await UserService.silentRefresh(
       oldRefreshToken
     );
 
@@ -65,6 +64,7 @@ const UserController = {
       message: '로그인 연장이 완료되었습니다.',
       data: {
         token: accessToken,
+        info,
       },
     });
   },

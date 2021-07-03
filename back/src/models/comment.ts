@@ -41,6 +41,9 @@ export default class Comment extends Model {
   @Column
   replyId: number;
 
+  @HasMany(() => Comment, 'replyId')
+  replies: Comment[];
+
   @HasMany(() => CommentLike)
   likedUser: CommentLike[];
 }

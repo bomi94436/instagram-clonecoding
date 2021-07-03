@@ -8,11 +8,75 @@ import {
   User,
 } from '../models';
 import { createModelAndValidation, CustomError } from '../utils';
-import { Op, Transaction } from 'sequelize';
+import { FindOptions, Op, Transaction } from 'sequelize';
 import sequelize from '../models/sequelize';
 
 const PostService = {
-  readPost: async (lastId: number) => {
+  getReadPostOptions: (where?: {
+    id?: number;
+    followerId?: number;
+  }): FindOptions => ({
+    where,
+    limit: 10,
+    order: [
+      ['createdAt', 'DESC'],
+      [{ model: Picture, as: 'pictures' }, 'id', 'ASC'],
+      [{ model: Comment, as: 'comments' }, 'createdAt', 'ASC'],
+      [
+        { model: Comment, as: 'comments' },
+        { model: Comment, as: 'replies' },
+        'createdAt',
+        'ASC',
+      ],
+    ],
+    attributes: {
+      exclude: ['userId'],
+    },
+    include: [
+      {
+        model: User,
+        as: 'user',
+        attributes: ['id', 'nickname'],
+      },
+      {
+        model: Picture,
+        attributes: ['id', 'type', 'src'],
+      },
+      {
+        model: Comment,
+        order: [[Comment, 'id', 'ASC']],
+        attributes: {
+          exclude: ['postId', 'userId', 'replyId'],
+        },
+        where: {
+          replyId: null,
+        },
+        include: [
+          {
+            model: User,
+            as: 'user',
+            attributes: ['id', 'nickname'],
+          },
+          {
+            model: Comment,
+            as: 'replies',
+            attributes: {
+              exclude: ['postId', 'userId'],
+            },
+            include: [
+              {
+                model: User,
+                as: 'user',
+                attributes: ['id', 'nickname'],
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  }),
+
+  readExplorePost: async (lastId: number) => {
     let where = {};
 
     if (lastId) {
@@ -21,23 +85,7 @@ const PostService = {
       };
     }
 
-    return await Post.findAll({
-      where,
-      limit: 10,
-      order: [
-        ['createdAt', 'DESC'],
-        [{ model: Picture, as: 'pictures' }, 'id', 'ASC'],
-      ],
-      attributes: {
-        exclude: ['content', 'userId'],
-      },
-      include: [
-        {
-          model: Picture,
-          attributes: ['id', 'type', 'src'],
-        },
-      ],
-    });
+    return await Post.findAll(PostService.getReadPostOptions(where));
   },
 
   readHomePost: async (userId: number, lastId: number) => {
@@ -74,42 +122,7 @@ const PostService = {
       [Op.or]: or,
     };
 
-    return await Post.findAll({
-      where,
-      limit: 10,
-      order: [
-        ['createdAt', 'DESC'],
-        [{ model: Picture, as: 'pictures' }, 'id', 'ASC'],
-        [{ model: Comment, as: 'comments' }, 'createdAt', 'ASC'],
-      ],
-      attributes: {
-        exclude: ['userId'],
-      },
-      include: [
-        {
-          model: User,
-          as: 'user',
-          attributes: ['id', 'nickname'],
-        },
-        {
-          model: Picture,
-          attributes: ['id', 'type', 'src'],
-        },
-        {
-          model: Comment,
-          attributes: {
-            exclude: ['postId', 'userId'],
-          },
-          include: [
-            {
-              model: User,
-              as: 'user',
-              attributes: ['id', 'nickname'],
-            },
-          ],
-        },
-      ],
-    });
+    return await Post.findAll(PostService.getReadPostOptions(where));
   },
 
   createPost: async (userId: number, postData: PostData): Promise<void> => {
@@ -334,6 +347,36 @@ const PostService = {
       await transaction.rollback();
       throw error;
     }
+  },
+
+  deleteComment: async (
+    userId: number,
+    postId: number,
+    commentId: number
+  ): Promise<void> => {
+    const post = await Post.findOne(
+      PostService.getReadPostOptions({ id: postId })
+    );
+    if (!post) throw new CustomError(403, '존재하지 않는 게시글입니다.');
+
+    const comment = await Comment.findOne({
+      where: {
+        id: commentId,
+      },
+    });
+    if (!comment) throw new CustomError(403, '존재하지 않는 댓글입니다.');
+
+    if (comment.userId !== userId)
+      throw new CustomError(
+        403,
+        '댓글 작성자만 해당 댓글을 삭제할 수 있습니다.'
+      );
+
+    await Comment.destroy({
+      where: {
+        id: commentId,
+      },
+    });
   },
 };
 

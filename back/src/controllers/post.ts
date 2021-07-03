@@ -7,7 +7,7 @@ const PostController = {
     res: express.Response,
     next: express.NextFunction
   ): Promise<void> => {
-    const posts = await PostService.readPost(Number(req.query.lastId));
+    const posts = await PostService.readExplorePost(Number(req.query.lastId));
 
     res.status(200).json(<ResponseData>{
       success: true,
@@ -110,6 +110,25 @@ const PostController = {
       message: '게시글에 좋아요를 취소했습니다.',
       data: {
         postId: Number(req.params.postId),
+      },
+    });
+  },
+
+  deleteComment: async (
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction
+  ): Promise<void> => {
+    const postId = Number(req.params.postId);
+    const commentId = Number(req.params.commentId);
+    await PostService.deleteComment(req.user.id, postId, commentId);
+
+    res.status(200).json(<ResponseData>{
+      success: true,
+      message: '게시글의 댓글을 삭제했습니다.',
+      data: {
+        postId,
+        commentId,
       },
     });
   },

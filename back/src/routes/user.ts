@@ -9,11 +9,7 @@ const router = express.Router();
  * /users
  * */
 
-router.get(
-  '/silent-refresh',
-  isLoggedIn,
-  wrapAsync(UserController.silentRefresh)
-);
+router.get('/silent-refresh', wrapAsync(UserController.silentRefresh));
 router.get('/logout', wrapAsync(UserController.logout));
 router.get('/:nickname', isLoggedIn, wrapAsync(UserController.getUser));
 router.post('/', wrapAsync(UserController.signUp));

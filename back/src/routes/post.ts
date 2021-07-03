@@ -61,5 +61,10 @@ router.delete(
   isLoggedIn,
   wrapAsync(PostController.unlikePost)
 );
+router.delete(
+  '/:postId/comment/:commentId',
+  isLoggedIn,
+  wrapAsync(PostController.deleteComment)
+);
 
 module.exports = router;

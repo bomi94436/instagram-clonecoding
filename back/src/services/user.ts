@@ -151,7 +151,6 @@ const UserService = {
   },
 
   silentRefresh: async (
-    loggedInUser: string,
     oldRefreshToken: string
   ): Promise<ReturnType<typeof UserService.generateToken>> =>
     jwt.verify(
@@ -169,25 +168,37 @@ const UserService = {
           }
         }
 
-        const [dbErr, user] = await to(
-          User.findOne({
-            where: {
-              id: decoded.id,
+        const user = await User.findOne({
+          where: {
+            id: decoded.id,
+            token: oldRefreshToken,
+          },
+          attributes: ['id', 'email', 'nickname', 'postCount'],
+          include: [
+            {
+              model: PostLike,
+              attributes: ['postId'],
             },
-          })
+            {
+              model: Follow,
+              as: 'followings',
+              attributes: ['followingId'],
+            },
+            {
+              model: Follow,
+              as: 'followers',
+              attributes: ['followerId'],
+            },
+          ],
+        });
+        if (!user) throw new CustomError(403, '유효하지 않은 로그인입니다.');
+
+        const { accessToken, refreshToken } = await UserService.generateToken(
+          user.id,
+          user.email
         );
-        if (dbErr) throw dbErr;
 
-        if (user.token === oldRefreshToken && loggedInUser === user.email) {
-          const { accessToken, refreshToken } = await UserService.generateToken(
-            decoded.id,
-            decoded.email
-          );
-
-          return { accessToken, refreshToken };
-        } else {
-          throw new CustomError(403, '유효하지 않은 로그인입니다.');
-        }
+        return { accessToken, refreshToken, info: user };
       }
     ),
 
