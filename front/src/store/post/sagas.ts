@@ -14,15 +14,19 @@ import {
   clearCreateComment,
   deleteCommentAsync,
   DELETE_COMMENT,
+  deletePostAsync,
+  DELETE_POST,
 } from './actions';
 import {
   createCommentData,
   createPostData,
   deleteCommentData,
+  deletePostData,
   readHomePostParams,
   readPostParams,
 } from './types';
 import history from '../../lib/history';
+import { decreasePostCount } from '../auth/actions';
 
 const uploadAPI = (data: FormData) => axios.post('/posts/pictures', data);
 
@@ -77,29 +81,6 @@ function* createCommentSaga(
   }
 }
 
-const deleteCommentAPI = (data: deleteCommentData) =>
-  axios.delete(`/posts/${data.postId}/comment/${data.commentId}`);
-
-function* deleteCommentSaga(
-  action: ReturnType<typeof deleteCommentAsync.request>
-) {
-  try {
-    const response: AxiosResponse = yield call(
-      deleteCommentAPI,
-      action.payload
-    );
-    yield put(
-      deleteCommentAsync.success({
-        ...response.data,
-        mode: action.payload.mode,
-      })
-    );
-  } catch (e) {
-    alert(e.response.data.message);
-    yield put(deleteCommentAsync.failure(e.response.data));
-  }
-}
-
 const readHomePostAPI = (params: readHomePostParams) =>
   axios.get('/posts/following', { params });
 
@@ -127,11 +108,54 @@ function* readPostSaga(action: ReturnType<typeof readPostAsync.request>) {
   }
 }
 
+const deletePostAPI = (data: deletePostData) =>
+  axios.delete(`/posts/${data.postId}`);
+
+function* deletePostSaga(action: ReturnType<typeof deletePostAsync.request>) {
+  try {
+    const response: AxiosResponse = yield call(deletePostAPI, action.payload);
+    yield put(
+      deletePostAsync.success({
+        ...response.data,
+        mode: action.payload.mode,
+      })
+    );
+    yield put(decreasePostCount());
+  } catch (e) {
+    alert(e.response.data.message);
+    yield put(deletePostAsync.failure(e.response.data));
+  }
+}
+
+const deleteCommentAPI = (data: deleteCommentData) =>
+  axios.delete(`/posts/${data.postId}/comment/${data.commentId}`);
+
+function* deleteCommentSaga(
+  action: ReturnType<typeof deleteCommentAsync.request>
+) {
+  try {
+    const response: AxiosResponse = yield call(
+      deleteCommentAPI,
+      action.payload
+    );
+    yield put(
+      deleteCommentAsync.success({
+        ...response.data,
+        mode: action.payload.mode,
+      })
+    );
+  } catch (e) {
+    alert(e.response.data.message);
+    yield put(deleteCommentAsync.failure(e.response.data));
+  }
+}
+
 export function* postSaga() {
   yield takeLatest(UPLOAD_PICTURE, uploadSaga);
   yield takeLatest(CREATE_POST, createPostSaga);
   yield takeLatest(CREATE_COMMENT, createCommentSaga);
-  yield takeLatest(DELETE_COMMENT, deleteCommentSaga);
   yield takeEvery(READ_HOME_POST, readHomePostSaga);
   yield takeEvery(READ_POST, readPostSaga);
+  yield takeLatest(DELETE_POST, deletePostSaga);
+  yield takeLatest(DELETE_COMMENT, deleteCommentSaga);
 }

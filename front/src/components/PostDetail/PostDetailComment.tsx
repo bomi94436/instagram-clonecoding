@@ -135,7 +135,11 @@ const PostDetailComment = ({
                     <StyledMorePostModal>
                       <button
                         className="delete"
-                        onClick={() => onClickDeleteComment(postId, reply.id)}
+                        onClick={() => {
+                          onClickDeleteComment(postId, reply.id);
+                          setOpenReplyModal(false);
+                          setOpenReply(false);
+                        }}
                       >
                         삭제
                       </button>

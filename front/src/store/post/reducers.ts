@@ -6,9 +6,10 @@ const initialState: PostState = {
   upload: asyncState.initial(),
   createPost: asyncState.initial(),
   createComment: asyncState.initial(),
-  deleteComment: asyncState.initial(),
   readHomePost: asyncState.initial(),
   readPost: asyncState.initial(),
+  deletePost: asyncState.initial(),
+  deleteComment: asyncState.initial(),
   uploadedPicture: [],
 };
 
@@ -79,39 +80,6 @@ const post = (state: PostState = initialState, action: PostAction) =>
         draft.createComment = asyncState.error(action.payload);
         break;
 
-      case 'post/DELETE_COMMENT':
-        draft.deleteComment = asyncState.loading();
-        break;
-      case 'post/DELETE_COMMENT_SUCCESS':
-        {
-          draft.deleteComment = asyncState.success(action.payload);
-
-          const post =
-            action.payload.mode === 'home'
-              ? draft.readHomePost.data?.data.find(
-                  (post: Post) => post.id === action.payload.data.postId
-                )
-              : draft.readPost.data?.data.find(
-                  (post: Post) => post.id === action.payload.data.postId
-                );
-
-          post.comments.forEach((comment: Comment, commentIndex: number) => {
-            if (comment.id === action.payload.data.commentId) {
-              post.comments.splice(commentIndex, 1);
-            }
-            comment.replies?.forEach((reply: Comment, replyIndex: number) => {
-              if (reply.id === action.payload.data.commentId) {
-                comment.replies.splice(replyIndex, 1);
-              }
-            });
-          });
-        }
-
-        break;
-      case 'post/DELETE_COMMENT_ERROR':
-        draft.deleteComment = asyncState.error(action.payload);
-        break;
-
       case 'post/READ_HOME_POST':
         draft.readHomePost = asyncState.loading(draft.readHomePost.data);
         break;
@@ -130,6 +98,62 @@ const post = (state: PostState = initialState, action: PostAction) =>
         break;
       case 'post/READ_POST_ERROR':
         draft.readPost = asyncState.error(action.payload);
+        break;
+
+      case 'post/DELETE_POST':
+        draft.deletePost = asyncState.loading();
+        break;
+      case 'post/DELETE_POST_SUCCESS': {
+        draft.deletePost = asyncState.success(action.payload);
+
+        if (action.payload.mode === 'home') {
+          draft.readHomePost.data?.data.forEach(
+            (post: Post, index: number) =>
+              post.id === action.payload.data.postId &&
+              draft.readHomePost.data?.data.splice(index, 1)
+          );
+        }
+
+        break;
+      }
+      case 'post/DELETE_POST_ERROR':
+        draft.deletePost = asyncState.error(action.payload);
+        break;
+
+      case 'post/DELETE_COMMENT':
+        draft.deleteComment = asyncState.loading();
+        break;
+      case 'post/DELETE_COMMENT_SUCCESS': {
+        draft.deleteComment = asyncState.success(action.payload);
+
+        const post =
+          action.payload.mode === 'home'
+            ? draft.readHomePost.data?.data.find(
+                (post: Post) => post.id === action.payload.data.postId
+              )
+            : draft.readPost.data?.data.find(
+                (post: Post) => post.id === action.payload.data.postId
+              );
+
+        post.comments.forEach((comment: Comment, commentIndex: number) => {
+          if (
+            comment.id === action.payload.data.commentId ||
+            comment.replyId === action.payload.data.commentId
+          ) {
+            post.comments.splice(commentIndex, 1);
+          }
+          comment.replies?.forEach((reply: Comment, replyIndex: number) => {
+            if (reply.id === action.payload.data.commentId) {
+              comment.replies.splice(replyIndex, 1);
+            }
+          });
+        });
+
+        break;
+      }
+
+      case 'post/DELETE_COMMENT_ERROR':
+        draft.deleteComment = asyncState.error(action.payload);
         break;
 
       case 'post/DELETE_PICTURE':

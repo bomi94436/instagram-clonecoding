@@ -32,6 +32,8 @@ export const GET_USER_INFO_ERROR = 'auth/GET_USER_INFO_ERROR';
 export const SET_AUTO_LOGIN = 'auth/SET_AUTO_LOGIN';
 export const CLEAR_AUTO_LOGIN = 'auth/CLEAR_AUTO_LOGIN';
 
+export const DECREASE_POST_COUNT = 'auth/DECREASE_POST_COUNT';
+
 export const signUpAsync = createAsyncAction(
   SIGN_UP,
   SIGN_UP_SUCCESS,
@@ -79,3 +81,5 @@ export const setAutoLogin = createAction(SET_AUTO_LOGIN, ({ timer }) => ({
 }))();
 
 export const clearAutoLogin = createAction(CLEAR_AUTO_LOGIN)();
+
+export const decreasePostCount = createAction(DECREASE_POST_COUNT)();

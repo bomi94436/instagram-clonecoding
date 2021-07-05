@@ -85,6 +85,16 @@ export const StyledPostDetailModal = styled.div`
         flex-grow: 1;
       }
 
+      .content-middle,
+      .comment-middle {
+        display: flex;
+        flex-direction: column;
+
+        > :nth-child(2) {
+          margin: 16px 0 4px;
+        }
+      }
+
       .comment {
         justify-content: space-between;
 
@@ -95,23 +105,6 @@ export const StyledPostDetailModal = styled.div`
         :hover {
           .more-button {
             display: block;
-          }
-        }
-
-        .content-middle,
-        .comment-middle {
-          display: flex;
-          flex-direction: column;
-
-          > :nth-child(2) {
-            margin: 16px 0 4px;
-          }
-
-          .time {
-            margin-right: 12px;
-            font-weight: 600;
-            font-size: 12px;
-            color: ${({ theme }) => theme.fontColor.gray};
           }
         }
 
@@ -207,13 +200,13 @@ export const StyledPostDetailModal = styled.div`
           font-weight: 600;
         }
       }
+    }
 
-      .time {
-        font-size: 10px;
-        font-weight: 600;
-        line-height: 18px;
-        color: ${({ theme }) => theme.fontColor.gray};
-      }
+    .time {
+      margin-right: 12px;
+      font-weight: 600;
+      font-size: 12px;
+      color: ${({ theme }) => theme.fontColor.gray};
     }
   }
 `;

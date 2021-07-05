@@ -2,6 +2,7 @@ import { AsyncState } from '../../lib/reducerUtils';
 import { ActionType } from 'typesafe-actions';
 import {
   clearAutoLogin,
+  decreasePostCount,
   getUserInfoAsync,
   likePostAsync,
   loginAsync,
@@ -34,6 +35,7 @@ export type AuthAction = ActionType<
   | typeof getUserInfoAsync
   | typeof setAutoLogin
   | typeof clearAutoLogin
+  | typeof decreasePostCount
 >;
 
 export interface SignUpData {

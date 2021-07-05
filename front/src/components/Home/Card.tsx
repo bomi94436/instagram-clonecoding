@@ -33,6 +33,7 @@ interface props {
   onClickUnlike: (
     e: React.MouseEvent<HTMLButtonElement>
   ) => (postId: number) => void;
+  onClickDeletePost: (postId: number) => void;
   onSubmitComment: (
     e: React.FormEvent<HTMLFormElement>
   ) => (postId: number, content: string, replyId?: number | undefined) => void;
@@ -44,6 +45,7 @@ const Card = ({
   likedPost,
   onClickLike,
   onClickUnlike,
+  onClickDeletePost,
   onSubmitComment,
 }: props) => {
   const [comment, onChangeComment, setComment] = useInput('');
@@ -70,7 +72,7 @@ const Card = ({
             <span>{post.user.nickname}</span>
           </div>
 
-          <button onClick={(e) => setOpenModal(true)}>
+          <button onClick={() => setOpenModal(true)}>
             <FiMoreHorizontal />
           </button>
         </div>
@@ -166,7 +168,15 @@ const Card = ({
         <Modal openModal={openModal} setOpenModal={setOpenModal}>
           <StyledMorePostModal>
             {post.user.id === userId && (
-              <button className="delete">삭제</button>
+              <button
+                className="delete"
+                onClick={() => {
+                  onClickDeletePost(post.id);
+                  setOpenModal(false);
+                }}
+              >
+                삭제
+              </button>
             )}
             <button>링크 복사</button>
             <button onClick={() => setOpenModal(false)}>취소</button>

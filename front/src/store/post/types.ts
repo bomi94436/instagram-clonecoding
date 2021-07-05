@@ -12,15 +12,17 @@ import {
   deleteCommentAsync,
   increaseLikePost,
   decreaseLikePost,
+  deletePostAsync,
 } from './actions';
 
 export type PostState = {
   upload: AsyncState<ResponseData, ResponseData>;
   createPost: AsyncState<ResponseData, ResponseData>;
   createComment: AsyncState<ResponseData, ResponseData>;
-  deleteComment: AsyncState<ResponseData, ResponseData>;
   readHomePost: AsyncState<ResponseData, ResponseData>;
   readPost: AsyncState<ResponseData, ResponseData>;
+  deletePost: AsyncState<ResponseData, ResponseData>;
+  deleteComment: AsyncState<ResponseData, ResponseData>;
   uploadedPicture: UploadedPicture[];
 };
 
@@ -28,15 +30,26 @@ export type PostAction = ActionType<
   | typeof uploadPictureAsync
   | typeof createPostAsync
   | typeof createCommentAsync
-  | typeof deleteCommentAsync
   | typeof readHomePostAsync
   | typeof readPostAsync
+  | typeof deletePostAsync
+  | typeof deleteCommentAsync
   | typeof reorderPicture
   | typeof deletePicture
   | typeof increaseLikePost
   | typeof decreaseLikePost
   | typeof clearCreateComment
 >;
+
+interface User {
+  id: number;
+  nickname: string;
+  profile?: string;
+}
+
+interface Mode {
+  mode?: 'home' | 'explore';
+}
 
 export interface ResponsePicture {
   type: string;
@@ -68,12 +81,6 @@ export interface Picture {
   type: 'image' | 'video';
 }
 
-interface User {
-  id: number;
-  nickname: string;
-  profile?: string;
-}
-
 export interface Comment {
   id: number;
   content: string;
@@ -93,15 +100,17 @@ export interface Post {
   comments: Comment[];
 }
 
-export interface createCommentData {
+export interface createCommentData extends Mode {
   postId: number;
   content: string;
   replyId?: number;
-  mode?: 'home' | 'explore';
 }
 
-export interface deleteCommentData {
+export interface deletePostData extends Mode {
+  postId: number;
+}
+
+export interface deleteCommentData extends Mode {
   postId: number;
   commentId: number;
-  mode?: 'home' | 'explore';
 }

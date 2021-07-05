@@ -124,14 +124,17 @@ const PostDetail = ({
               </div>
             </div>
 
-            {post.comments.map((comment: Comment) => (
-              <PostDetailCommentContainer
-                key={comment.id}
-                postId={post.id}
-                comment={comment}
-                onClickReply={onClickReply}
-              />
-            ))}
+            {post.comments.map(
+              (comment: Comment) =>
+                comment.replyId === null && (
+                  <PostDetailCommentContainer
+                    key={comment.id}
+                    postId={post.id}
+                    comment={comment}
+                    onClickReply={onClickReply}
+                  />
+                )
+            )}
           </section>
 
           <section className="bottom">
@@ -184,6 +187,7 @@ const PostDetail = ({
             setOpenEmojiPicker={setOpenEmojiPicker}
             commentRef={commentRef}
             replyId={replyId}
+            setReplyId={setReplyId}
           />
         </div>
 

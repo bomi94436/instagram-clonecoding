@@ -13,6 +13,7 @@ interface props {
   setOpenEmojiPicker: React.Dispatch<React.SetStateAction<boolean>>;
   commentRef: React.RefObject<HTMLInputElement>;
   replyId?: number;
+  setReplyId?: React.Dispatch<React.SetStateAction<number | undefined>>;
 }
 
 const CardCommentForm = ({
@@ -24,6 +25,7 @@ const CardCommentForm = ({
   setOpenEmojiPicker,
   commentRef,
   replyId,
+  setReplyId,
 }: props) => {
   return (
     <StyledCardCommentForm
@@ -32,6 +34,7 @@ const CardCommentForm = ({
         setOpenEmojiPicker(false);
         setComment('');
         commentRef.current?.blur();
+        replyId && setReplyId && setReplyId(undefined);
       }}
     >
       <div className="left">

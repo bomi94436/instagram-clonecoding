@@ -12,24 +12,6 @@ interface props {
 
 const CardComment = ({ post, comments }: props) => {
   const location = useLocation();
-  const sortComments: Comment[] = [];
-
-  if (comments.length > 1) {
-    sortComments.push(comments[comments.length - 2]);
-    if (comments[comments.length - 2].replies?.length > 0) {
-      comments[comments.length - 2].replies.forEach((reply) =>
-        sortComments.push(reply)
-      );
-    }
-  }
-  if (comments.length > 0) {
-    sortComments.push(comments[comments.length - 1]);
-    if (comments[comments.length - 1].replies?.length > 0) {
-      comments[comments.length - 1].replies.forEach((reply) =>
-        sortComments.push(reply)
-      );
-    }
-  }
 
   return (
     <StyledCardComment>
@@ -43,14 +25,14 @@ const CardComment = ({ post, comments }: props) => {
           <button>댓글 {comments.length}개 모두 보기</button>
         </Link>
       )}
-      {sortComments.length > 1 && (
+      {comments.length > 1 && (
         <div className="comment">
           <div>
             <span className="nickname">
-              {sortComments[sortComments.length - 2].user.nickname}{' '}
+              {comments[comments.length - 2].user.nickname}{' '}
             </span>
             <span>
-              {filterHashAndAt(sortComments[sortComments.length - 2].content)}
+              {filterHashAndAt(comments[comments.length - 2].content)}
             </span>
           </div>
           <button>
@@ -58,14 +40,14 @@ const CardComment = ({ post, comments }: props) => {
           </button>
         </div>
       )}
-      {sortComments.length > 0 && (
+      {comments.length > 0 && (
         <div className="comment">
           <div>
             <span className="nickname">
-              {sortComments[sortComments.length - 1].user.nickname}{' '}
+              {comments[comments.length - 1].user.nickname}{' '}
             </span>
             <span>
-              {filterHashAndAt(sortComments[sortComments.length - 1].content)}
+              {filterHashAndAt(comments[comments.length - 1].content)}
             </span>
           </div>
           <button>

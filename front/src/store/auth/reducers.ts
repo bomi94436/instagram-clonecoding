@@ -114,6 +114,9 @@ const auth = (state: AuthState = initialState, action: AuthAction) =>
         clearInterval(draft.timer as NodeJS.Timeout);
         draft.timer = null;
         break;
+
+      case 'auth/DECREASE_POST_COUNT':
+        if (draft.user.postCount) draft.user.postCount -= 1;
     }
   });
 

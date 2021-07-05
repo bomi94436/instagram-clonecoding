@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useCallback } from 'react';
 import { likePostAsync, unlikePostAsync } from '../../store/auth/actions';
 import { RootState } from '../../store';
-import { createCommentAsync } from '../../store/post/actions';
+import { createCommentAsync, deletePostAsync } from '../../store/post/actions';
 
 interface props {
   post: Post;
@@ -28,6 +28,13 @@ const CardContainer = ({ post }: props) => {
   const onClickUnlike = useCallback(
     (e: React.MouseEvent<HTMLButtonElement>) => (postId: number) => {
       dispatch(unlikePostAsync.request({ postId, mode: 'home' }));
+    },
+    [dispatch]
+  );
+
+  const onClickDeletePost = useCallback(
+    (postId: number) => {
+      dispatch(deletePostAsync.request({ postId, mode: 'home' }));
     },
     [dispatch]
   );
@@ -58,6 +65,7 @@ const CardContainer = ({ post }: props) => {
       likedPost={likedPost}
       onClickLike={onClickLike}
       onClickUnlike={onClickUnlike}
+      onClickDeletePost={onClickDeletePost}
       onSubmitComment={onSubmitComment}
     />
   );

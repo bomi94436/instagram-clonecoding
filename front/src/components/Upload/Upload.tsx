@@ -54,6 +54,7 @@ const Upload = ({
               <input
                 type="file"
                 name="file"
+                accept="image/*, video/*"
                 multiple
                 hidden
                 ref={uploadRef}

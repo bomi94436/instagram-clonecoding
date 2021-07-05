@@ -7,6 +7,7 @@ import {
   createCommentData,
   Post,
   deleteCommentData,
+  deletePostData,
 } from './types';
 
 export const UPLOAD_PICTURE = 'post/UPLOAD_PICTURE';
@@ -21,10 +22,6 @@ export const CREATE_COMMENT = 'post/CREATE_COMMENT';
 export const CREATE_COMMENT_SUCCESS = 'post/CREATE_COMMENT_SUCCESS';
 export const CREATE_COMMENT_ERROR = 'post/CREATE_COMMENT_ERROR';
 
-export const DELETE_COMMENT = 'post/DELETE_COMMENT';
-export const DELETE_COMMENT_SUCCESS = 'post/DELETE_COMMENT_SUCCESS';
-export const DELETE_COMMENT_ERROR = 'post/DELETE_COMMENT_ERROR';
-
 export const READ_HOME_POST = 'post/READ_HOME_POST';
 export const READ_HOME_POST_SUCCESS = 'post/READ_HOME_POST_SUCCESS';
 export const READ_HOME_POST_ERROR = 'post/READ_HOME_POST_ERROR';
@@ -32,6 +29,14 @@ export const READ_HOME_POST_ERROR = 'post/READ_HOME_POST_ERROR';
 export const READ_POST = 'post/READ_POST';
 export const READ_POST_SUCCESS = 'post/READ_POST_SUCCESS';
 export const READ_POST_ERROR = 'post/READ_POST_ERROR';
+
+export const DELETE_POST = 'post/DELETE_POST';
+export const DELETE_POST_SUCCESS = 'post/DELETE_POST_SUCCESS';
+export const DELETE_POST_ERROR = 'post/DELETE_POST_ERROR';
+
+export const DELETE_COMMENT = 'post/DELETE_COMMENT';
+export const DELETE_COMMENT_SUCCESS = 'post/DELETE_COMMENT_SUCCESS';
+export const DELETE_COMMENT_ERROR = 'post/DELETE_COMMENT_ERROR';
 
 export const REORDER_UPLOADED = 'post/REORDER_UPLOADED';
 export const DELETE_PICTURE = 'post/DELETE_PICTURE';
@@ -59,12 +64,6 @@ export const createCommentAsync = createAsyncAction(
   CREATE_COMMENT_ERROR
 )<createCommentData, ResponseData, ResponseData>();
 
-export const deleteCommentAsync = createAsyncAction(
-  DELETE_COMMENT,
-  DELETE_COMMENT_SUCCESS,
-  DELETE_COMMENT_ERROR
-)<deleteCommentData, ResponseData, ResponseData>();
-
 export const readHomePostAsync = createAsyncAction(
   READ_HOME_POST,
   READ_HOME_POST_SUCCESS,
@@ -76,6 +75,18 @@ export const readPostAsync = createAsyncAction(
   READ_POST_SUCCESS,
   READ_POST_ERROR
 )<readPostParams, ResponseData<Post>, ResponseData>();
+
+export const deletePostAsync = createAsyncAction(
+  DELETE_POST,
+  DELETE_POST_SUCCESS,
+  DELETE_POST_ERROR
+)<deletePostData, ResponseData, ResponseData>();
+
+export const deleteCommentAsync = createAsyncAction(
+  DELETE_COMMENT,
+  DELETE_COMMENT_SUCCESS,
+  DELETE_COMMENT_ERROR
+)<deleteCommentData, ResponseData, ResponseData>();
 
 export const reorderPicture = createAction(
   REORDER_UPLOADED,
