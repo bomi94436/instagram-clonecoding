@@ -56,6 +56,7 @@ router.post(
   wrapAsync(PostController.createComment)
 );
 router.patch('/:postId/like', isLoggedIn, wrapAsync(PostController.likePost));
+router.delete('/:postId', isLoggedIn, wrapAsync(PostController.deletePost));
 router.delete(
   '/:postId/like',
   isLoggedIn,

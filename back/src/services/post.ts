@@ -46,10 +46,7 @@ const PostService = {
         model: Comment,
         order: [[Comment, 'id', 'ASC']],
         attributes: {
-          exclude: ['postId', 'userId', 'replyId'],
-        },
-        where: {
-          replyId: null,
+          exclude: ['postId', 'userId'],
         },
         include: [
           {
@@ -88,7 +85,7 @@ const PostService = {
     return await Post.findAll(PostService.getReadPostOptions(where));
   },
 
-  readHomePost: async (userId: number, lastId: number) => {
+  readHomePost: async (userId: number, lastId?: number) => {
     let where = {};
     const or = [];
 
@@ -349,14 +346,60 @@ const PostService = {
     }
   },
 
+  deletePost: async (userId: number, postId: number): Promise<void> => {
+    const post = await Post.findOne({
+      where: {
+        id: postId,
+      },
+    });
+    if (!post) throw new CustomError(403, '존재하지 않는 게시글입니다.');
+
+    if (post.userId !== userId)
+      throw new CustomError(
+        403,
+        '게시글 작성자만 해당 게시글을 삭제할 수 있습니다.'
+      );
+
+    const transaction: Transaction = await sequelize.transaction();
+
+    try {
+      await Post.destroy({
+        where: {
+          id: postId,
+        },
+        transaction,
+      });
+
+      const user = await User.findOne({
+        where: {
+          id: userId,
+        },
+      });
+
+      await user.update(
+        {
+          postCount: user.postCount - 1,
+        },
+        { transaction }
+      );
+
+      await transaction.commit();
+    } catch (error) {
+      await transaction.rollback();
+      throw error;
+    }
+  },
+
   deleteComment: async (
     userId: number,
     postId: number,
     commentId: number
   ): Promise<void> => {
-    const post = await Post.findOne(
-      PostService.getReadPostOptions({ id: postId })
-    );
+    const post = await Post.findOne({
+      where: {
+        id: postId,
+      },
+    });
     if (!post) throw new CustomError(403, '존재하지 않는 게시글입니다.');
 
     const comment = await Comment.findOne({
@@ -374,7 +417,10 @@ const PostService = {
 
     await Comment.destroy({
       where: {
-        id: commentId,
+        [Op.or]: {
+          id: commentId,
+          replyId: commentId,
+        },
       },
     });
   },

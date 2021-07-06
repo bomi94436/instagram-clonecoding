@@ -114,6 +114,23 @@ const PostController = {
     });
   },
 
+  deletePost: async (
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction
+  ): Promise<void> => {
+    const postId = Number(req.params.postId);
+    await PostService.deletePost(req.user.id, postId);
+
+    res.status(200).json(<ResponseData>{
+      success: true,
+      message: '게시글을 삭제했습니다.',
+      data: {
+        postId,
+      },
+    });
+  },
+
   deleteComment: async (
     req: express.Request,
     res: express.Response,
