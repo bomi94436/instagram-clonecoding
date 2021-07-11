@@ -12,6 +12,7 @@ interface props {
   likedPost: { postId: number }[];
   onClickLike: (postId: number) => void;
   onClickUnlike: (postId: number) => void;
+  onClickDeletePost: (postId: number) => void;
   onSubmitComment: (
     e: React.FormEvent<HTMLFormElement>
   ) => (postId: number, content: string, replyId?: number | undefined) => void;
@@ -25,6 +26,7 @@ const ExplorePostDetailContainer = ({
   likedPost,
   onClickLike,
   onClickUnlike,
+  onClickDeletePost,
   onSubmitComment,
 }: props & RouteComponentProps<{ postId: string }>) => {
   const postId = Number(match.params.postId);
@@ -62,6 +64,7 @@ const ExplorePostDetailContainer = ({
       likedPost={likedPost}
       onClickLike={onClickLike}
       onClickUnlike={onClickUnlike}
+      onClickDeletePost={onClickDeletePost}
       onSubmitComment={onSubmitComment}
     />
   );

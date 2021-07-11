@@ -133,14 +133,17 @@ export const StyledCard = styled.div`
 
         .fade {
           @keyframes heart-beat {
-            50% {
-              transform: scale(1.5);
+            40% {
+              transform: scale(1.3);
+            }
+            80% {
+              transform: scale(0.6);
             }
             100% {
               transform: scale(1);
             }
           }
-          animation: heart-beat 0.2s linear;
+          animation: heart-beat 0.3s linear;
         }
       }
 
@@ -332,13 +335,18 @@ export const StyledCardComment = styled.div`
 
     width: 100%;
 
-    button {
+    .heart-button {
       padding: 0 3px;
-    }
+      color: black;
 
-    svg {
-      width: 12px;
-      height: 12px;
+      svg {
+        width: 12px;
+        height: 12px;
+      }
+
+      &.fill {
+        color: ${({ theme }) => theme.icon.red};
+      }
     }
   }
 `;

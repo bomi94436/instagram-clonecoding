@@ -16,8 +16,6 @@ const initialState: AuthState = {
   signup: asyncState.initial(),
   login: asyncState.initial(),
   silentRefresh: asyncState.initial(),
-  likePost: asyncState.initial(),
-  unlikePost: asyncState.initial(),
   logout: asyncState.initial(),
   getUserInfo: asyncState.initial(),
   timer: null,
@@ -70,32 +68,6 @@ const auth = (state: AuthState = initialState, action: AuthAction) =>
         draft.logout = asyncState.error(action.payload);
         break;
 
-      case 'auth/LIKE_POST':
-        draft.likePost = asyncState.loading();
-        break;
-      case 'auth/LIKE_POST_SUCCESS':
-        draft.likePost = asyncState.success(action.payload);
-        draft.user.likedPost.push({
-          postId: Number(action.payload.data.postId),
-        });
-        break;
-      case 'auth/LIKE_POST_ERROR':
-        draft.likePost = asyncState.error(action.payload);
-        break;
-
-      case 'auth/UNLIKE_POST':
-        draft.unlikePost = asyncState.loading();
-        break;
-      case 'auth/UNLIKE_POST_SUCCESS':
-        draft.unlikePost = asyncState.success(action.payload);
-        draft.user.likedPost = draft.user.likedPost.filter(
-          (v) => v.postId !== Number(action.payload.data.postId)
-        );
-        break;
-      case 'auth/UNLIKE_POST_ERROR':
-        draft.unlikePost = asyncState.error(action.payload);
-        break;
-
       case 'auth/GET_USER_INFO':
         draft.getUserInfo = asyncState.loading();
         break;
@@ -117,6 +89,18 @@ const auth = (state: AuthState = initialState, action: AuthAction) =>
 
       case 'auth/DECREASE_POST_COUNT':
         if (draft.user.postCount) draft.user.postCount -= 1;
+        break;
+
+      case 'auth/ADD_LIKED_POST':
+        draft.user.likedPost.push({
+          postId: Number(action.payload.postId),
+        });
+        break;
+      case 'auth/REMOVE_LIKED_POST':
+        draft.user.likedPost = draft.user.likedPost.filter(
+          (v) => v.postId !== Number(action.payload.postId)
+        );
+        break;
     }
   });
 

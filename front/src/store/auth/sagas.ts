@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from 'axios';
-import { call, put, takeEvery, takeLatest, throttle } from 'redux-saga/effects';
+import { call, put, takeEvery, takeLatest } from 'redux-saga/effects';
 import {
   LOGIN,
   loginAsync,
@@ -9,16 +9,11 @@ import {
   SILENT_REFRESH,
   silentRefreshAsync,
   LOGOUT,
-  unlikePostAsync,
-  likePostAsync,
-  LIKE_POST,
-  UNLIKE_POST,
   getUserInfoAsync,
   GET_USER_INFO,
 } from './actions';
 import { LoginData, SignUpData } from './types';
 import history from '../../lib/history';
-import { decreaseLikePost, increaseLikePost } from '../post/actions';
 
 const signUpAPI = (data: SignUpData) => axios.post('/users', data);
 
@@ -75,34 +70,6 @@ function* logoutSaga() {
   }
 }
 
-const likePostAPI = (params: { postId: number }) =>
-  axios.patch(`/posts/${params.postId}/like`);
-
-function* likePostSaga(action: ReturnType<typeof likePostAsync.request>) {
-  try {
-    const response: AxiosResponse = yield call(likePostAPI, action.payload);
-    yield put(likePostAsync.success(response.data));
-    yield put(increaseLikePost(response.data.data.postId, action.payload.mode));
-  } catch (e) {
-    alert(e.response.data.message);
-    yield put(likePostAsync.failure(e.response.data));
-  }
-}
-
-const unlikePostAPI = (params: { postId: number }) =>
-  axios.delete(`/posts/${params.postId}/like`);
-
-function* unlikePostSaga(action: ReturnType<typeof unlikePostAsync.request>) {
-  try {
-    const response: AxiosResponse = yield call(unlikePostAPI, action.payload);
-    yield put(unlikePostAsync.success(response.data));
-    yield put(decreaseLikePost(response.data.data.postId, action.payload.mode));
-  } catch (e) {
-    alert(e.response.data.message);
-    yield put(unlikePostAsync.failure(e.response.data));
-  }
-}
-
 const getUserInfoAPI = (params: { nickname: string }) =>
   axios.get(`/users/${params.nickname}`);
 
@@ -121,7 +88,5 @@ export function* authSaga() {
   yield takeLatest(LOGIN, loginSaga);
   yield takeEvery(SILENT_REFRESH, silentRefreshSaga);
   yield takeEvery(LOGOUT, logoutSaga);
-  yield throttle(2000, LIKE_POST, likePostSaga);
-  yield throttle(2000, UNLIKE_POST, unlikePostSaga);
   yield takeEvery(GET_USER_INFO, getUserInfoSaga);
 }

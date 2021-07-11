@@ -10,13 +10,19 @@ import {
   createCommentAsync,
   clearCreateComment,
   deleteCommentAsync,
-  increaseLikePost,
-  decreaseLikePost,
   deletePostAsync,
+  likePostAsync,
+  unlikePostAsync,
+  likeCommentAsync,
+  unlikeCommentAsync,
 } from './actions';
 
 export type PostState = {
   upload: AsyncState<ResponseData, ResponseData>;
+  likePost: AsyncState<ResponseData, ResponseData>;
+  unlikePost: AsyncState<ResponseData, ResponseData>;
+  likeComment: AsyncState<ResponseData, ResponseData>;
+  unlikeComment: AsyncState<ResponseData, ResponseData>;
   createPost: AsyncState<ResponseData, ResponseData>;
   createComment: AsyncState<ResponseData, ResponseData>;
   readHomePost: AsyncState<ResponseData, ResponseData>;
@@ -28,6 +34,10 @@ export type PostState = {
 
 export type PostAction = ActionType<
   | typeof uploadPictureAsync
+  | typeof likePostAsync
+  | typeof unlikePostAsync
+  | typeof likeCommentAsync
+  | typeof unlikeCommentAsync
   | typeof createPostAsync
   | typeof createCommentAsync
   | typeof readHomePostAsync
@@ -36,8 +46,6 @@ export type PostAction = ActionType<
   | typeof deleteCommentAsync
   | typeof reorderPicture
   | typeof deletePicture
-  | typeof increaseLikePost
-  | typeof decreaseLikePost
   | typeof clearCreateComment
 >;
 
@@ -45,10 +53,6 @@ interface User {
   id: number;
   nickname: string;
   profile?: string;
-}
-
-interface Mode {
-  mode?: 'home' | 'explore';
 }
 
 export interface ResponsePicture {
@@ -87,6 +91,7 @@ export interface Comment {
   user: User;
   createdAt: Date;
   replyId?: number;
+  likedUser: { userId: number }[];
   replies: Comment[];
 }
 

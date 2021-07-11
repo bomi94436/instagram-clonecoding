@@ -3,9 +3,15 @@ import Card from '../../components/Home/Card';
 import { Post } from '../../store/post/types';
 import { useDispatch, useSelector } from 'react-redux';
 import { useCallback } from 'react';
-import { likePostAsync, unlikePostAsync } from '../../store/auth/actions';
 import { RootState } from '../../store';
-import { createCommentAsync, deletePostAsync } from '../../store/post/actions';
+import {
+  createCommentAsync,
+  deletePostAsync,
+  likeCommentAsync,
+  likePostAsync,
+  unlikeCommentAsync,
+  unlikePostAsync,
+} from '../../store/post/actions';
 
 interface props {
   post: Post;
@@ -28,6 +34,20 @@ const CardContainer = ({ post }: props) => {
   const onClickUnlike = useCallback(
     (e: React.MouseEvent<HTMLButtonElement>) => (postId: number) => {
       dispatch(unlikePostAsync.request({ postId, mode: 'home' }));
+    },
+    [dispatch]
+  );
+
+  const onClickLikeComment = useCallback(
+    (commentId: number) => {
+      dispatch(likeCommentAsync.request({ commentId, mode: 'home' }));
+    },
+    [dispatch]
+  );
+
+  const onClickUnlikeComment = useCallback(
+    (commentId: number) => {
+      dispatch(unlikeCommentAsync.request({ commentId, mode: 'home' }));
     },
     [dispatch]
   );
@@ -65,6 +85,8 @@ const CardContainer = ({ post }: props) => {
       likedPost={likedPost}
       onClickLike={onClickLike}
       onClickUnlike={onClickUnlike}
+      onClickLikeComment={onClickLikeComment}
+      onClickUnlikeComment={onClickUnlikeComment}
       onClickDeletePost={onClickDeletePost}
       onSubmitComment={onSubmitComment}
     />

@@ -1,11 +1,15 @@
 import React, { useCallback, useEffect, useRef } from 'react';
-import { createCommentAsync } from '../../store/post/actions';
+import {
+  createCommentAsync,
+  deletePostAsync,
+  likePostAsync,
+  unlikePostAsync,
+} from '../../store/post/actions';
 import { useDispatch, useSelector } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
 import { StaticContext, withRouter } from 'react-router';
 import HomePostDetailContainer from './HomePostDetailContainer';
 import ExplorePostDetailContainer from './ExplorePostDetailContainer';
-import { likePostAsync, unlikePostAsync } from '../../store/auth/actions';
 import { RootState } from '../../store';
 
 const PostDetailContainer = ({
@@ -48,6 +52,14 @@ const PostDetailContainer = ({
       dispatch(unlikePostAsync.request({ postId, mode: location.state.mode }));
     },
     [dispatch, location.state.mode]
+  );
+
+  const onClickDeletePost = useCallback(
+    (postId: number) => {
+      dispatch(deletePostAsync.request({ postId, mode: location.state.mode }));
+      history.goBack();
+    },
+    [dispatch, history, location.state.mode]
   );
 
   const onSubmitComment = useCallback(
@@ -94,6 +106,7 @@ const PostDetailContainer = ({
         likedPost={likedPost}
         onClickLike={onClickLike}
         onClickUnlike={onClickUnlike}
+        onClickDeletePost={onClickDeletePost}
         onSubmitComment={onSubmitComment}
       />
     );
@@ -106,6 +119,7 @@ const PostDetailContainer = ({
         likedPost={likedPost}
         onClickLike={onClickLike}
         onClickUnlike={onClickUnlike}
+        onClickDeletePost={onClickDeletePost}
         onSubmitComment={onSubmitComment}
       />
     );

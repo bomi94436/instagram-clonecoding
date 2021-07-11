@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { filterHashAndAt, timeForToday } from '../../lib/util';
-import { BsHeart, FiMoreHorizontal } from 'react-icons/all';
+import { BsHeart, BsHeartFill, FiMoreHorizontal } from 'react-icons/all';
 import defaultProfile from '../../lib/assets/default_profile.jpg';
 import { Comment } from '../../store/post/types';
 import Modal from '../common/Modal';
@@ -12,6 +12,8 @@ interface props {
   comment: Comment;
   onClickReply: (replyId: number | undefined, nickname: string) => void;
   onClickDeleteComment: (postId: number, commentId: number) => void;
+  onClickLikeComment: (commentId: number) => void;
+  onClickUnlikeComment: (commentId: number) => void;
 }
 
 const PostDetailComment = ({
@@ -20,6 +22,8 @@ const PostDetailComment = ({
   comment,
   onClickReply,
   onClickDeleteComment,
+  onClickLikeComment,
+  onClickUnlikeComment,
 }: props) => {
   const [openReply, setOpenReply] = useState(false);
   const [openModal, setOpenModal] = useState(false);
@@ -44,7 +48,16 @@ const PostDetailComment = ({
               <span>{filterHashAndAt(comment.content)}</span>
             </div>
             <div>
-              <span className="time">{timeForToday(comment.createdAt)}</span>
+              <span className="time-and-liked-user">
+                {timeForToday(comment.createdAt)}
+              </span>
+
+              {comment.likedUser.length > 0 && (
+                <span className="time-and-liked-user">
+                  좋아요 {comment.likedUser.length}개
+                </span>
+              )}
+
               <span
                 className="reply-button"
                 onClick={() => onClickReply(comment.id, comment.user.nickname)}
@@ -61,9 +74,21 @@ const PostDetailComment = ({
           </button>
         )}
 
-        <button className="heart-button">
-          <BsHeart />
-        </button>
+        {comment.likedUser.find((v) => v.userId === userId) ? (
+          <button
+            className="heart-button fill"
+            onClick={() => onClickUnlikeComment(comment.id)}
+          >
+            <BsHeartFill />
+          </button>
+        ) : (
+          <button
+            className="heart-button"
+            onClick={() => onClickLikeComment(comment.id)}
+          >
+            <BsHeart />
+          </button>
+        )}
       </div>
 
       {comment.replies?.length > 0 && (
@@ -99,9 +124,16 @@ const PostDetailComment = ({
                       <span>{filterHashAndAt(reply.content)}</span>
                     </div>
                     <div>
-                      <span className="time">
+                      <span className="time-and-liked-user">
                         {timeForToday(reply.createdAt)}
                       </span>
+
+                      {reply.likedUser.length > 0 && (
+                        <span className="time-and-liked-user">
+                          좋아요 {reply.likedUser.length}개
+                        </span>
+                      )}
+
                       <span
                         className="reply-button"
                         onClick={() =>
@@ -123,9 +155,21 @@ const PostDetailComment = ({
                   </button>
                 )}
 
-                <button className="heart-button">
-                  <BsHeart />
-                </button>
+                {reply.likedUser.find((v) => v.userId === userId) ? (
+                  <button
+                    className="heart-button fill"
+                    onClick={() => onClickUnlikeComment(reply.id)}
+                  >
+                    <BsHeartFill />
+                  </button>
+                ) : (
+                  <button
+                    className="heart-button"
+                    onClick={() => onClickLikeComment(reply.id)}
+                  >
+                    <BsHeart />
+                  </button>
+                )}
 
                 {openReplyModal && (
                   <Modal

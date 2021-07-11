@@ -15,3 +15,7 @@ declare interface UserInfo {
   followings: { followingId: number }[];
   followers: { followerId: number }[];
 }
+
+declare interface Mode {
+  mode: 'home' | 'explore';
+}

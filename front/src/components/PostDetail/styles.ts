@@ -115,7 +115,7 @@ export const StyledPostDetailModal = styled.div`
 
           display: none;
 
-          padding: 16px;
+          padding: 12px;
           background: radial-gradient(
             rgba(255, 255, 255, 0.9) 60%,
             rgba(0, 0, 0, 0)
@@ -133,6 +133,10 @@ export const StyledPostDetailModal = styled.div`
           svg {
             width: 12px;
             height: 12px;
+          }
+
+          &.fill {
+            color: ${({ theme }) => theme.icon.red};
           }
         }
       }
@@ -202,7 +206,7 @@ export const StyledPostDetailModal = styled.div`
       }
     }
 
-    .time {
+    .time-and-liked-user {
       margin-right: 12px;
       font-weight: 600;
       font-size: 12px;

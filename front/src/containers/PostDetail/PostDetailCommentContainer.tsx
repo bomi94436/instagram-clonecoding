@@ -1,5 +1,9 @@
 import React, { useCallback } from 'react';
-import { deleteCommentAsync } from '../../store/post/actions';
+import {
+  deleteCommentAsync,
+  likeCommentAsync,
+  unlikeCommentAsync,
+} from '../../store/post/actions';
 import { useDispatch, useSelector } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { StaticContext } from 'react-router';
@@ -40,6 +44,24 @@ const PostDetailCommentContainer = ({
     [dispatch, location.state.mode]
   );
 
+  const onClickLikeComment = useCallback(
+    (commentId: number) => {
+      dispatch(
+        likeCommentAsync.request({ commentId, mode: location.state.mode })
+      );
+    },
+    [dispatch, location.state.mode]
+  );
+
+  const onClickUnlikeComment = useCallback(
+    (commentId: number) => {
+      dispatch(
+        unlikeCommentAsync.request({ commentId, mode: location.state.mode })
+      );
+    },
+    [dispatch, location.state.mode]
+  );
+
   return (
     <PostDetailComment
       userId={userId}
@@ -47,6 +69,8 @@ const PostDetailCommentContainer = ({
       comment={comment}
       onClickReply={onClickReply}
       onClickDeleteComment={onClickDeleteComment}
+      onClickLikeComment={onClickLikeComment}
+      onClickUnlikeComment={onClickUnlikeComment}
     />
   );
 };

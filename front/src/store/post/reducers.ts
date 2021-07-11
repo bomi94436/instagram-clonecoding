@@ -4,6 +4,10 @@ import produce from 'immer';
 
 const initialState: PostState = {
   upload: asyncState.initial(),
+  likePost: asyncState.initial(),
+  unlikePost: asyncState.initial(),
+  likeComment: asyncState.initial(),
+  unlikeComment: asyncState.initial(),
   createPost: asyncState.initial(),
   createComment: asyncState.initial(),
   readHomePost: asyncState.initial(),
@@ -37,6 +41,113 @@ const post = (state: PostState = initialState, action: PostAction) =>
 
       case 'post/REORDER_UPLOADED':
         draft.uploadedPicture = action.payload;
+        break;
+
+      case 'post/LIKE_POST':
+        draft.likePost = asyncState.loading();
+        break;
+      case 'post/LIKE_POST_SUCCESS': {
+        draft.likePost = asyncState.success(action.payload);
+        const post =
+          action.payload.mode === 'home'
+            ? draft.readHomePost.data?.data.find(
+                (v: Post) => v.id === action.payload.data.postId
+              )
+            : draft.readPost.data?.data.find(
+                (v: Post) => v.id === action.payload.data.postId
+              );
+        post.likeCount += 1;
+        break;
+      }
+      case 'post/LIKE_POST_ERROR':
+        draft.likePost = asyncState.error(action.payload);
+        break;
+
+      case 'post/UNLIKE_POST':
+        draft.unlikePost = asyncState.loading();
+        break;
+      case 'post/UNLIKE_POST_SUCCESS': {
+        draft.unlikePost = asyncState.success(action.payload);
+        const post =
+          action.payload.mode === 'home'
+            ? draft.readHomePost.data?.data.find(
+                (v: Post) => v.id === action.payload.data.postId
+              )
+            : draft.readPost.data?.data.find(
+                (v: Post) => v.id === action.payload.data.postId
+              );
+        post.likeCount -= 1;
+        break;
+      }
+      case 'post/UNLIKE_POST_ERROR':
+        draft.unlikePost = asyncState.error(action.payload);
+        break;
+
+      case 'post/LIKE_COMMENT':
+        draft.likeComment = asyncState.loading();
+        break;
+      case 'post/LIKE_COMMENT_SUCCESS': {
+        draft.likeComment = asyncState.success(action.payload);
+        const post =
+          action.payload.mode === 'home'
+            ? draft.readHomePost.data?.data.find(
+                (v: Post) => v.id === action.payload.data.postId
+              )
+            : draft.readPost.data?.data.find(
+                (v: Post) => v.id === action.payload.data.postId
+              );
+
+        post.comments.forEach((comment: Comment) => {
+          if (comment.id === action.payload.data.commentId) {
+            comment.likedUser.push({ userId: action.payload.data.userId });
+          }
+          comment.replies?.forEach((reply: Comment) => {
+            if (reply.id === action.payload.data.commentId) {
+              reply.likedUser.push({ userId: action.payload.data.userId });
+            }
+          });
+        });
+
+        break;
+      }
+      case 'post/LIKE_COMMENT_ERROR':
+        draft.likeComment = asyncState.error(action.payload);
+        break;
+
+      case 'post/UNLIKE_COMMENT':
+        draft.unlikeComment = asyncState.loading();
+        break;
+      case 'post/UNLIKE_COMMENT_SUCCESS': {
+        draft.unlikeComment = asyncState.success(action.payload);
+        const post =
+          action.payload.mode === 'home'
+            ? draft.readHomePost.data?.data.find(
+                (v: Post) => v.id === action.payload.data.postId
+              )
+            : draft.readPost.data?.data.find(
+                (v: Post) => v.id === action.payload.data.postId
+              );
+
+        post.comments.forEach((comment: Comment) => {
+          if (comment.id === action.payload.data.commentId) {
+            comment.likedUser = comment.likedUser.filter(
+              (v: { userId: number }) => v.userId !== action.payload.data.userId
+            );
+          }
+          comment.replies?.forEach((reply: Comment) => {
+            if (reply.id === action.payload.data.commentId) {
+              reply.likedUser = reply.likedUser.filter(
+                (v: { userId: number }) =>
+                  v.userId !== action.payload.data.userId
+              );
+            }
+          });
+        });
+
+        break;
+      }
+      case 'post/UNLIKE_COMMENT_ERROR':
+        draft.unlikeComment = asyncState.error(action.payload);
         break;
 
       case 'post/CREATE_POST':
@@ -112,6 +223,12 @@ const post = (state: PostState = initialState, action: PostAction) =>
               post.id === action.payload.data.postId &&
               draft.readHomePost.data?.data.splice(index, 1)
           );
+        } else {
+          draft.readPost.data?.data.forEach(
+            (post: Post, index: number) =>
+              post.id === action.payload.data.postId &&
+              draft.readPost.data?.data.splice(index, 1)
+          );
         }
 
         break;
@@ -161,31 +278,6 @@ const post = (state: PostState = initialState, action: PostAction) =>
           (v) => v.id !== action.payload
         );
         break;
-
-      case 'post/INCREASE_LIKE_POST': {
-        const post =
-          action.payload.mode === 'home'
-            ? draft.readHomePost.data?.data.find(
-                (v: Post) => v.id === action.payload.postId
-              )
-            : draft.readPost.data?.data.find(
-                (v: Post) => v.id === action.payload.postId
-              );
-        post.likeCount += 1;
-        break;
-      }
-      case 'post/DECREASE_LIKE_POST': {
-        const post =
-          action.payload.mode === 'home'
-            ? draft.readHomePost.data?.data.find(
-                (v: Post) => v.id === action.payload.postId
-              )
-            : draft.readPost.data?.data.find(
-                (v: Post) => v.id === action.payload.postId
-              );
-        post.likeCount -= 1;
-        break;
-      }
 
       case 'post/CLEAR_CREATE_COMMENT':
         draft.createComment = asyncState.initial();

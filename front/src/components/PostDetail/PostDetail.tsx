@@ -29,6 +29,7 @@ interface props {
   likedPost: { postId: number }[];
   onClickLike: (postId: number) => void;
   onClickUnlike: (postId: number) => void;
+  onClickDeletePost: (postId: number) => void;
   onSubmitComment: (
     e: React.FormEvent<HTMLFormElement>
   ) => (postId: number, content: string, replyId?: number | undefined) => void;
@@ -45,6 +46,7 @@ const PostDetail = ({
   likedPost,
   onClickLike,
   onClickUnlike,
+  onClickDeletePost,
   onSubmitComment,
 }: props) => {
   const [current, setCurrent] = useState<number>(0);
@@ -119,7 +121,9 @@ const PostDetail = ({
                   <span>{filterHashAndAt(post.content)}</span>
                 </div>
                 <div>
-                  <span className="time">{timeForToday(post.createdAt)}</span>
+                  <span className="time-and-liked-user">
+                    {timeForToday(post.createdAt)}
+                  </span>
                 </div>
               </div>
             </div>
@@ -175,7 +179,9 @@ const PostDetail = ({
               </div>
             )}
 
-            <div className="time">{timeForToday(post.createdAt)}</div>
+            <div className="time-and-liked-user">
+              {timeForToday(post.createdAt)}
+            </div>
           </section>
 
           <CardCommentForm
@@ -204,7 +210,12 @@ const PostDetail = ({
           <Modal openModal={openModal} setOpenModal={setOpenModal}>
             <StyledMorePostModal>
               {post.user.id === userId && (
-                <button className="delete">삭제</button>
+                <button
+                  className="delete"
+                  onClick={() => onClickDeletePost(post.id)}
+                >
+                  삭제
+                </button>
               )}
               <button>링크 복사</button>
               <button onClick={() => setOpenModal(false)}>취소</button>

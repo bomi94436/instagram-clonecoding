@@ -14,6 +14,22 @@ export const UPLOAD_PICTURE = 'post/UPLOAD_PICTURE';
 export const UPLOAD_PICTURE_SUCCESS = 'post/UPLOAD_PICTURE_SUCCESS';
 export const UPLOAD_PICTURE_ERROR = 'post/UPLOAD_PICTURE_ERROR';
 
+export const LIKE_POST = 'post/LIKE_POST';
+export const LIKE_POST_SUCCESS = 'post/LIKE_POST_SUCCESS';
+export const LIKE_POST_ERROR = 'post/LIKE_POST_ERROR';
+
+export const UNLIKE_POST = 'post/UNLIKE_POST';
+export const UNLIKE_POST_SUCCESS = 'post/UNLIKE_POST_SUCCESS';
+export const UNLIKE_POST_ERROR = 'post/UNLIKE_POST_ERROR';
+
+export const LIKE_COMMENT = 'post/LIKE_COMMENT';
+export const LIKE_COMMENT_SUCCESS = 'post/LIKE_COMMENT_SUCCESS';
+export const LIKE_COMMENT_ERROR = 'post/LIKE_COMMENT_ERROR';
+
+export const UNLIKE_COMMENT = 'post/UNLIKE_COMMENT';
+export const UNLIKE_COMMENT_SUCCESS = 'post/UNLIKE_COMMENT_SUCCESS';
+export const UNLIKE_COMMENT_ERROR = 'post/UNLIKE_COMMENT_ERROR';
+
 export const CREATE_POST = 'post/CREATE_POST';
 export const CREATE_POST_SUCCESS = 'post/CREATE_POST_SUCCESS';
 export const CREATE_POST_ERROR = 'post/CREATE_POST_ERROR';
@@ -41,9 +57,6 @@ export const DELETE_COMMENT_ERROR = 'post/DELETE_COMMENT_ERROR';
 export const REORDER_UPLOADED = 'post/REORDER_UPLOADED';
 export const DELETE_PICTURE = 'post/DELETE_PICTURE';
 
-export const INCREASE_LIKE_POST = 'post/INCREASE_LIKE_POST';
-export const DECREASE_LIKE_POST = 'post/DECREASE_LIKE_POST';
-
 export const CLEAR_CREATE_COMMENT = 'post/CLEAR_CREATE_COMMENT';
 
 export const uploadPictureAsync = createAsyncAction(
@@ -51,6 +64,38 @@ export const uploadPictureAsync = createAsyncAction(
   UPLOAD_PICTURE_SUCCESS,
   UPLOAD_PICTURE_ERROR
 )<FormData, ResponseData, ResponseData>();
+
+export const likePostAsync = createAsyncAction(
+  LIKE_POST,
+  LIKE_POST_SUCCESS,
+  LIKE_POST_ERROR
+)<{ postId: number; mode: 'home' | 'explore' }, ResponseData, ResponseData>();
+
+export const unlikePostAsync = createAsyncAction(
+  UNLIKE_POST,
+  UNLIKE_POST_SUCCESS,
+  UNLIKE_POST_ERROR
+)<{ postId: number; mode: 'home' | 'explore' }, ResponseData, ResponseData>();
+
+export const likeCommentAsync = createAsyncAction(
+  LIKE_COMMENT,
+  LIKE_COMMENT_SUCCESS,
+  LIKE_COMMENT_ERROR
+)<
+  { commentId: number; mode: 'home' | 'explore' },
+  ResponseData,
+  ResponseData
+>();
+
+export const unlikeCommentAsync = createAsyncAction(
+  UNLIKE_COMMENT,
+  UNLIKE_COMMENT_SUCCESS,
+  UNLIKE_COMMENT_ERROR
+)<
+  { commentId: number; mode: 'home' | 'explore' },
+  ResponseData,
+  ResponseData
+>();
 
 export const createPostAsync = createAsyncAction(
   CREATE_POST,
@@ -96,16 +141,6 @@ export const reorderPicture = createAction(
 export const deletePicture = createAction(
   DELETE_PICTURE,
   (pictureId: number) => pictureId
-)();
-
-export const increaseLikePost = createAction(
-  INCREASE_LIKE_POST,
-  (postId: number, mode: 'home' | 'explore') => ({ postId, mode })
-)();
-
-export const decreaseLikePost = createAction(
-  DECREASE_LIKE_POST,
-  (postId: number, mode: 'home' | 'explore') => ({ postId, mode })
 )();
 
 export const clearCreateComment = createAction(CLEAR_CREATE_COMMENT)();

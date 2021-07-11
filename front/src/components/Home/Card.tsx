@@ -33,6 +33,8 @@ interface props {
   onClickUnlike: (
     e: React.MouseEvent<HTMLButtonElement>
   ) => (postId: number) => void;
+  onClickLikeComment: (commentId: number) => void;
+  onClickUnlikeComment: (commentId: number) => void;
   onClickDeletePost: (postId: number) => void;
   onSubmitComment: (
     e: React.FormEvent<HTMLFormElement>
@@ -45,6 +47,8 @@ const Card = ({
   likedPost,
   onClickLike,
   onClickUnlike,
+  onClickLikeComment,
+  onClickUnlikeComment,
   onClickDeletePost,
   onSubmitComment,
 }: props) => {
@@ -139,7 +143,13 @@ const Card = ({
 
           <CardContent nickname={post.user.nickname} content={post.content} />
 
-          <CardComment post={post} comments={post.comments} />
+          <CardComment
+            userId={userId}
+            post={post}
+            comments={post.comments}
+            onClickLikeComment={onClickLikeComment}
+            onClickUnlikeComment={onClickUnlikeComment}
+          />
 
           <div className="time">{timeForToday(post.createdAt)}</div>
         </div>

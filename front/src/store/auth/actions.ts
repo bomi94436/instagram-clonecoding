@@ -17,14 +17,6 @@ export const LOGOUT = 'auth/LOGOUT';
 export const LOGOUT_SUCCESS = 'auth/LOGOUT_SUCCESS';
 export const LOGOUT_ERROR = 'auth/LOGOUT_ERROR';
 
-export const LIKE_POST = 'auth/LIKE_POST';
-export const LIKE_POST_SUCCESS = 'auth/LIKE_POST_SUCCESS';
-export const LIKE_POST_ERROR = 'auth/LIKE_POST_ERROR';
-
-export const UNLIKE_POST = 'auth/UNLIKE_POST';
-export const UNLIKE_POST_SUCCESS = 'auth/UNLIKE_POST_SUCCESS';
-export const UNLIKE_POST_ERROR = 'auth/UNLIKE_POST_ERROR';
-
 export const GET_USER_INFO = 'auth/GET_USER_INFO';
 export const GET_USER_INFO_SUCCESS = 'auth/GET_USER_INFO_SUCCESS';
 export const GET_USER_INFO_ERROR = 'auth/GET_USER_INFO_ERROR';
@@ -33,6 +25,9 @@ export const SET_AUTO_LOGIN = 'auth/SET_AUTO_LOGIN';
 export const CLEAR_AUTO_LOGIN = 'auth/CLEAR_AUTO_LOGIN';
 
 export const DECREASE_POST_COUNT = 'auth/DECREASE_POST_COUNT';
+
+export const ADD_LIKED_POST = 'auth/ADD_LIKED_POST';
+export const REMOVE_LIKED_POST = 'auth/REMOVE_LIKED_POST';
 
 export const signUpAsync = createAsyncAction(
   SIGN_UP,
@@ -58,18 +53,6 @@ export const logoutAsync = createAsyncAction(
   LOGOUT_ERROR
 )<undefined, ResponseData, ResponseData>();
 
-export const likePostAsync = createAsyncAction(
-  LIKE_POST,
-  LIKE_POST_SUCCESS,
-  LIKE_POST_ERROR
-)<{ postId: number; mode: 'home' | 'explore' }, ResponseData, ResponseData>();
-
-export const unlikePostAsync = createAsyncAction(
-  UNLIKE_POST,
-  UNLIKE_POST_SUCCESS,
-  UNLIKE_POST_ERROR
-)<{ postId: number; mode: 'home' | 'explore' }, ResponseData, ResponseData>();
-
 export const getUserInfoAsync = createAsyncAction(
   GET_USER_INFO,
   GET_USER_INFO_SUCCESS,
@@ -83,3 +66,14 @@ export const setAutoLogin = createAction(SET_AUTO_LOGIN, ({ timer }) => ({
 export const clearAutoLogin = createAction(CLEAR_AUTO_LOGIN)();
 
 export const decreasePostCount = createAction(DECREASE_POST_COUNT)();
+
+export const addLikedPost = createAction(ADD_LIKED_POST, (postId: number) => ({
+  postId,
+}))();
+
+export const removeLikedPost = createAction(
+  REMOVE_LIKED_POST,
+  (postId: number) => ({
+    postId,
+  })
+)();
