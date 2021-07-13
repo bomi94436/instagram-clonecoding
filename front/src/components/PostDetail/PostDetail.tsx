@@ -17,6 +17,8 @@ import CardCommentForm from '../Home/CardCommentForm';
 import { StyledPostDetailModal } from './styles';
 import { EmojiPicker } from '../index';
 import PostDetailCommentContainer from '../../containers/PostDetail/PostDetailCommentContainer';
+import CopyToClipboard from 'react-copy-to-clipboard';
+import config from '../../config';
 
 interface props {
   userId: number | null;
@@ -217,7 +219,20 @@ const PostDetail = ({
                   삭제
                 </button>
               )}
-              <button>링크 복사</button>
+
+              <CopyToClipboard
+                text={`${config.frontUrl}/post-detail/${post.id}`}
+              >
+                <button
+                  onClick={() => {
+                    alert('링크가 복사되었습니다.');
+                    setOpenModal(false);
+                  }}
+                >
+                  링크 복사
+                </button>
+              </CopyToClipboard>
+
               <button onClick={() => setOpenModal(false)}>취소</button>
             </StyledMorePostModal>
           </Modal>
