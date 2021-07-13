@@ -43,6 +43,7 @@ const upload = multer({
 
 router.get('/', isLoggedIn, wrapAsync(PostController.readPost));
 router.get('/following', isLoggedIn, wrapAsync(PostController.readHomePost));
+
 router.post('/', isLoggedIn, wrapAsync(PostController.createPost));
 router.post(
   '/pictures',
@@ -55,12 +56,24 @@ router.post(
   isLoggedIn,
   wrapAsync(PostController.createComment)
 );
+
 router.patch('/:postId/like', isLoggedIn, wrapAsync(PostController.likePost));
+router.patch(
+  '/comment/:commentId/like',
+  isLoggedIn,
+  wrapAsync(PostController.likeComment)
+);
+
 router.delete('/:postId', isLoggedIn, wrapAsync(PostController.deletePost));
 router.delete(
   '/:postId/like',
   isLoggedIn,
   wrapAsync(PostController.unlikePost)
+);
+router.delete(
+  '/comment/:commentId/like',
+  isLoggedIn,
+  wrapAsync(PostController.unlikeComment)
 );
 router.delete(
   '/:postId/comment/:commentId',

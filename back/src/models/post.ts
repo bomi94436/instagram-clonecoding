@@ -38,6 +38,7 @@ export default class Post extends Model {
   @BelongsToMany(() => Hashtag, () => PostHashtag)
   hashtags: Hashtag[];
 
+  // 좋아요한 사람 수
   @Default(0)
   @Column
   likeCount: number;

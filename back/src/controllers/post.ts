@@ -114,6 +114,48 @@ const PostController = {
     });
   },
 
+  likeComment: async (
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction
+  ): Promise<void> => {
+    const postId = await PostService.likeComment(
+      req.user.id,
+      Number(req.params.commentId)
+    );
+
+    res.status(200).json(<ResponseData>{
+      success: true,
+      message: '댓글에 좋아요 했습니다.',
+      data: {
+        userId: req.user.id,
+        postId,
+        commentId: Number(req.params.commentId),
+      },
+    });
+  },
+
+  unlikeComment: async (
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction
+  ): Promise<void> => {
+    const postId = await PostService.unlikeComment(
+      req.user.id,
+      Number(req.params.commentId)
+    );
+
+    res.status(200).json(<ResponseData>{
+      success: true,
+      message: '댓글에 좋아요를 취소했습니다.',
+      data: {
+        userId: req.user.id,
+        postId,
+        commentId: Number(req.params.commentId),
+      },
+    });
+  },
+
   deletePost: async (
     req: express.Request,
     res: express.Response,

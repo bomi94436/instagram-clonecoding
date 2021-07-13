@@ -69,6 +69,7 @@ export default class User extends Model {
   @HasMany(() => CommentLike)
   likedComment: CommentLike[];
 
+  // 작성한 게시글 개수
   @Default(0)
   @Column
   postCount: number;

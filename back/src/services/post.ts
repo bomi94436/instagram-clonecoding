@@ -1,5 +1,6 @@
 import {
   Comment,
+  CommentLike,
   Follow,
   Hashtag,
   Picture,
@@ -55,6 +56,11 @@ const PostService = {
             attributes: ['id', 'nickname'],
           },
           {
+            model: CommentLike,
+            as: 'likedUser',
+            attributes: ['userId'],
+          },
+          {
             model: Comment,
             as: 'replies',
             attributes: {
@@ -65,6 +71,11 @@ const PostService = {
                 model: User,
                 as: 'user',
                 attributes: ['id', 'nickname'],
+              },
+              {
+                model: CommentLike,
+                as: 'likedUser',
+                attributes: ['userId'],
               },
             ],
           },
@@ -344,6 +355,69 @@ const PostService = {
       await transaction.rollback();
       throw error;
     }
+  },
+
+  likeComment: async (userId: number, commentId: number): Promise<number> => {
+    const user = await User.findOne({
+      where: {
+        id: userId,
+      },
+    });
+
+    const comment = await Comment.findOne({
+      where: {
+        id: commentId,
+      },
+    });
+    if (!comment) throw new CustomError(403, '존재하지 않는 댓글입니다.');
+
+    const isLiked = await CommentLike.findOne({
+      where: {
+        commentId,
+        userId: user.id,
+      },
+    });
+    if (isLiked) throw new CustomError(403, '이미 좋아요를 표시한 글입니다.');
+
+    await CommentLike.create({
+      commentId,
+      userId: user.id,
+    });
+
+    return comment.postId;
+  },
+
+  unlikeComment: async (userId: number, commentId: number): Promise<number> => {
+    const user = await User.findOne({
+      where: {
+        id: userId,
+      },
+    });
+
+    const comment = await Comment.findOne({
+      where: {
+        id: commentId,
+      },
+    });
+    if (!comment) throw new CustomError(403, '존재하지 않는 댓글입니다.');
+
+    const isLiked = await CommentLike.findOne({
+      where: {
+        commentId,
+        userId: user.id,
+      },
+    });
+    if (!isLiked)
+      throw new CustomError(403, '이미 좋아요를 표시하지 않은 댓글입니다.');
+
+    await CommentLike.destroy({
+      where: {
+        commentId,
+        userId: user.id,
+      },
+    });
+
+    return comment.postId;
   },
 
   deletePost: async (userId: number, postId: number): Promise<void> => {
