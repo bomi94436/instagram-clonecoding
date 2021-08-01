@@ -1,4 +1,6 @@
 import * as express from 'express';
+import sharp = require('sharp');
+const fs = require('fs');
 import PostService from '../services/post';
 
 const PostController = {
@@ -46,6 +48,34 @@ const PostController = {
     });
   },
 
+  resizePicture: async (
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction
+  ) => {
+    Promise.all(
+      req.files.map(
+        (file) =>
+          new Promise<void>((resolve) =>
+            file.mimetype.split('/')[0] === 'image'
+              ? sharp(file.path)
+                  .resize({ width: 600 })
+                  .withMetadata()
+                  .toFile(`uploads/resize-${file.filename}`, () => {
+                    fs.unlink(`uploads/${file.filename}`, () => {
+                      resolve();
+                    });
+                  })
+              : resolve()
+          )
+      )
+    )
+      .then(() => next())
+      .catch((err) => {
+        throw err;
+      });
+  },
+
   uploadPicture: async (
     req: express.Request,
     res: express.Response,
@@ -54,11 +84,13 @@ const PostController = {
     res.status(201).json(<ResponseData>{
       success: true,
       message: '파일을 업로드했습니다.',
-      data: req.files.map((v) => ({
-        type: v.mimetype.split('/')[0],
-        size: v.size,
-        ext: v.mimetype.split('/')[1],
-        src: v.filename,
+      data: req.files.map((file) => ({
+        type: file.mimetype.split('/')[0],
+        size: file.size,
+        ext: file.mimetype.split('/')[1],
+        src:
+          (file.mimetype.split('/')[0] === 'image' ? 'resize-' : '') +
+          file.filename,
       })),
     });
   },

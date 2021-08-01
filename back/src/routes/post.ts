@@ -49,6 +49,7 @@ router.post(
   '/pictures',
   isLoggedIn,
   upload.array('upload'),
+  wrapAsync(PostController.resizePicture),
   wrapAsync(PostController.uploadPicture)
 );
 router.post(

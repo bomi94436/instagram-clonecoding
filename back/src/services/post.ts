@@ -13,12 +13,15 @@ import { FindOptions, Op, Transaction } from 'sequelize';
 import sequelize from '../models/sequelize';
 
 const PostService = {
-  getReadPostOptions: (where?: {
-    id?: number;
-    followerId?: number;
-  }): FindOptions => ({
+  getReadPostOptions: (
+    limit: number,
+    where?: {
+      id?: number;
+      followerId?: number;
+    }
+  ): FindOptions => ({
     where,
-    limit: 10,
+    limit,
     order: [
       ['createdAt', 'DESC'],
       [{ model: Picture, as: 'pictures' }, 'id', 'ASC'],
@@ -84,7 +87,7 @@ const PostService = {
     ],
   }),
 
-  readExplorePost: async (lastId: number) => {
+  readExplorePost: async (lastId?: number) => {
     let where = {};
 
     if (lastId) {
@@ -93,7 +96,7 @@ const PostService = {
       };
     }
 
-    return await Post.findAll(PostService.getReadPostOptions(where));
+    return await Post.findAll(PostService.getReadPostOptions(9, where));
   },
 
   readHomePost: async (userId: number, lastId?: number) => {
@@ -130,7 +133,7 @@ const PostService = {
       [Op.or]: or,
     };
 
-    return await Post.findAll(PostService.getReadPostOptions(where));
+    return await Post.findAll(PostService.getReadPostOptions(5, where));
   },
 
   createPost: async (userId: number, postData: PostData): Promise<void> => {
@@ -259,6 +262,14 @@ const PostService = {
           model: User,
           as: 'user',
           attributes: ['id', 'nickname'],
+        },
+        {
+          model: CommentLike,
+          as: 'likedUser',
+        },
+        {
+          model: Comment,
+          as: 'replies',
         },
       ],
     });
