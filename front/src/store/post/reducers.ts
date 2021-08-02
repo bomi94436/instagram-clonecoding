@@ -15,6 +15,8 @@ const initialState: PostState = {
   deletePost: asyncState.initial(),
   deleteComment: asyncState.initial(),
   uploadedPicture: [],
+  homePost: [],
+  explorePost: [],
 };
 
 const post = (state: PostState = initialState, action: PostAction) =>
@@ -50,13 +52,14 @@ const post = (state: PostState = initialState, action: PostAction) =>
         draft.likePost = asyncState.success(action.payload);
         const post =
           action.payload.mode === 'home'
-            ? draft.readHomePost.data?.data.find(
+            ? draft.homePost.find(
                 (v: Post) => v.id === action.payload.data.postId
               )
-            : draft.readPost.data?.data.find(
+            : draft.explorePost.find(
                 (v: Post) => v.id === action.payload.data.postId
               );
-        post.likeCount += 1;
+        if (post) post.likeCount += 1;
+
         break;
       }
       case 'post/LIKE_POST_ERROR':
@@ -70,13 +73,13 @@ const post = (state: PostState = initialState, action: PostAction) =>
         draft.unlikePost = asyncState.success(action.payload);
         const post =
           action.payload.mode === 'home'
-            ? draft.readHomePost.data?.data.find(
+            ? draft.homePost.find(
                 (v: Post) => v.id === action.payload.data.postId
               )
-            : draft.readPost.data?.data.find(
+            : draft.explorePost.find(
                 (v: Post) => v.id === action.payload.data.postId
               );
-        post.likeCount -= 1;
+        if (post) post.likeCount -= 1;
         break;
       }
       case 'post/UNLIKE_POST_ERROR':
@@ -90,14 +93,14 @@ const post = (state: PostState = initialState, action: PostAction) =>
         draft.likeComment = asyncState.success(action.payload);
         const post =
           action.payload.mode === 'home'
-            ? draft.readHomePost.data?.data.find(
+            ? draft.homePost.find(
                 (v: Post) => v.id === action.payload.data.postId
               )
-            : draft.readPost.data?.data.find(
+            : draft.explorePost.find(
                 (v: Post) => v.id === action.payload.data.postId
               );
 
-        post.comments.forEach((comment: Comment) => {
+        post?.comments.forEach((comment: Comment) => {
           if (comment.id === action.payload.data.commentId) {
             comment.likedUser.push({ userId: action.payload.data.userId });
           }
@@ -121,14 +124,14 @@ const post = (state: PostState = initialState, action: PostAction) =>
         draft.unlikeComment = asyncState.success(action.payload);
         const post =
           action.payload.mode === 'home'
-            ? draft.readHomePost.data?.data.find(
+            ? draft.homePost.find(
                 (v: Post) => v.id === action.payload.data.postId
               )
-            : draft.readPost.data?.data.find(
+            : draft.explorePost.find(
                 (v: Post) => v.id === action.payload.data.postId
               );
 
-        post.comments.forEach((comment: Comment) => {
+        post?.comments.forEach((comment: Comment) => {
           if (comment.id === action.payload.data.commentId) {
             comment.likedUser = comment.likedUser.filter(
               (v: { userId: number }) => v.userId !== action.payload.data.userId
@@ -168,22 +171,22 @@ const post = (state: PostState = initialState, action: PostAction) =>
         {
           draft.createComment = asyncState.success(action.payload);
 
-          const post: Post =
+          const post =
             action.payload.mode === 'home'
-              ? draft.readHomePost.data?.data.find(
+              ? draft.homePost.find(
                   (post: Post) => post.id === action.payload.data.postId
                 )
-              : draft.readPost.data?.data.find(
+              : draft.explorePost.find(
                   (post: Post) => post.id === action.payload.data.postId
                 );
 
           if (action.payload.data.replyId) {
-            const comment = post.comments.find(
+            const comment = post?.comments.find(
               (comment: Comment) => comment.id === action.payload.data.replyId
             );
             comment?.replies.push(action.payload.data);
           } else {
-            post.comments.push(action.payload.data);
+            post?.comments.push(action.payload.data);
           }
         }
         break;
@@ -192,11 +195,27 @@ const post = (state: PostState = initialState, action: PostAction) =>
         break;
 
       case 'post/READ_HOME_POST':
-        draft.readHomePost = asyncState.loading(draft.readHomePost.data);
+        draft.readHomePost = asyncState.loading();
         break;
-      case 'post/READ_HOME_POST_SUCCESS':
+      case 'post/READ_HOME_POST_SUCCESS': {
+        const response: Post[] = action.payload.data;
+        const posts: Post[] = draft.homePost;
+
+        if (!action.payload.lastId) {
+          draft.homePost = action.payload.data;
+        } else if (
+          !(
+            response?.length &&
+            posts?.length &&
+            response[response.length - 1].id === posts[posts.length - 1].id
+          )
+        ) {
+          draft.homePost = draft.homePost.concat(response);
+        }
+
         draft.readHomePost = asyncState.success(action.payload);
         break;
+      }
       case 'post/READ_HOME_POST_ERROR':
         draft.readHomePost = asyncState.error(action.payload);
         break;
@@ -205,6 +224,21 @@ const post = (state: PostState = initialState, action: PostAction) =>
         draft.readPost = asyncState.loading(draft.readPost.data);
         break;
       case 'post/READ_POST_SUCCESS':
+        const response: Post[] = action.payload.data;
+        const posts: Post[] = draft.explorePost;
+
+        if (!action.payload.lastId) {
+          draft.explorePost = action.payload.data;
+        } else if (
+          !(
+            response?.length &&
+            posts?.length &&
+            response[response.length - 1].id === posts[posts.length - 1].id
+          )
+        ) {
+          draft.explorePost = draft.explorePost.concat(response);
+        }
+
         draft.readPost = asyncState.success(action.payload);
         break;
       case 'post/READ_POST_ERROR':
@@ -218,16 +252,16 @@ const post = (state: PostState = initialState, action: PostAction) =>
         draft.deletePost = asyncState.success(action.payload);
 
         if (action.payload.mode === 'home') {
-          draft.readHomePost.data?.data.forEach(
+          draft.homePost.forEach(
             (post: Post, index: number) =>
               post.id === action.payload.data.postId &&
-              draft.readHomePost.data?.data.splice(index, 1)
+              draft.homePost.splice(index, 1)
           );
         } else {
-          draft.readPost.data?.data.forEach(
+          draft.explorePost.forEach(
             (post: Post, index: number) =>
               post.id === action.payload.data.postId &&
-              draft.readPost.data?.data.splice(index, 1)
+              draft.explorePost.splice(index, 1)
           );
         }
 
@@ -245,14 +279,14 @@ const post = (state: PostState = initialState, action: PostAction) =>
 
         const post =
           action.payload.mode === 'home'
-            ? draft.readHomePost.data?.data.find(
+            ? draft.homePost.find(
                 (post: Post) => post.id === action.payload.data.postId
               )
-            : draft.readPost.data?.data.find(
+            : draft.explorePost.find(
                 (post: Post) => post.id === action.payload.data.postId
               );
 
-        post.comments.forEach((comment: Comment, commentIndex: number) => {
+        post?.comments.forEach((comment: Comment, commentIndex: number) => {
           if (
             comment.id === action.payload.data.commentId ||
             comment.replyId === action.payload.data.commentId

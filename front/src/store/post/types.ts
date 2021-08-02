@@ -30,6 +30,8 @@ export type PostState = {
   deletePost: AsyncState<ResponseData, ResponseData>;
   deleteComment: AsyncState<ResponseData, ResponseData>;
   uploadedPicture: UploadedPicture[];
+  homePost: Post[];
+  explorePost: Post[];
 };
 
 export type PostAction = ActionType<

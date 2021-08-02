@@ -180,7 +180,12 @@ function* readHomePostSaga(
 ) {
   try {
     const response: AxiosResponse = yield call(readHomePostAPI, action.payload);
-    yield put(readHomePostAsync.success(response.data));
+    yield put(
+      readHomePostAsync.success({
+        ...response.data,
+        lastId: action.payload.lastId,
+      })
+    );
   } catch (e) {
     alert(e.response.data.message);
     yield put(readHomePostAsync.failure(e.response.data));
@@ -192,7 +197,12 @@ const readPostAPI = (params: readPostParams) => axios.get('/posts', { params });
 function* readPostSaga(action: ReturnType<typeof readPostAsync.request>) {
   try {
     const response: AxiosResponse = yield call(readPostAPI, action.payload);
-    yield put(readPostAsync.success(response.data));
+    yield put(
+      readPostAsync.success({
+        ...response.data,
+        lastId: action.payload.lastId,
+      })
+    );
   } catch (e) {
     alert(e.response.data.message);
     yield put(readPostAsync.failure(e.response.data));

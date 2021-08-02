@@ -5,7 +5,6 @@ import {
   readHomePostParams,
   readPostParams,
   createCommentData,
-  Post,
   deleteCommentData,
   deletePostData,
 } from './types';
@@ -113,13 +112,13 @@ export const readHomePostAsync = createAsyncAction(
   READ_HOME_POST,
   READ_HOME_POST_SUCCESS,
   READ_HOME_POST_ERROR
-)<readHomePostParams, ResponseData<Post>, ResponseData>();
+)<readHomePostParams, ResponseData, ResponseData>();
 
 export const readPostAsync = createAsyncAction(
   READ_POST,
   READ_POST_SUCCESS,
   READ_POST_ERROR
-)<readPostParams, ResponseData<Post>, ResponseData>();
+)<readPostParams, ResponseData, ResponseData>();
 
 export const deletePostAsync = createAsyncAction(
   DELETE_POST,

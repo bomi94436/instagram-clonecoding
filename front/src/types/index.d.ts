@@ -3,6 +3,7 @@ declare interface ResponseData<D = any> {
   message: string;
   data?: D;
   mode?: 'home' | 'explore';
+  lastId?: number;
 }
 
 declare interface UserInfo {

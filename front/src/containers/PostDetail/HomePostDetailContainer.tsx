@@ -32,10 +32,8 @@ const HomePostDetailContainer = ({
   const postId = Number(match.params.postId);
   const userId = useSelector((state: RootState) => state.auth.user.id);
   const post = useSelector((state: RootState) =>
-    state.post.readHomePost.data?.data.find(
-      (findPost: Post) => findPost.id === postId
-    )
-  );
+    state.post.homePost.find((findPost: Post) => findPost.id === postId)
+  ) as Post;
 
   return (
     <PostDetail

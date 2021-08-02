@@ -59,7 +59,7 @@ export const StyledAppLayout = styled.div`
   .box {
     padding-top: 84px;
     background-color: rgb(250, 250, 250);
-    min-height: 100vh;
+    min-height: calc(100vh - 84px);
 
     .children {
       display: flex;

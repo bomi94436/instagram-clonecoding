@@ -32,22 +32,18 @@ const ExplorePostDetailContainer = ({
   const postId = Number(match.params.postId);
   const userId = useSelector((state: RootState) => state.auth.user.id);
   const post = useSelector((state: RootState) =>
-    state.post.readPost.data?.data.find(
-      (findPost: Post) => findPost.id === postId
-    )
-  );
+    state.post.explorePost.find((findPost: Post) => findPost.id === postId)
+  ) as Post;
   const postIndex = useSelector((state: RootState) =>
-    state.post.readPost.data?.data.findIndex(
-      (findPost: Post) => findPost.id === postId
-    )
+    state.post.explorePost.findIndex((findPost: Post) => findPost.id === postId)
   );
   const prevPost: Post | undefined = useSelector((state: RootState) =>
-    state.post.readPost.data?.data.find(
+    state.post.explorePost.find(
       (findPost: Post, findIndex: number) => findIndex === postIndex - 1
     )
   );
   const nextPost: Post | undefined = useSelector((state: RootState) =>
-    state.post.readPost.data?.data.find(
+    state.post.explorePost.find(
       (findPost: Post, findIndex: number) => findIndex === postIndex + 1
     )
   );

@@ -3,9 +3,8 @@ import { media } from '../../styles/media';
 
 export const Wrapper = styled.div`
   display: flex;
-  justify-content: center;
-
   width: 950px;
+
   ${media.desktop} {
     width: 100%;
   }
@@ -60,45 +59,73 @@ export const StyledSection = styled.div`
     position: relative;
     overflow: hidden;
     padding: 0;
+  }
 
-    .cover {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.5);
-      color: white;
-      z-index: 1;
-      opacity: 0;
-      :hover {
-        opacity: 1;
-      }
+  button .cover {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    ${media.desktop} {
+      flex-direction: column;
     }
 
-    .contents {
-      img,
-      video {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-      }
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    z-index: 1;
+    opacity: 0;
+  }
 
-      .icon {
-        position: absolute;
-        top: 15px;
-        right: 15px;
-        color: white;
-        filter: drop-shadow(0 0 2px gray);
+  button .cover div {
+    display: flex;
+    align-items: center;
 
-        svg {
-          width: 24px;
-          height: 24px;
-        }
-      }
+    font-size: 16px;
+    font-weight: 700;
+  }
+
+  button .cover > :first-child {
+    margin: 0 30px 0 0;
+    ${media.desktop} {
+      margin: 0 0 10px 0;
     }
+  }
+
+  button .cover div svg {
+    width: 19px;
+    height: 19px;
+    margin-right: 8px;
+  }
+
+  button .cover:hover {
+    opacity: 1;
+  }
+
+  button .contents img,
+  button .contents video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  button .contents .icon {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    color: white;
+    filter: drop-shadow(0 0 2px gray);
+  }
+
+  button .contents .icon svg {
+    width: 24px;
+    height: 24px;
   }
 `;
