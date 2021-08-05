@@ -18,7 +18,10 @@ export const isLoggedIn = (
     (jwtErr: VerifyErrors | null, decoded: Token | undefined): void => {
       if (jwtErr) throw new CustomError(401, '로그인이 필요한 서비스입니다.');
 
-      req.user = decoded.email;
+      req.user = {
+        id: decoded.id,
+        email: decoded.email,
+      };
       next();
     }
   );

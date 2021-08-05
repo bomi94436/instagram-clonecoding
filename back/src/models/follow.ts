@@ -1,4 +1,5 @@
 import {
+  BelongsTo,
   Column,
   ForeignKey,
   Model,
@@ -17,8 +18,14 @@ export default class Follow extends Model {
   @Column
   followingId: number;
 
+  @BelongsTo(() => User, 'followingId')
+  following: User;
+
   @ForeignKey(() => User)
   @PrimaryKey
   @Column
   followerId: number;
+
+  @BelongsTo(() => User, 'followerId')
+  follower: User;
 }

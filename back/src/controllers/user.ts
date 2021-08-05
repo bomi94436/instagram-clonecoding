@@ -50,8 +50,7 @@ const UserController = {
     next: express.NextFunction
   ): Promise<void> => {
     const oldRefreshToken = req.cookies['x-refresh-token'];
-    const { accessToken, refreshToken } = await UserService.silentRefresh(
-      req.user,
+    const { accessToken, refreshToken, info } = await UserService.silentRefresh(
       oldRefreshToken
     );
 
@@ -65,6 +64,7 @@ const UserController = {
       message: '로그인 연장이 완료되었습니다.',
       data: {
         token: accessToken,
+        info,
       },
     });
   },
@@ -82,6 +82,26 @@ const UserController = {
     res.status(200).json(<ResponseData>{
       success: true,
       message: '로그아웃 되었습니다.',
+    });
+  },
+
+  getUser: async (
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction
+  ): Promise<void> => {
+    const info = await UserService.getUser(req.params.nickname);
+
+    if (!info)
+      res.status(404).json(<ResponseData>{
+        success: false,
+        message: '사용자 정보를 찾을 수 없습니다.',
+      });
+
+    res.status(200).json(<ResponseData>{
+      success: true,
+      message: '사용자 정보 조회가 완료되었습니다.',
+      data: info,
     });
   },
 };

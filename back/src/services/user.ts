@@ -1,7 +1,7 @@
 import to from 'await-to-js';
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-import { User } from '../models';
+import { Follow, PostLike, User } from '../models';
 import { CustomError } from '../utils';
 import { VerifyErrors } from 'jsonwebtoken';
 const config = require('../config');
@@ -40,11 +40,13 @@ const UserService = {
   },
 
   generateToken: async (
+    id: number,
     email: string
   ): Promise<{ accessToken: string; refreshToken: string }> => {
     const accessToken: string = jwt.sign(
       {
-        email: email,
+        id,
+        email,
       },
       config.jwtSecret,
       {
@@ -53,7 +55,8 @@ const UserService = {
     );
     const refreshToken: string = jwt.sign(
       {
-        email: email,
+        id,
+        email,
       },
       config.jwtSecret,
       {
@@ -68,7 +71,8 @@ const UserService = {
         },
         {
           where: {
-            email: email,
+            id,
+            email,
           },
         }
       )
@@ -113,13 +117,30 @@ const UserService = {
         where: {
           email: userData.email,
         },
-        attributes: ['email', 'nickname'],
+        attributes: ['id', 'email', 'nickname', 'postCount'],
+        include: [
+          {
+            model: PostLike,
+            attributes: ['postId'],
+          },
+          {
+            model: Follow,
+            as: 'followings',
+            attributes: ['followingId'],
+          },
+          {
+            model: Follow,
+            as: 'followers',
+            attributes: ['followerId'],
+          },
+        ],
       })
     );
     if (err2) throw err2;
 
     const { accessToken, refreshToken } = await UserService.generateToken(
-      userData.email
+      info.id,
+      info.email
     );
 
     return {
@@ -130,7 +151,6 @@ const UserService = {
   },
 
   silentRefresh: async (
-    loggedInUser: string,
     oldRefreshToken: string
   ): Promise<ReturnType<typeof UserService.generateToken>> =>
     jwt.verify(
@@ -148,24 +168,37 @@ const UserService = {
           }
         }
 
-        const [dbErr, user] = await to(
-          User.findOne({
-            where: {
-              email: decoded.email,
+        const user = await User.findOne({
+          where: {
+            id: decoded.id,
+            token: oldRefreshToken,
+          },
+          attributes: ['id', 'email', 'nickname', 'postCount'],
+          include: [
+            {
+              model: PostLike,
+              attributes: ['postId'],
             },
-          })
+            {
+              model: Follow,
+              as: 'followings',
+              attributes: ['followingId'],
+            },
+            {
+              model: Follow,
+              as: 'followers',
+              attributes: ['followerId'],
+            },
+          ],
+        });
+        if (!user) throw new CustomError(403, '유효하지 않은 로그인입니다.');
+
+        const { accessToken, refreshToken } = await UserService.generateToken(
+          user.id,
+          user.email
         );
-        if (dbErr) throw dbErr;
 
-        if (user.token === oldRefreshToken && loggedInUser === user.email) {
-          const { accessToken, refreshToken } = await UserService.generateToken(
-            decoded.email
-          );
-
-          return { accessToken, refreshToken };
-        } else {
-          throw new CustomError(403, '유효하지 않은 로그인입니다.');
-        }
+        return { accessToken, refreshToken, info: user };
       }
     ),
 
@@ -184,6 +217,30 @@ const UserService = {
     );
     if (err) throw err;
   },
+
+  getUser: async (nickname: string): Promise<User> =>
+    await User.findOne({
+      where: {
+        nickname,
+      },
+      attributes: ['id', 'email', 'nickname', 'postCount'],
+      include: [
+        {
+          model: PostLike,
+          attributes: ['postId'],
+        },
+        {
+          model: Follow,
+          as: 'followings',
+          attributes: ['followingId'],
+        },
+        {
+          model: Follow,
+          as: 'followers',
+          attributes: ['followerId'],
+        },
+      ],
+    }),
 };
 
 export default UserService;

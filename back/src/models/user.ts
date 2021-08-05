@@ -1,10 +1,4 @@
-import {
-  BelongsToMany,
-  Column,
-  HasMany,
-  Model,
-  Table,
-} from 'sequelize-typescript';
+import { Column, Default, HasMany, Model, Table } from 'sequelize-typescript';
 import {
   IsDefined,
   IsEmail,
@@ -12,7 +6,8 @@ import {
   Length,
   Matches,
 } from 'class-validator';
-import { Follow, Post } from '.';
+import { Comment, CommentLike, Follow, Post } from '.';
+import PostLike from './postlike';
 
 @Table({
   charset: 'utf8',
@@ -57,11 +52,25 @@ export default class User extends Model {
   @HasMany(() => Post)
   posts: Post[];
 
+  @HasMany(() => Comment)
+  comments: Comment[];
+
   // 누군가 -> 나
-  @BelongsToMany(() => User, () => Follow, 'followingId')
+  @HasMany(() => Follow, 'followingId')
   followers: Follow[];
 
   // 나 -> 누군가
-  @BelongsToMany(() => User, () => Follow, 'followerId')
+  @HasMany(() => Follow, 'followerId')
   followings: Follow[];
+
+  @HasMany(() => PostLike)
+  likedPost: PostLike[];
+
+  @HasMany(() => CommentLike)
+  likedComment: CommentLike[];
+
+  // 작성한 게시글 개수
+  @Default(0)
+  @Column
+  postCount: number;
 }
