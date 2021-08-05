@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from 'axios';
-import { call, put, takeEvery } from 'redux-saga/effects';
+import { call, put, takeEvery, takeLatest } from 'redux-saga/effects';
 import {
   LOGIN,
   loginAsync,
@@ -9,6 +9,8 @@ import {
   SILENT_REFRESH,
   silentRefreshAsync,
   LOGOUT,
+  getUserInfoAsync,
+  GET_USER_INFO,
 } from './actions';
 import { LoginData, SignUpData } from './types';
 import history from '../../lib/history';
@@ -68,9 +70,23 @@ function* logoutSaga() {
   }
 }
 
+const getUserInfoAPI = (params: { nickname: string }) =>
+  axios.get(`/users/${params.nickname}`);
+
+function* getUserInfoSaga(action: ReturnType<typeof getUserInfoAsync.request>) {
+  try {
+    const response: AxiosResponse = yield call(getUserInfoAPI, action.payload);
+    yield put(getUserInfoAsync.success(response.data));
+  } catch (e) {
+    alert(e.response.data.message);
+    yield put(getUserInfoAsync.failure(e.response.data));
+  }
+}
+
 export function* authSaga() {
-  yield takeEvery(SIGN_UP, signUpSaga);
-  yield takeEvery(LOGIN, loginSaga);
+  yield takeLatest(SIGN_UP, signUpSaga);
+  yield takeLatest(LOGIN, loginSaga);
   yield takeEvery(SILENT_REFRESH, silentRefreshSaga);
   yield takeEvery(LOGOUT, logoutSaga);
+  yield takeEvery(GET_USER_INFO, getUserInfoSaga);
 }

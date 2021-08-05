@@ -37,10 +37,13 @@ export const StyledNavBar = styled.div`
       display: flex;
       align-items: center;
 
-      .upload-button {
+      .button {
         width: 22px;
         height: 22px;
         padding: 0;
+        &:not(:first-child) {
+          margin-left: 24px;
+        }
 
         svg {
           width: 22px;
@@ -56,6 +59,7 @@ export const StyledAppLayout = styled.div`
   .box {
     padding-top: 84px;
     background-color: rgb(250, 250, 250);
+    min-height: calc(100vh - 84px);
 
     .children {
       display: flex;
@@ -136,5 +140,47 @@ export const StyledMenu = styled.div`
     border-width: 5px;
     border-style: solid;
     border-color: transparent transparent white transparent;
+  }
+`;
+
+export const StyledModal = styled.div`
+  position: fixed;
+  z-index: 999;
+  top: 0;
+  left: 0;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  width: 100%;
+  height: 100%;
+
+  background-color: rgba(0, 0, 0, 0.4);
+
+  > div {
+    @keyframes fade-in {
+      0% {
+        transform: scale(1.2);
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
+    animation: fade-in 0.2s ease;
+  }
+`;
+
+export const StyledEmojiPicker = styled.div`
+  position: absolute;
+  bottom: 50px;
+  z-index: 4;
+
+  &.home {
+    left: 10px;
+  }
+
+  &.post-detail {
+    right: 50px;
   }
 `;

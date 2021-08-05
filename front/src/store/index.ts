@@ -5,8 +5,9 @@ import { authSaga } from './auth/sagas';
 import auth from './auth/reducers';
 import { postSaga } from './post/sagas';
 import post from './post/reducers';
+import config from '../config';
 
-axios.defaults.baseURL = 'http://localhost:3065';
+axios.defaults.baseURL = config.backUrl;
 axios.defaults.withCredentials = true;
 
 export function* rootSaga() {

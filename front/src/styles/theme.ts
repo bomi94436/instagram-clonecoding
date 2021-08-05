@@ -15,6 +15,9 @@ const myTheme: DefaultTheme = {
   border: {
     gray: '#dadada',
   },
+  icon: {
+    red: '#eb545c',
+  },
 };
 
 export { myTheme };

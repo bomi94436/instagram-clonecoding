@@ -1,43 +1,65 @@
-import React, { useState } from 'react';
-import faker from 'faker';
+import React, { useRef, useState } from 'react';
 import {
   BsBookmark,
   BsHeart,
+  BsHeartFill,
   FiMoreHorizontal,
   IoChatbubbleOutline,
-  VscSmiley,
 } from 'react-icons/all';
-import Picker from 'emoji-picker-react';
 import useInput from '../../lib/hooks/useInput';
-import { StyledCard, StyledCardWrapper, StyledSlider } from './styles';
+import {
+  StyledCard,
+  StyledCardWrapper,
+  StyledMorePostModal,
+  StyledSlider,
+} from './styles';
 import CardContent from './CardContent';
 import defaultProfile from '../../lib/assets/default_profile.jpg';
 import Video from './Video';
+import { Picture, Post } from '../../store/post/types';
+import { sliderSettings, timeForToday } from '../../lib/util';
+import Modal from '../common/Modal';
+import CardComment from './CardComment';
+import CardCommentForm from './CardCommentForm';
+import { EmojiPicker } from '../index';
+import CopyToClipboard from 'react-copy-to-clipboard';
+import config from '../../config';
 
 interface props {
-  post: any;
+  userId: number | null;
+  post: Post;
+  likedPost: { postId: number }[];
+  onClickLike: (
+    e: React.MouseEvent<HTMLButtonElement>
+  ) => (postId: number) => void;
+  onClickUnlike: (
+    e: React.MouseEvent<HTMLButtonElement>
+  ) => (postId: number) => void;
+  onClickLikeComment: (commentId: number) => void;
+  onClickUnlikeComment: (commentId: number) => void;
+  onClickDeletePost: (postId: number) => void;
+  onSubmitComment: (
+    e: React.FormEvent<HTMLFormElement>
+  ) => (postId: number, content: string, replyId?: number | undefined) => void;
 }
 
-const Card = ({ post }: props) => {
+const Card = ({
+  userId,
+  post,
+  likedPost,
+  onClickLike,
+  onClickUnlike,
+  onClickLikeComment,
+  onClickUnlikeComment,
+  onClickDeletePost,
+  onSubmitComment,
+}: props) => {
   const [comment, onChangeComment, setComment] = useInput('');
   const [openEmojiPicker, setOpenEmojiPicker] = useState<boolean>(false);
   const [current, setCurrent] = useState<number>(0);
-
-  const sliderSettings = {
-    dots: true,
-    infinite: false,
-    speed: 500,
-    arrows: true,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-    className: 'view',
-    appendDots: (dots: JSX.Element) => (
-      <div>
-        <ul style={{ margin: '5px', padding: '0' }}>{dots}</ul>
-      </div>
-    ),
-    afterChange: (current: number) => setCurrent(current),
-  };
+  const [openModal, setOpenModal] = useState<boolean>(false);
+  const [fadeHeart, setFadeHeart] = useState<boolean>(false);
+  const commentRef = useRef<HTMLInputElement>(null);
 
   return (
     <StyledCardWrapper>
@@ -56,13 +78,13 @@ const Card = ({ post }: props) => {
             <span>{post.user.nickname}</span>
           </div>
 
-          <button>
+          <button onClick={() => setOpenModal(true)}>
             <FiMoreHorizontal />
           </button>
         </div>
 
-        <StyledSlider {...sliderSettings}>
-          {post.pictures.map((picture: any) =>
+        <StyledSlider {...sliderSettings(setCurrent)} isModal={false}>
+          {post.pictures.map((picture: Picture) =>
             picture.type === 'image' ? (
               <img
                 key={picture.id}
@@ -78,11 +100,30 @@ const Card = ({ post }: props) => {
         <div className="content">
           <div className="icons">
             <div className="left">
-              <button>
-                <BsHeart />
-                {/* BsHeartFill */}
-              </button>
-              <button>
+              {likedPost.find((v) => v.postId === post.id) ? (
+                <button
+                  className={`fill-heart${fadeHeart ? ' fade' : ''}`}
+                  onClick={(e) => {
+                    onClickUnlike(e)(post.id);
+                    setFadeHeart(true);
+                  }}
+                  onAnimationEnd={() => setFadeHeart(false)}
+                >
+                  <BsHeartFill />
+                </button>
+              ) : (
+                <button
+                  className={`${fadeHeart ? ' fade' : ''}`}
+                  onClick={(e) => {
+                    onClickLike(e)(post.id);
+                    setFadeHeart(true);
+                  }}
+                  onAnimationEnd={() => setFadeHeart(false)}
+                >
+                  <BsHeart />
+                </button>
+              )}
+              <button onClick={() => commentRef.current?.focus()}>
                 <IoChatbubbleOutline />
               </button>
             </div>
@@ -92,53 +133,78 @@ const Card = ({ post }: props) => {
             </button>
           </div>
 
-          <div className="liked">
-            <span>{faker.name.findName()}</span>님 외 여러명이 좋아합니다
-          </div>
+          {post.likeCount > 0 ? (
+            <div className="liked">
+              좋아요 <span>{post.likeCount}</span>개
+            </div>
+          ) : (
+            <div className="liked">
+              가장 먼저 <span>좋아요</span>를 눌러보세요
+            </div>
+          )}
 
-          <div className="text">
-            <span>{post.user.nickname} </span>
-            <CardContent content={post.content} />
-          </div>
+          <CardContent nickname={post.user.nickname} content={post.content} />
 
-          <div className="time">7시간 전</div>
+          <CardComment
+            userId={userId}
+            post={post}
+            comments={post.comments}
+            onClickLikeComment={onClickLikeComment}
+            onClickUnlikeComment={onClickUnlikeComment}
+          />
+
+          <div className="time">{timeForToday(post.createdAt)}</div>
         </div>
 
-        <div className="comment">
-          <div className="left">
-            <button
-              className="emoji"
-              onClick={() => setOpenEmojiPicker((prev) => (prev = !prev))}
-            >
-              <VscSmiley className="icon" />
-            </button>
-
-            <input
-              value={comment}
-              onChange={onChangeComment}
-              onClick={() => setOpenEmojiPicker(false)}
-              placeholder="댓글 달기..."
-            />
-          </div>
-
-          <button
-            className={`submit${!comment ? ' disabled' : ''}`}
-            disabled={!comment}
-            onClick={() => {
-              setOpenEmojiPicker(false);
-            }}
-          >
-            게시
-          </button>
-        </div>
+        <CardCommentForm
+          postId={post.id}
+          comment={comment}
+          setComment={setComment}
+          onChangeComment={onChangeComment}
+          onSubmitComment={onSubmitComment}
+          setOpenEmojiPicker={setOpenEmojiPicker}
+          commentRef={commentRef}
+        />
       </StyledCard>
 
       {openEmojiPicker && (
-        <div className="emoji-picker">
-          <Picker
-            onEmojiClick={(event, data) => setComment(comment + data.emoji)}
-          />
-        </div>
+        <EmojiPicker
+          component="home"
+          comment={comment}
+          setComment={setComment}
+          setOpenEmojiPicker={setOpenEmojiPicker}
+        />
+      )}
+
+      {openModal && (
+        <Modal openModal={openModal} setOpenModal={setOpenModal}>
+          <StyledMorePostModal>
+            {post.user.id === userId && (
+              <button
+                className="delete"
+                onClick={() => {
+                  onClickDeletePost(post.id);
+                  setOpenModal(false);
+                }}
+              >
+                삭제
+              </button>
+            )}
+
+            <CopyToClipboard text={`${config.frontUrl}/post-detail/${post.id}`}>
+              <button
+                onClick={() => {
+                  alert('링크가 복사되었습니다.');
+                  setOpenModal(false);
+                }}
+              >
+                링크 복사
+              </button>
+            </CopyToClipboard>
+
+            <button onClick={() => setOpenModal(false)}>취소</button>
+          </StyledMorePostModal>
+        </Modal>
       )}
     </StyledCardWrapper>
   );

@@ -13,7 +13,9 @@ import { Upload } from '../../components';
 const UploadContainer = () => {
   const dispatch = useDispatch();
   const uploadRef = useRef<HTMLInputElement>(null);
-  const pictures = useSelector((state: RootState) => state.post.picture);
+  const pictures = useSelector(
+    (state: RootState) => state.post.uploadedPicture
+  );
 
   const onClickUpload = useCallback(
     (e: React.MouseEvent<HTMLButtonElement>) => {

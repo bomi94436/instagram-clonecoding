@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { FaPlay } from 'react-icons/all';
-import { StyledButton } from './styles';
+import { StyledPlayButton } from './styles';
 
 interface props {
   picture: { id: number; type: string; src: string };
@@ -27,21 +27,17 @@ const Video = ({ picture, current }: props) => {
   }, [current]);
 
   return (
-    <>
+    <div className="video">
       <video
         ref={videoRef}
         key={picture.id}
         src={`http://localhost:3065/${picture.src}`}
         loop
       />
-      <StyledButton
-        className="play-button"
-        onClick={onClickPlayButton}
-        isPlayed={isPlayed}
-      >
+      <StyledPlayButton onClick={onClickPlayButton} isPlayed={isPlayed}>
         <FaPlay />
-      </StyledButton>
-    </>
+      </StyledPlayButton>
+    </div>
   );
 };
 

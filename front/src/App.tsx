@@ -1,46 +1,76 @@
 import React from 'react';
-import { Redirect, Route, Switch } from 'react-router-dom';
-import { Explore, SignUp, Tags } from './components';
-import { HomeContainer, LoginContainer, UploadContainer } from './containers';
+import { Route, RouteComponentProps, Switch } from 'react-router-dom';
+import { SignUp, Tags } from './components';
+import {
+  ExploreContainer,
+  HomeContainer,
+  LoginContainer,
+  UploadContainer,
+  PostDetailContainer,
+} from './containers';
 import AuthRoute from './AuthRoute';
-import history from './lib/history';
-import { Router } from 'react-router';
+import { Redirect, StaticContext, withRouter } from 'react-router';
 
-function App() {
+function App({
+  location,
+}: RouteComponentProps<
+  {},
+  StaticContext,
+  { postDetail: any; mode: 'home' | 'explore' }
+>) {
+  const postDetail = location.state && location.state.postDetail;
+
   return (
-    <Router history={history}>
-      <Switch>
+    <>
+      <Switch location={postDetail || location}>
         <AuthRoute
           authenticated="loggedIn"
           path="/"
-          Component={HomeContainer}
+          component={() => <HomeContainer />}
           exact
         />
-        <Route path="/login" component={LoginContainer} />
+
+        <Route path="/login" component={() => <LoginContainer />} />
         <AuthRoute
           authenticated="notLoggedIn"
           path="/signup"
-          Component={SignUp}
+          component={() => <SignUp />}
         />
         <AuthRoute
           authenticated="loggedIn"
           path="/explore/tags/:tag"
-          Component={Tags}
+          component={() => <Tags />}
         />
         <AuthRoute
           authenticated="loggedIn"
           path="/explore"
-          Component={Explore}
+          component={() => <ExploreContainer />}
         />
         <AuthRoute
           authenticated="loggedIn"
           path="/upload"
-          Component={UploadContainer}
+          component={() => <UploadContainer />}
+        />
+        <AuthRoute
+          authenticated="loggedIn"
+          path="/post-detail/:postId"
+          component={() => <div>hi</div>} // TODO: modal x
+          exact
         />
         <Redirect path="*" to="/" />
       </Switch>
-    </Router>
+
+      {postDetail && (
+        <AuthRoute
+          authenticated="loggedIn"
+          path="/post-detail/:postId"
+          component={() => <PostDetailContainer />}
+          option="modal"
+          exact
+        />
+      )}
+    </>
   );
 }
 
-export default App;
+export default withRouter(App);
